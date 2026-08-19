@@ -19,6 +19,13 @@ const TYPES = {
   '.txt': 'text/plain; charset=utf-8',
   '.md': 'text/plain; charset=utf-8',
   '.woff2': 'font/woff2',
+  // 影片一定要給對的型別。回 application/octet-stream 的話 <video> 不會播，
+  // 本機預覽會誤以為縮圖壞了（線上沒這問題，GitHub Pages 自己認得）。
+  '.mp4': 'video/mp4',
+  '.webm': 'video/webm',
+  '.mov': 'video/quicktime',
+  '.gif': 'image/gif',
+  '.ico': 'image/x-icon',
 };
 
 createServer(async (req, res) => {

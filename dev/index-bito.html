@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Doris Lin — Bito 版面原型</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,400&family=Noto+Sans+TC:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="https://use.typekit.net/kln0qcj.css">
+<style>
+/* ============================================================ 骨架
+   數值全部照 bito.tv 實測，註解裡標出跟你現在的站不一樣的地方 */
+:root {
+  --ink: rgba(0, 0, 0, 0.75);
+  --ink-strong: rgba(0, 0, 0, 1);
+  --rule: #e7e7e7;
+  --grey: #707070;
+  --font: "DM Sans", "Noto Sans TC", -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft JhengHei", sans-serif;
+  --page-margin: 2.5rem;   /* Bito 2.5rem／你的站 3.5rem */
+  --gutter: 1.5rem;        /* 兩邊一樣 */
+  --max: 1600px;           /* 你的站目前沒有上限 */
+  --ease: cubic-bezier(.89, -.01, .37, 1);   /* Bito 全站都用這一條 */
+  --card-ratio: 631 / 348;   /* 普通卡比例。右下角控制條可即時切換 */
+  --card-ratio-num: 1.8132;   /* 同一個比例的數值版，直式卡的 calc() 要用 */
+}
+* { box-sizing: border-box; }
+html { font-size: 16px; }   /* Bito 16px 基準／你的舊站是 10px */
+body {
+  margin: 0;
+  background: #fff;
+  color: var(--ink-strong);
+  font-family: var(--font);
+  font-size: 1rem;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: inherit; text-decoration: none; }
+img, video { display: block; max-width: 100%; }
+
+.main-container { margin: auto; max-width: var(--max); }
+.grid-content {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  margin-left: var(--page-margin);
+  margin-right: var(--page-margin);
+  column-gap: var(--gutter);
+}
+@media (max-width: 834px) { .grid-content { column-gap: 1rem; } }
+@media (max-width: 500px) { .grid-content { margin-left: 1.5rem; margin-right: 1.5rem; } }
+
+/* ============================================================ 頁首
+   Bito：fixed、往下捲收起、往上捲滑出並加白底 */
+header.bito {
+  position: fixed; top: 0; width: 100%; z-index: 20;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 2rem var(--page-margin);
+  transform: translateY(0);
+  transition: all 1s var(--ease);
+}
+header.bito.hidden { transform: translateY(-100%); }
+header.bito.bg { background: #fff; padding-top: 1rem; padding-bottom: 1rem; }
+header.bito .logo video { width: 240px; height: auto; }
+header.bito .links { display: flex; gap: 1.5rem; list-style: none; margin: 0; padding: 0; }
+header.bito .links a[aria-current] { font-weight: 700; }
+@media (max-width: 500px) {
+  header.bito { padding: 1rem 1.5rem .5rem; }
+  header.bito.bg { padding-top: 1rem; padding-bottom: .5rem; }
+  header.bito .logo video { width: 150px; }
+  header.bito .links { gap: 1rem; }
+  header.bito .links a { font-size: .875rem; }
+}
+
+/* ============================================================ 開場
+   Bito 首頁沒有大標，直接就是篩選列加作品格。這裡保留你的自我介紹但縮小，
+   讓作品盡量往上。想更接近 Bito 就把這段刪掉。 */
+.intro { padding: 9rem var(--page-margin) 3rem; margin: auto; max-width: var(--max); }
+.intro h1 { font-size: 1.75rem; font-weight: 500; line-height: 1.4; margin: 0 0 .25rem; }
+.intro p { margin: 0; color: var(--grey); }
+@media (max-width: 500px) { .intro { padding: 6rem 1.5rem 2rem; } .intro h1 { font-size: 1.375rem; } }
+
+/* ============================================================ 作品格
+   .work 在 12 欄裡佔 4 欄 → 桌機一行 3 格（Bito 是一行 2 格）。
+   加 .row-2-image 變兩列高的直式卡。 */
+.works { padding-bottom: 3rem; }
+.works .grid-content { row-gap: var(--gutter); }
+.work {
+  display: block;
+  grid-column: span 4 / span 4;
+  overflow: hidden; position: relative;
+}
+.work.row-2-image { grid-row: span 2 / span 2; }
+
+.work-media { width: 100%; overflow: hidden; }
+.work:not(.row-2-image) .work-media { aspect-ratio: var(--card-ratio); }
+.work-media img, .work-media video { width: 100%; height: 100%; object-fit: cover; }
+
+/* 直式卡：圖絕對定位鋪滿整張卡，高度改由 ::before 在文件流裡撐出來。
+   高度 = 兩列 + 一個 row-gap = 200% / 比例 + gutter。
+   padding 的百分比是對「自身寬度」計算的，所以不必知道實際像素寬，換比例或
+   縮放視窗都會自己跟上。
+   為什麼不能只靠絕對定位：那樣高卡在文件流裡高度是 0，一旦某一列剛好整列
+   都是高卡（例如排序最前面連續幾件都是直式），該列就會塌成一條細線。 */
+.work.row-2-image::before {
+  content: ''; display: block;
+  padding-top: calc(200% / var(--card-ratio-num) + var(--gutter));
+}
+.work.row-2-image .work-media { position: absolute; inset: 0; }
+
+/* hover：色塊整片由上往下滑，文字晚 .3s 才浮現 */
+.work-overlay {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  background: var(--card-color);
+  transform: translateY(-101%);
+  transition: transform .7s var(--ease);
+}
+.work:hover .work-overlay, .work:focus-visible .work-overlay { transform: translateY(0); }
+.info {
+  position: absolute; top: 0; left: 0; padding: 1.5rem;
+  opacity: 0; transition: opacity .7s; transition-delay: .3s;
+  color: #fff;
+}
+.info.dark { color: #000; }
+.work:hover .info, .work:focus-visible .info { opacity: 1; }
+.info .title { font-size: 1.125rem; font-weight: 500; line-height: 1.2; margin-bottom: .25rem; }
+.info .description { font-size: 1rem; line-height: 1.2; }
+.work:focus-visible { outline: 2px solid #f02; outline-offset: 2px; }
+
+/* 手機：不用 overlay，文字放到圖片下面 */
+.mobile-info { display: none; margin-top: .5rem; }
+.mobile-info .title { font-size: 1rem; font-weight: 500; line-height: 1.2; }
+.mobile-info .description { font-size: .875rem; line-height: 1.5; color: var(--grey); }
+/* 平板：一行 2 格，直式高卡取消。三欄的咬合節奏換成兩欄就會留洞，
+   Bito 在窄螢幕也是一律簡化掉直式卡。 */
+@media (max-width: 834px) {
+  .work { grid-column: span 6 / span 6; }
+  .work.row-2-image { grid-row: span 1 / span 1; }
+  .work.row-2-image::before { display: none; }
+  .work.row-2-image .work-media { position: static; aspect-ratio: var(--card-ratio); }
+}
+@media (max-width: 500px) {
+  .work { grid-column: 1 / -1; overflow: visible; }
+  .work-overlay, .info { display: none; }
+  .mobile-info { display: block; }
+  .works .grid-content { row-gap: 2rem; }
+}
+
+/* ============================================================ 頁尾 */
+footer .grid-content { border-top: 1px solid var(--rule); padding: 2rem 0; align-items: start; }
+footer .col, footer .social { grid-column: span 3 / span 3; }
+footer p, footer li { margin: 0; line-height: 1.5rem; }
+footer ul { list-style: none; margin: 0; padding: 0; }
+@media (max-width: 500px) {
+  footer .grid-content { padding: 3.5rem 0 2.5rem; row-gap: 1.5rem; }
+  footer .col, footer .social { grid-column: 1 / -1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  header.bito, .work-overlay, .info { transition-duration: .01ms; }
+}
+
+
+/* ============================================================ 比例控制條
+   只是選比例用的工具，不是設計的一部分（SHOW_RATIO_BAR 控制要不要輸出）。 */
+#ratio-bar {
+  position: fixed; right: 1rem; bottom: 1rem; z-index: 50;
+  display: flex; align-items: center; gap: .25rem;
+  padding: .5rem; border-radius: .5rem;
+  background: rgba(20, 20, 20, .92); color: #fff;
+  font: 500 .8125rem/1 var(--font);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, .25);
+}
+#ratio-bar button {
+  border: 0; border-radius: .3125rem; padding: .4rem .55rem;
+  background: transparent; color: inherit; font: inherit; cursor: pointer;
+}
+#ratio-bar button:hover { background: rgba(255, 255, 255, .16); }
+#ratio-bar button[aria-pressed="true"] { background: #fff; color: #111; }
+#ratio-bar .readout {
+  padding-left: .5rem; margin-left: .25rem;
+  border-left: 1px solid rgba(255, 255, 255, .25);
+  opacity: .75; font-weight: 400; white-space: nowrap;
+}
+@media (max-width: 500px) { #ratio-bar { display: none; } }
+
+</style>
+</head>
+<body>
+
+<header class="bito" id="hdr">
+  <a class="logo" href="../index.html" aria-label="Doris Lin">
+    <video src="../assets/img/logo.mp4" width="800" height="298"
+           poster="../assets/img/logo.webp" autoplay muted loop playsinline preload="auto"></video>
+  </a>
+  <nav aria-label="Main">
+    <ul class="links">
+      <li><a href="../index.html" aria-current="page">Playground</a></li>
+      <li><a href="https://www.behance.net/yihsuanlin3257" target="_blank" rel="noopener">Works</a></li>
+      <li><a href="../work/Reel.html">Reel</a></li>
+      <li><a href="../information.html">Info</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main>
+  <section class="intro">
+    <h1>Hi there! I'm Doris Lin</h1>
+    <p>a 3D artist, motion designer, animator and a toast maker! 🥨</p>
+  </section>
+
+  <section class="main-container works" aria-label="Selected work">
+    <div class="grid-content">
+      <a class="work row-2-image" href="../work/Grandma-s-kitchen.html"
+         style="--card-color:#c6713a">
+        <div class="work-media"><img src="../assets/media/Grandma-s-kitchen/TP_TaipeiLumitree_Lumi2025_kitchen_00000_V06_00000.webp" alt="Grandma’s kitchen" decoding="async"></div>
+        <div class="work-overlay" aria-hidden="true"></div>
+        <div class="info" aria-hidden="true">
+          <div class="title">Grandma’s kitchen</div>
+          <div class="description">2026 · Personal work</div>
+        </div>
+        <div class="mobile-info">
+          <div class="title">Grandma’s kitchen</div>
+          <div class="description">2026 · Personal work</div>
+        </div>
+      </a>
+      <a class="work row-2-image" href="../work/A-Journey-in-Tohoku.html"
+         style="--card-color:#41a2c8">
+        <div class="work-media"><video src="../assets/media/A-Journey-in-Tohoku/reels_5-1.mp4" autoplay muted loop playsinline poster="../assets/media/A-Journey-in-Tohoku/reels_5-1.webp" preload="auto"></video></div>
+        <div class="work-overlay" aria-hidden="true"></div>
+        <div class="info" aria-hidden="true">
+          <div class="title">A Journey in Tohoku❄️</div>
+          <div class="description">2026 · Personal work</div>
+        </div>
+        <div class="mobile-info">
+          <div class="title">A Journey in Tohoku❄️</div>
+          <div class="description">2026 · Personal work</div>
+        </div>
+      </a>
+      <a class="work" href="../work/Gua-Bao.html"
+         style="--card-color:#c87d41">
+        <div class="work-media"><img src="../assets/media/Gua-Bao/01V02.webp" alt="Gua Bao" decoding="async"></div>
+        <div class="work-overlay" aria-hidden="true"></div>
+        <div class="info" aria-hidden="true">
+          <div class="title">Gua Bao</div>
+          <div class="description">2026 · Personal work</div>
+        </div>
+        <div class="mobile-info">
+          <div class="title">Gua Bao</div>
+          <div class="description">2026 · Personal work</div>
+        </div>
+      </a>
+      <a class="work" href="../work/happiness-awaits.html"
+         style="--card-color:#c85341">
+        <div class="work-media"><img src="../assets/media/happiness-awaits/SOLO_00000.webp" alt="2026 happiness awaits 🐴🍎" decoding="async"></div>
+        <div class="work-overlay" aria-hidden="true"></div>
+        <div class="info" aria-hidden="true">
+          <div class="title">2026 happiness awaits 🐴🍎</div>
+          <div class="description">2026 · Personal work</div>
+        </div>
+        <div class="mobile-info">
+          <div class="title">2026 happiness awaits 🐴🍎</div>
+          <div class="description">2026 · Personal work</div>
+        </div>
+      </a>
+      <a class="work" href="../work/Christmas-Feast.html"
+         style="--card-color:#a91d04">
+        <div class="work-media"><img src="../assets/media/Christmas-Feast/Denoised-beauty-source_IG_00000_FIX.webp" alt="Christmas Feast" decoding="async"></div>
+        <div class="work-overlay" aria-hidden="true"></div>
+        <div class="info" aria-hidden="true">
+          <div class="title">Christmas Feast</div>
+          <div class="description">2025 · Personal work</div>
+        </div>
+        <div class="mobile-info">
+          <div class="title">Christmas Feast</div>
+          <div class="description">2025 · Personal work</div>
+        </div>
+      </a>
+      <a class="work" href="../work/Taiwanese-sumer-vibe.html"
+         style="--card-color:#89c841">
+        <div class="work-media"><img src="../assets/media/Taiwanese-sumer-vibe/FullSizeRender_VSCO.webp" alt="Taiwanese sumer vibe" decoding="async"></div>
+        <div class="work-overlay" aria-hidden="true"></div>
+        <div class="info dark" aria-hidden="true">
+          <div class="title">Taiwanese sumer vibe</div>
+          <div class="description">2025 · Personal work</div>
+        </div>
+        <div class="mobile-info">
+          <div class="title">Taiwanese sumer vibe</div>
+          <div class="description">2025 · Personal work</div>
+        </div>
+      </a>
+      <a class="work row-2-image" href="../work/Playground.html"
+         style="--card-color:#d18b38">
+        <div class="work-media"><img src="../assets/media/Playground/Denoised-beauty-source15_CC.webp" alt="Playground" loading="lazy" decoding="async"></div>
+        <div class="work-overlay" aria-hidden="true"></div>
+        <div class="info" aria-hidden="true">
+          <div class="title">Playground</div>
+          <div class="description">2024 · Personal work</div>
+        </div>
+        <div class="mobile-info">
+          <div class="title">Playground</div>
+          <div class="description">2024 · Personal work</div>
+        </div>
+      </a>
+      <a class="work" href="../work/Year-of-the-Dragon.html"
+         style="--card-color:#2e81a5">
+        <div class="work-media"><img src="../assets/media/Year-of-the-Dragon/2024_dragon_V02_final_CC.webp" alt="Year of the Dragon 🐉" loading="lazy" decoding="async"></div>
+        <div class="work-overlay" aria-hidden="true"></div>
+        <div class="info" aria-hidden="true">
+          <div class="title">Year of the Dragon 🐉</div>
+          <div class="description">2024 · Personal work</div>
+        </div>
+        <div class="mobile-info">
+          <div class="title">Year of the Dragon 🐉</div>
+          <div class="description">2024 · Personal work</div>
+        </div>
+      </a>
+      <a class="work" href="../work/goodmorningmacc-shenzaoclub.html"
+         style="--card-color:#f1c006">
+        <div class="work-media"><img src="../assets/media/goodmorningmacc-shenzaoclub/_1920-108_ALL_00504.webp" alt="Goodmorningmacc &amp; Shenzaoclub | 早安美之沈聯名動畫" loading="lazy" decoding="async"></div>
+        <div class="work-overlay" aria-hidden="true"></div>
+        <div class="info dark" aria-hidden="true">
+          <div class="title">Goodmorningmacc &amp; Shenzaoclub | 早安美之沈聯名動畫</div>
+          <div class="description">2024 · Client work</div>
+        </div>
+        <div class="mobile-info">
+          <div class="title">Goodmorningmacc &amp; Shenzaoclub | 早安美之沈聯名動畫</div>
+          <div class="description">2024 · Client work</div>
+        </div>
+      </a>
+      <a class="work row-2-image" href="../work/Tommy-s-Oddly-Love.html"
+         style="--card-color:#c88241">
+        <div class="work-media"><img src="../assets/media/Tommy-s-Oddly-Love/Denoised-beauty-source-3_00195.webp" alt="Tommy’s Oddly Love" loading="lazy" decoding="async"></div>
+        <div class="work-overlay" aria-hidden="true"></div>
+        <div class="info" aria-hidden="true">
+          <div class="title">Tommy’s Oddly Love</div>
+          <div class="description">2025 · Personal work</div>
+        </div>
+        <div class="mobile-info">
+          <div class="title">Tommy’s Oddly Love</div>
+          <div class="description">2025 · Personal work</div>
+        </div>
+      </a>
+      <a class="work" href="../work/Christmas-Plan.html"
+         style="--card-color:#c6893a">
+        <div class="work-media"><img src="../assets/media/Christmas-Plan/2312230000_00000.webp" alt="Christmas Plan" loading="lazy" decoding="async"></div>
+        <div class="work-overlay" aria-hidden="true"></div>
+        <div class="info" aria-hidden="true">
+          <div class="title">Christmas Plan</div>
+          <div class="description">2023 · Personal work</div>
+        </div>
+        <div class="mobile-info">
+          <div class="title">Christmas Plan</div>
+          <div class="description">2023 · Personal work</div>
+        </div>
+      </a>
+      <a class="work row-2-image" href="../work/Halloween-Costume-Party.html"
+         style="--card-color:#56288b">
+        <div class="work-media"><img src="../assets/media/Halloween-Costume-Party/IMAGE_00009.webp" alt="🕸️ Halloween Costume Party 🪩" loading="lazy" decoding="async"></div>
+        <div class="work-overlay" aria-hidden="true"></div>
+        <div class="info" aria-hidden="true">
+          <div class="title">🕸️ Halloween Costume Party 🪩</div>
+          <div class="description">2025 · Personal work</div>
+        </div>
+        <div class="mobile-info">
+          <div class="title">🕸️ Halloween Costume Party 🪩</div>
+          <div class="description">2025 · Personal work</div>
+        </div>
+      </a>
+      <a class="work" href="../work/Camping.html"
+         style="--card-color:#4db327">
+        <div class="work-media"><img src="../assets/media/Camping/FINAL_VSCO.webp" alt="Camping" loading="lazy" decoding="async"></div>
+        <div class="work-overlay" aria-hidden="true"></div>
+        <div class="info" aria-hidden="true">
+          <div class="title">Camping</div>
+          <div class="description">2025 · Personal work</div>
+        </div>
+        <div class="mobile-info">
+          <div class="title">Camping</div>
+          <div class="description">2025 · Personal work</div>
+        </div>
+      </a>
+      <a class="work" href="../work/snaaaake.html"
+         style="--card-color:#41c877">
+        <div class="work-media"><img src="../assets/media/snaaaake/V04.webp" alt="snaaaake" loading="lazy" decoding="async"></div>
+        <div class="work-overlay" aria-hidden="true"></div>
+        <div class="info" aria-hidden="true">
+          <div class="title">snaaaake</div>
+          <div class="description">2025 · Personal work</div>
+        </div>
+        <div class="mobile-info">
+          <div class="title">snaaaake</div>
+          <div class="description">2025 · Personal work</div>
+        </div>
+      </a>
+      <a class="work" href="../work/Santa-s-After-Work-Party.html"
+         style="--card-color:#b25b1e">
+        <div class="work-media"><img src="../assets/media/Santa-s-After-Work-Party/Denoised-beauty-source_00000_V02.webp" alt="Santa's After-Work Party!" loading="lazy" decoding="async"></div>
+        <div class="work-overlay" aria-hidden="true"></div>
+        <div class="info" aria-hidden="true">
+          <div class="title">Santa's After-Work Party!</div>
+          <div class="description">2024 · Personal work</div>
+        </div>
+        <div class="mobile-info">
+          <div class="title">Santa's After-Work Party!</div>
+          <div class="description">2024 · Personal work</div>
+        </div>
+      </a>
+      <a class="work" href="../work/Dancing-Christmas-Tree.html"
+         style="--card-color:#a98531">
+        <div class="work-media"><video src="../assets/media/Dancing-Christmas-Tree/0eb28d6a-62b2-4d05-a167-d7be16338918.mp4" autoplay muted loop playsinline poster="../assets/media/Dancing-Christmas-Tree/0eb28d6a-62b2-4d05-a167-d7be16338918.webp" preload="none"></video></div>
+        <div class="work-overlay" aria-hidden="true"></div>
+        <div class="info" aria-hidden="true">
+          <div class="title">Dancing Christmas Tree</div>
+          <div class="description">2022 · Personal work</div>
+        </div>
+        <div class="mobile-info">
+          <div class="title">Dancing Christmas Tree</div>
+          <div class="description">2022 · Personal work</div>
+        </div>
+      </a>
+      <a class="work" href="../work/Afternoon-Tea-Time.html"
+         style="--card-color:#916a2a">
+        <div class="work-media"><img src="../assets/media/Afternoon-Tea-Time/_SOLO_output-3_CC.webp" alt="Afternoon Tea Time" loading="lazy" decoding="async"></div>
+        <div class="work-overlay" aria-hidden="true"></div>
+        <div class="info" aria-hidden="true">
+          <div class="title">Afternoon Tea Time</div>
+          <div class="description">2024 · Personal work</div>
+        </div>
+        <div class="mobile-info">
+          <div class="title">Afternoon Tea Time</div>
+          <div class="description">2024 · Personal work</div>
+        </div>
+      </a>
+      <a class="work row-2-image" href="../work/Summer-Vibe.html"
+         style="--card-color:#41c869">
+        <div class="work-media"><img src="../assets/media/Summer-Vibe/Toast_rigged_ALL_V030015_V02_00007.webp" alt="Summer Vibe" loading="lazy" decoding="async"></div>
+        <div class="work-overlay" aria-hidden="true"></div>
+        <div class="info" aria-hidden="true">
+          <div class="title">Summer Vibe</div>
+          <div class="description">2024 · Personal work</div>
+        </div>
+        <div class="mobile-info">
+          <div class="title">Summer Vibe</div>
+          <div class="description">2024 · Personal work</div>
+        </div>
+      </a>
+      <a class="work" href="../work/3D-Ceramic-Project-NO-O1.html"
+         style="--card-color:#41c8bc">
+        <div class="work-media"><img src="../assets/media/3D-Ceramic-Project-NO-O1/final_v02_00124.webp" alt="3D Ceramic Project @ NO.O1" loading="lazy" decoding="async"></div>
+        <div class="work-overlay" aria-hidden="true"></div>
+        <div class="info dark" aria-hidden="true">
+          <div class="title">3D Ceramic Project @ NO.O1</div>
+          <div class="description">2024 · Personal work</div>
+        </div>
+        <div class="mobile-info">
+          <div class="title">3D Ceramic Project @ NO.O1</div>
+          <div class="description">2024 · Personal work</div>
+        </div>
+      </a>
+      <a class="work row-2-image" href="../work/Toast-baby-pottery.html"
+         style="--card-color:#865a27">
+        <div class="work-media"><img src="../assets/media/Toast-baby-pottery/7427BA54-4D05-442E-9F77-544D7C5D4F8C.webp" alt="Toast baby | pottery" loading="lazy" decoding="async"></div>
+        <div class="work-overlay" aria-hidden="true"></div>
+        <div class="info" aria-hidden="true">
+          <div class="title">Toast baby | pottery</div>
+          <div class="description">2023 · Personal work</div>
+        </div>
+        <div class="mobile-info">
+          <div class="title">Toast baby | pottery</div>
+          <div class="description">2023 · Personal work</div>
+        </div>
+      </a>
+      <a class="work" href="../work/Magical-Pumpkin-Soup.html"
+         style="--card-color:#864527">
+        <div class="work-media"><img src="../assets/media/Magical-Pumpkin-Soup/__V030031_V07_CC0.webp" alt="Magical pumpkin soup 🥣🎃🧟‍♂️🔮🧪" loading="lazy" decoding="async"></div>
+        <div class="work-overlay" aria-hidden="true"></div>
+        <div class="info" aria-hidden="true">
+          <div class="title">Magical pumpkin soup 🥣🎃🧟‍♂️🔮🧪</div>
+          <div class="description">2023 · Personal work</div>
+        </div>
+        <div class="mobile-info">
+          <div class="title">Magical pumpkin soup 🥣🎃🧟‍♂️🔮🧪</div>
+          <div class="description">2023 · Personal work</div>
+        </div>
+      </a>
+      <a class="work" href="../work/The-positive-Building-Papaya-milk.html"
+         style="--card-color:#c89141">
+        <div class="work-media"><img src="../assets/media/The-positive-Building-Papaya-milk/.webp" alt="The positive Building| Papaya milk" loading="lazy" decoding="async"></div>
+        <div class="work-overlay" aria-hidden="true"></div>
+        <div class="info" aria-hidden="true">
+          <div class="title">The positive Building| Papaya milk</div>
+          <div class="description">2023 · Personal work</div>
+        </div>
+        <div class="mobile-info">
+          <div class="title">The positive Building| Papaya milk</div>
+          <div class="description">2023 · Personal work</div>
+        </div>
+      </a>
+      <a class="work" href="../work/The-Daruma-doll-at-Katsuo-Ji-Temple.html"
+         style="--card-color:#b56732">
+        <div class="work-media"><video src="../assets/media/The-Daruma-doll-at-Katsuo-Ji-Temple/__final_3_AdobeExpress.mp4" autoplay muted loop playsinline poster="../assets/media/The-Daruma-doll-at-Katsuo-Ji-Temple/__final_3_AdobeExpress.webp" preload="none"></video></div>
+        <div class="work-overlay" aria-hidden="true"></div>
+        <div class="info" aria-hidden="true">
+          <div class="title">The Daruma doll at Katsuo-Ji Temple</div>
+          <div class="description">2023 · Personal work</div>
+        </div>
+        <div class="mobile-info">
+          <div class="title">The Daruma doll at Katsuo-Ji Temple</div>
+          <div class="description">2023 · Personal work</div>
+        </div>
+      </a>
+      <a class="work" href="../work/Traditional-Taiwanese-Bathroom.html"
+         style="--card-color:#cb7e3e">
+        <div class="work-media"><video src="../assets/media/Traditional-Taiwanese-Bathroom/230524___1__AdobeExpress.mp4" autoplay muted loop playsinline poster="../assets/media/Traditional-Taiwanese-Bathroom/230524___1__AdobeExpress.webp" preload="none"></video></div>
+        <div class="work-overlay" aria-hidden="true"></div>
+        <div class="info" aria-hidden="true">
+          <div class="title">Traditional Taiwanese Bathroom</div>
+          <div class="description">2023 · Personal work</div>
+        </div>
+        <div class="mobile-info">
+          <div class="title">Traditional Taiwanese Bathroom</div>
+          <div class="description">2023 · Personal work</div>
+        </div>
+      </a>
+      <a class="work row-2-image" href="../work/Nodding-Off.html"
+         style="--card-color:#c89341">
+        <div class="work-media"><img src="../assets/media/Nodding-Off/_00075.webp" alt="Nodding Off..." loading="lazy" decoding="async"></div>
+        <div class="work-overlay" aria-hidden="true"></div>
+        <div class="info" aria-hidden="true">
+          <div class="title">Nodding Off...</div>
+          <div class="description">2023 · Personal work</div>
+        </div>
+        <div class="mobile-info">
+          <div class="title">Nodding Off...</div>
+          <div class="description">2023 · Personal work</div>
+        </div>
+      </a>
+      <a class="work" href="../work/Toast-Baby-Take-a-Bread-series.html"
+         style="--card-color:#cea53b">
+        <div class="work-media"><img src="../assets/media/Toast-Baby-Take-a-Bread-series/toast_V02.webp" alt="Toast Baby | Take a Bread series" loading="lazy" decoding="async"></div>
+        <div class="work-overlay" aria-hidden="true"></div>
+        <div class="info" aria-hidden="true">
+          <div class="title">Toast Baby | Take a Bread series</div>
+          <div class="description">2023 · Personal work</div>
+        </div>
+        <div class="mobile-info">
+          <div class="title">Toast Baby | Take a Bread series</div>
+          <div class="description">2023 · Personal work</div>
+        </div>
+      </a>
+      <a class="work" href="../work/The-year-of-the-Rabbit.html"
+         style="--card-color:#c841b1">
+        <div class="work-media"><img src="../assets/media/The-year-of-the-Rabbit/2023_0120_V01_00000.webp" alt="The year of the Rabbit" loading="lazy" decoding="async"></div>
+        <div class="work-overlay" aria-hidden="true"></div>
+        <div class="info" aria-hidden="true">
+          <div class="title">The year of the Rabbit</div>
+          <div class="description">2023 · Personal work</div>
+        </div>
+        <div class="mobile-info">
+          <div class="title">The year of the Rabbit</div>
+          <div class="description">2023 · Personal work</div>
+        </div>
+      </a>
+      <a class="work" href="../work/Little-Jam-Take-a-Bread-series.html"
+         style="--card-color:#df992a">
+        <div class="work-media"><img src="../assets/media/Little-Jam-Take-a-Bread-series/little_Jam__V03.webp" alt="Little Jam | Take a Bread series" loading="lazy" decoding="async"></div>
+        <div class="work-overlay" aria-hidden="true"></div>
+        <div class="info" aria-hidden="true">
+          <div class="title">Little Jam | Take a Bread series</div>
+          <div class="description">2023 · Personal work</div>
+        </div>
+        <div class="mobile-info">
+          <div class="title">Little Jam | Take a Bread series</div>
+          <div class="description">2023 · Personal work</div>
+        </div>
+      </a>
+      <a class="work" href="../work/ASUS-CES-2023.html"
+         style="--card-color:#275286">
+        <div class="work-media"><img src="../assets/media/ASUS-CES-2023/ASUS_CES_ExpertBook-Lightness_1500x1500_nosub_0179.webp" alt="ASUS CES 2023 #Lightness" loading="lazy" decoding="async"></div>
+        <div class="work-overlay" aria-hidden="true"></div>
+        <div class="info" aria-hidden="true">
+          <div class="title">ASUS CES 2023 #Lightness</div>
+          <div class="description">2023 · Animation,Styleframe</div>
+        </div>
+        <div class="mobile-info">
+          <div class="title">ASUS CES 2023 #Lightness</div>
+          <div class="description">2023 · Animation,Styleframe</div>
+        </div>
+      </a>
+      <a class="work" href="../work/Mooncake.html"
+         style="--card-color:#863627">
+        <div class="work-media"><video src="../assets/media/Mooncake/.mp4" autoplay muted loop playsinline poster="../assets/media/Mooncake/.webp" preload="none"></video></div>
+        <div class="work-overlay" aria-hidden="true"></div>
+        <div class="info" aria-hidden="true">
+          <div class="title">Mooncake!</div>
+          <div class="description">2022 · Personal work</div>
+        </div>
+        <div class="mobile-info">
+          <div class="title">Mooncake!</div>
+          <div class="description">2022 · Personal work</div>
+        </div>
+      </a>
+      <a class="work row-2-image" href="../work/Halloween-Dog.html"
+         style="--card-color:#862741">
+        <div class="work-media"><video src="../assets/media/Halloween-Dog/final.mp4" autoplay muted loop playsinline poster="../assets/media/Halloween-Dog/final.webp" preload="none"></video></div>
+        <div class="work-overlay" aria-hidden="true"></div>
+        <div class="info" aria-hidden="true">
+          <div class="title">Halloween Dog</div>
+          <div class="description">2022 · Personal work</div>
+        </div>
+        <div class="mobile-info">
+          <div class="title">Halloween Dog</div>
+          <div class="description">2022 · Personal work</div>
+        </div>
+      </a>
+      <a class="work" href="../work/Matcha-Souffle.html"
+         style="--card-color:#f1f910">
+        <div class="work-media"><img src="../assets/media/Matcha-Souffle/4.webp" alt="Matcha Souffle" loading="lazy" decoding="async"></div>
+        <div class="work-overlay" aria-hidden="true"></div>
+        <div class="info dark" aria-hidden="true">
+          <div class="title">Matcha Souffle</div>
+          <div class="description">2022 · Personal work</div>
+        </div>
+        <div class="mobile-info">
+          <div class="title">Matcha Souffle</div>
+          <div class="description">2022 · Personal work</div>
+        </div>
+      </a>
+      <a class="work" href="../work/Happy-Toast.html"
+         style="--card-color:#8a18eb">
+        <div class="work-media"><video src="../assets/media/Happy-Toast/_.mp4" autoplay muted loop playsinline poster="../assets/media/Happy-Toast/_.webp" preload="none"></video></div>
+        <div class="work-overlay" aria-hidden="true"></div>
+        <div class="info" aria-hidden="true">
+          <div class="title">Happy Toast</div>
+          <div class="description">2022 · Personal work</div>
+        </div>
+        <div class="mobile-info">
+          <div class="title">Happy Toast</div>
+          <div class="description">2022 · Personal work</div>
+        </div>
+      </a>
+      <a class="work" href="../work/Freedom-Frames.html"
+         style="--card-color:#c84c41">
+        <div class="work-media"><video src="../assets/media/Freedom-Frames/.mp4" autoplay muted loop playsinline poster="../assets/media/Freedom-Frames/.webp" preload="none"></video></div>
+        <div class="work-overlay" aria-hidden="true"></div>
+        <div class="info" aria-hidden="true">
+          <div class="title">自由的形狀 Freedom Frames</div>
+          <div class="description">2021 · Motion Design</div>
+        </div>
+        <div class="mobile-info">
+          <div class="title">自由的形狀 Freedom Frames</div>
+          <div class="description">2021 · Motion Design</div>
+        </div>
+      </a>
+      <a class="work" href="../work/Chick.html"
+         style="--card-color:#8d6e29">
+        <div class="work-media"><video src="../assets/media/Chick/2_DeMain.mp4" autoplay muted loop playsinline poster="../assets/media/Chick/2_DeMain.webp" preload="none"></video></div>
+        <div class="work-overlay" aria-hidden="true"></div>
+        <div class="info" aria-hidden="true">
+          <div class="title">Chick in Sweet and Sour Sauce</div>
+          <div class="description">2022 · Personal work</div>
+        </div>
+        <div class="mobile-info">
+          <div class="title">Chick in Sweet and Sour Sauce</div>
+          <div class="description">2022 · Personal work</div>
+        </div>
+      </a>
+      <a class="work row-2-image" href="../work/Turn-On.html"
+         style="--card-color:#e29127">
+        <div class="work-media"><video src="../assets/media/Turn-On/_V01_.mp4" autoplay muted loop playsinline poster="../assets/media/Turn-On/_V01_.webp" preload="none"></video></div>
+        <div class="work-overlay" aria-hidden="true"></div>
+        <div class="info" aria-hidden="true">
+          <div class="title">Turn On!</div>
+          <div class="description">2022 · Personal work</div>
+        </div>
+        <div class="mobile-info">
+          <div class="title">Turn On!</div>
+          <div class="description">2022 · Personal work</div>
+        </div>
+      </a>
+      <a class="work row-2-image" href="../work/Puffer-Fish.html"
+         style="--card-color:#92c841">
+        <div class="work-media"><img src="../assets/media/Puffer-Fish/0019.webp" alt="Puffer Fish" loading="lazy" decoding="async"></div>
+        <div class="work-overlay" aria-hidden="true"></div>
+        <div class="info dark" aria-hidden="true">
+          <div class="title">Puffer Fish</div>
+          <div class="description">2022 · Personal work</div>
+        </div>
+        <div class="mobile-info">
+          <div class="title">Puffer Fish</div>
+          <div class="description">2022 · Personal work</div>
+        </div>
+      </a>
+      <a class="work" href="../work/Annie-at-Work.html"
+         style="--card-color:#c1a138">
+        <div class="work-media"><video src="../assets/media/Annie-at-Work/1920x1080.mp4" autoplay muted loop playsinline poster="../assets/media/Annie-at-Work/1920x1080.webp" preload="none"></video></div>
+        <div class="work-overlay" aria-hidden="true"></div>
+        <div class="info" aria-hidden="true">
+          <div class="title">Annie at Work</div>
+          <div class="description">2021 · Personal work</div>
+        </div>
+        <div class="mobile-info">
+          <div class="title">Annie at Work</div>
+          <div class="description">2021 · Personal work</div>
+        </div>
+      </a>
+      <a class="work" href="../work/WAAA-MY-POPCORN.html"
+         style="--card-color:#a29c2f">
+        <div class="work-media"><img src="../assets/media/WAAA-MY-POPCORN/6.webp" alt="WAAA... MY POPCORN" loading="lazy" decoding="async"></div>
+        <div class="work-overlay" aria-hidden="true"></div>
+        <div class="info" aria-hidden="true">
+          <div class="title">WAAA... MY POPCORN</div>
+          <div class="description">2022 · Personal work</div>
+        </div>
+        <div class="mobile-info">
+          <div class="title">WAAA... MY POPCORN</div>
+          <div class="description">2022 · Personal work</div>
+        </div>
+      </a>
+      <a class="work" href="../work/Rudolph.html"
+         style="--card-color:#d99530">
+        <div class="work-media"><img src="../assets/media/Rudolph/-2022-08-01-003106.webp" alt="Rudolph! | Interactive Projection Game" loading="lazy" decoding="async"></div>
+        <div class="work-overlay" aria-hidden="true"></div>
+        <div class="info" aria-hidden="true">
+          <div class="title">Rudolph! | Interactive Projection Game</div>
+          <div class="description">2020 · Personal project</div>
+        </div>
+        <div class="mobile-info">
+          <div class="title">Rudolph! | Interactive Projection Game</div>
+          <div class="description">2020 · Personal project</div>
+        </div>
+      </a>
+      <a class="work" href="../work/Can-t-Believe.html"
+         style="--card-color:#278667">
+        <div class="work-media"><video src="../assets/media/Can-t-Believe/.mp4" autoplay muted loop playsinline poster="../assets/media/Can-t-Believe/.webp" preload="none"></video></div>
+        <div class="work-overlay" aria-hidden="true"></div>
+        <div class="info" aria-hidden="true">
+          <div class="title">OUUCH! | Can’t Believe.</div>
+          <div class="description">2021 · Graduation project</div>
+        </div>
+        <div class="mobile-info">
+          <div class="title">OUUCH! | Can’t Believe.</div>
+          <div class="description">2021 · Graduation project</div>
+        </div>
+      </a>
+      <a class="work" href="../work/Compare.html"
+         style="--card-color:#f91610">
+        <div class="work-media"><video src="../assets/media/Compare/_.mp4" autoplay muted loop playsinline poster="../assets/media/Compare/_.webp" preload="none"></video></div>
+        <div class="work-overlay" aria-hidden="true"></div>
+        <div class="info" aria-hidden="true">
+          <div class="title">OUUCH! | Compare</div>
+          <div class="description">2021 · Graduation project</div>
+        </div>
+        <div class="mobile-info">
+          <div class="title">OUUCH! | Compare</div>
+          <div class="description">2021 · Graduation project</div>
+        </div>
+      </a>
+      <a class="work" href="../work/eyes.html"
+         style="--card-color:#b19633">
+        <div class="work-media"><video src="../assets/media/eyes/.mp4" autoplay muted loop playsinline poster="../assets/media/eyes/.webp" preload="none"></video></div>
+        <div class="work-overlay" aria-hidden="true"></div>
+        <div class="info" aria-hidden="true">
+          <div class="title">OUUCH! | Eyes</div>
+          <div class="description">2021 · Graduation project</div>
+        </div>
+        <div class="mobile-info">
+          <div class="title">OUUCH! | Eyes</div>
+          <div class="description">2021 · Graduation project</div>
+        </div>
+      </a>
+      <a class="work" href="../work/Transform.html"
+         style="--card-color:#0619a8">
+        <div class="work-media"><video src="../assets/media/Transform/practice_.mp4" autoplay muted loop playsinline poster="../assets/media/Transform/practice_.webp" preload="none"></video></div>
+        <div class="work-overlay" aria-hidden="true"></div>
+        <div class="info" aria-hidden="true">
+          <div class="title">Transform</div>
+          <div class="description">2021 · Personal work</div>
+        </div>
+        <div class="mobile-info">
+          <div class="title">Transform</div>
+          <div class="description">2021 · Personal work</div>
+        </div>
+      </a>
+      <a class="work" href="../work/Hide.html"
+         style="--card-color:#4731a7">
+        <div class="work-media"><video src="../assets/media/Hide/-2.mp4" autoplay muted loop playsinline poster="../assets/media/Hide/-2.webp" preload="none"></video></div>
+        <div class="work-overlay" aria-hidden="true"></div>
+        <div class="info" aria-hidden="true">
+          <div class="title">OUUCH! | Hide</div>
+          <div class="description">2021 · Graduation project</div>
+        </div>
+        <div class="mobile-info">
+          <div class="title">OUUCH! | Hide</div>
+          <div class="description">2021 · Graduation project</div>
+        </div>
+      </a>
+      <a class="work" href="../work/REUNION.html"
+         style="--card-color:#c8aa41">
+        <div class="work-media"><video src="../assets/media/REUNION/REUNION_.mp4" autoplay muted loop playsinline poster="../assets/media/REUNION/REUNION_.webp" preload="none"></video></div>
+        <div class="work-overlay" aria-hidden="true"></div>
+        <div class="info" aria-hidden="true">
+          <div class="title">REUNION</div>
+          <div class="description">2021 · Personal work</div>
+        </div>
+        <div class="mobile-info">
+          <div class="title">REUNION</div>
+          <div class="description">2021 · Personal work</div>
+        </div>
+      </a>
+      <a class="work" href="../work/Fragile.html"
+         style="--card-color:#0b04a9">
+        <div class="work-media"><video src="../assets/media/Fragile/_2022_.mp4" autoplay muted loop playsinline poster="../assets/media/Fragile/_2022_.webp" preload="none"></video></div>
+        <div class="work-overlay" aria-hidden="true"></div>
+        <div class="info" aria-hidden="true">
+          <div class="title">OUUCH! | Fragile</div>
+          <div class="description">2021 · Graduation project</div>
+        </div>
+        <div class="mobile-info">
+          <div class="title">OUUCH! | Fragile</div>
+          <div class="description">2021 · Graduation project</div>
+        </div>
+      </a>
+      <a class="work" href="../work/Follow.html"
+         style="--card-color:#d08a39">
+        <div class="work-media"><video src="../assets/media/Follow/.mp4" autoplay muted loop playsinline poster="../assets/media/Follow/.webp" preload="none"></video></div>
+        <div class="work-overlay" aria-hidden="true"></div>
+        <div class="info" aria-hidden="true">
+          <div class="title">OUUCH! | Follow</div>
+          <div class="description">2021 · Graduation project</div>
+        </div>
+        <div class="mobile-info">
+          <div class="title">OUUCH! | Follow</div>
+          <div class="description">2021 · Graduation project</div>
+        </div>
+      </a>
+      <a class="work" href="../work/unspeakable.html"
+         style="--card-color:#8e10f9">
+        <div class="work-media"><video src="../assets/media/unspeakable/.mp4" autoplay muted loop playsinline poster="../assets/media/unspeakable/.webp" preload="none"></video></div>
+        <div class="work-overlay" aria-hidden="true"></div>
+        <div class="info" aria-hidden="true">
+          <div class="title">OUUCH! | Unspeakable</div>
+          <div class="description">2021 · Graduation project</div>
+        </div>
+        <div class="mobile-info">
+          <div class="title">OUUCH! | Unspeakable</div>
+          <div class="description">2021 · Graduation project</div>
+        </div>
+      </a>
+    </div>
+  </section>
+</main>
+
+<footer class="main-container">
+  <div class="grid-content">
+    <div class="col"><p>© Doris Lin — Taipei, Taiwan</p></div>
+    <div class="col"><ul><li><a href="mailto:[object Object]">[object Object]</a></li></ul></div>
+    <div class="social">
+      <ul>
+        <li><a href="https://www.behance.net/yihsuanlin3257" target="_blank" rel="noopener">Behance</a></li>
+        <li><a href="https://vimeo.com/dorislin1226" target="_blank" rel="noopener">Vimeo</a></li>
+      </ul>
+    </div>
+  </div>
+</footer>
+
+<div id="ratio-bar" role="group" aria-label="縮圖比例">
+  <button type="button" data-r="631 / 348">Bito 631:348</button>
+  <button type="button" data-r="16 / 9">16:9</button>
+  <button type="button" data-r="3 / 2">3:2</button>
+  <button type="button" data-r="4 / 3">4:3</button>
+  <button type="button" data-r="5 / 4">5:4</button>
+  <button type="button" data-r="1 / 1">1:1</button>
+  <button type="button" data-r="4 / 5">4:5</button>
+  <span class="readout" id="ratio-readout"></span>
+</div>
+
+<script>
+/* 比例控制條。改 --card-ratio 就會重算整個網格 ——
+   直式高卡是絕對定位撐滿兩列，所以它的比例會跟著變，不必另外設。 */
+(function () {
+  var bar = document.getElementById('ratio-bar');
+  var out = document.getElementById('ratio-readout');
+  var root = document.documentElement;
+
+  function sync() {
+    var cur = getComputedStyle(root).getPropertyValue('--card-ratio').trim();
+    bar.querySelectorAll('button').forEach(function (b) {
+      b.setAttribute('aria-pressed', String(b.dataset.r.replace(/\s/g, '') === cur.replace(/\s/g, '')));
+    });
+    // 量實際尺寸：普通卡的寬高，以及高卡撐開後的比例
+    var normal = document.querySelector('.work:not(.row-2-image) .work-media');
+    var tall = document.querySelector('.work.row-2-image');
+    if (!normal) return;
+    var n = normal.getBoundingClientRect();
+    var txt = Math.round(n.width) + '×' + Math.round(n.height) + 'px';
+    if (tall) {
+      var t = tall.getBoundingClientRect();
+      txt += '　直式卡 ' + (t.width / t.height).toFixed(2) + ':1';
+    }
+    out.textContent = txt;
+  }
+
+  bar.addEventListener('click', function (e) {
+    var b = e.target.closest('button');
+    if (!b) return;
+    var parts = b.dataset.r.split('/');
+    root.style.setProperty('--card-ratio', b.dataset.r);
+    // 直式卡的高度是用 calc 算的，要同步更新數值版，否則兩者會不一致
+    root.style.setProperty('--card-ratio-num', String(+(parts[0] / parts[1]).toFixed(4)));
+    sync();
+  });
+  window.addEventListener('resize', sync, { passive: true });
+  addEventListener('load', sync);
+  sync();
+})();
+</script>
+
+<script>
+
+/* Bito 的頁首捲動邏輯，門檻與節流值都照原站：
+   往下捲收起、往上捲滑出；捲超過 120px 且往上捲時才加白底 */
+(function () {
+  var hdr = document.getElementById('hdr'), last = 0, waiting = false;
+  function update() {
+    var t = document.documentElement.scrollTop || document.body.scrollTop;
+    var up = t < last;
+    hdr.classList.toggle('hidden', !(t <= 120 || up));
+    hdr.classList.toggle('bg', t > 120 && up);
+    last = t;
+    waiting = false;
+  }
+  window.addEventListener('scroll', function () {
+    if (!waiting) { waiting = true; setTimeout(update, 50); }
+  }, { passive: true });
+  update();
+})();
+
+/* Bito 首頁只有 19 件，同時播幾支影片沒差。這裡有 20 支自動播放的影片，
+   全部一起解碼會讓捲動變鈍、筆電風扇狂轉，所以只播進入視野的。
+   HTML 仍留 autoplay，沒有 JS 也會動。 */
+(function () {
+  if (!('IntersectionObserver' in window)) return;
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      var v = e.target;
+      if (e.isIntersecting) { if (v.paused) v.play().catch(function () {}); }
+      else if (!v.paused) v.pause();
+    });
+  }, { rootMargin: '200px 0px' });
+  document.querySelectorAll('.work-media video').forEach(function (v) { io.observe(v); });
+})();
+</script>
+</body>
+</html>
