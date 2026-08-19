@@ -1,0 +1,127 @@
+{
+  "_說明": "全站設定。改這個檔案然後跑 `node build.mjs` 就會重新產生所有頁面。",
+
+  "name": "Doris Lin",
+  "url": "https://dorislinwork.github.io",
+  "description": "Doris Lin is a motion designer and 3D illustrator based in Taiwan, making furry, friendly things in 3D.",
+  "lang": "en",
+
+  "hero": {
+    "_說明": "首頁大標，取自原站。兩行都會套用逐字浮現效果。",
+    "headline": "Hi there! I'm Doris Lin",
+    "sub": "a 3D artist, motion designer, animator and a toast maker! 🥨"
+  },
+
+  "nav": [
+    { "label": "Work", "href": "index.html" },
+    { "label": "Reel", "href": "work/Reel.html" },
+    { "label": "Information", "href": "information.html" }
+  ],
+
+  "email": {
+    "_說明": "拆成兩段是為了讓爬垃圾信的機器人抓不到，JS 會在瀏覽器端組起來。",
+    "user": "dorislinwork",
+    "domain": "gmail.com"
+  },
+
+  "social": [
+    { "label": "Behance", "href": "https://www.behance.net/yihsuanlin3257" },
+    { "label": "Vimeo", "href": "https://vimeo.com/dorislin1226" }
+  ],
+  "_social註": "原站的實際社群連結還沒抓到（在 JS 注入的區塊裡），這兩個是從搜尋結果找到的。要加 Instagram 之類的自己補一行。",
+
+  "information": {
+    "_說明": "以下文字原樣取自你原站的 /Information 頁，沒有改動。",
+    "heading": "Hey there!",
+    "body": [
+      "Doris Lin is a motion designer and 3D illustrator based in Taiwan (UTC+8) who made her inspiration from animal and real life. She loves making furry things in her work.",
+      "I love to animate friendly things that I feel identified with, trying different things and making cute characters and animations. Recntly, I like to realize my idea in 3D.",
+      "Apart from work, I also enjoy watching various types of movies and taking photos on the street. I also like browsing different memes on the internet and using them as inspiration for my own creations. Sometimes, when I am working on my projects, I find myself amused and laughing out loud at what I have made."
+    ],
+    "_錯字提醒": "原站有三個小錯字，我照原樣保留沒有改：「Recntly」應為 Recently、下面的「Exbihtion」應為 Exhibition、「made her inspiration from」語意上應該是 draws her inspiration from。要改的話直接改這個檔案。",
+    "clients": [
+      "Asus",
+      "TaiwanPlus",
+      "Golden Melody Awards",
+      "TigerParty",
+      "ViewSonic",
+      "RHINOSHIELD"
+    ],
+    "_clients註": "原站標題是「✸ Brands I've Designed & Animated For」，build 會用這個標題。",
+    "sections": [
+      {
+        "heading": "✸ Experience",
+        "items": [
+          "2022-2024　WildDesign / 3D Designer",
+          "2022-2022　Finger and Toe Animation Studio / 2D Animator ➔ The Jennie show - Animation series",
+          "2021-2022　Indie design / 2D Motion Designer"
+        ]
+      },
+      {
+        "heading": "✸ Exbihtion",
+        "items": [
+          "Oddly in Love: Handle with Weirdness ILLO, Turin (Graphic Days® – In the City), 2025",
+          "回川 CONATION Online Exhibition, 2021",
+          "Vision Get Wild Expo, 2021"
+        ]
+      },
+      {
+        "heading": "✸ Selected",
+        "items": [
+          "ThreeDimensional, Victionary, 2025 ➔ The Playground"
+        ]
+      },
+      {
+        "heading": "✸ Education",
+        "items": [
+          "2017-2021　Shih Chien University Department of Communications Design"
+        ]
+      }
+    ],
+    "contactLabel": "Come and say hey →"
+  },
+
+  "media": {
+    "_說明": "圖片從哪裡來。Cargo 的網址是參數化的（/w/<寬度>/q/<品質>/i/<hash>/<檔名>），所以只要有 hash 就能要任何尺寸。",
+    "source": "cargo",
+    "_source選項": "\"cargo\" = 直接連 Cargo CDN，馬上可用但依賴 Cargo 帳號還在；\"local\" = 用 assets/media/<slug>/<檔名>，要先跑 download-media.mjs 把圖抓下來。長期一定要換成 local，否則哪天停掉 Cargo 圖就全掛。",
+    "fullWidth": 1600,
+    "thumbWidth": 800,
+    "quality": 82
+  },
+
+  "theme": {
+    "_說明": "取自你原站的 CSS。深色模式預設關閉，因為原站是純白底。",
+    "bg": "#ffffff",
+    "ink": "#000000",
+    "accent": "#f02",
+    "accentHover": "#ff8787",
+    "accentActive": "#252525",
+    "caption": "rgba(0, 0, 0, 0.30)",
+    "captionSize": "1.4rem",
+    "darkMode": false
+  },
+
+  "fonts": {
+    "_說明": "mundial 是 Adobe Typekit，kit 代號 kln0qcj。換網域後要到 Adobe Fonts 後台把新網域加進這個 kit，否則字體不會載入。",
+    "typekitKit": "kln0qcj",
+    "googleFonts": "family=Julius+Sans+One&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;1,9..40,400",
+    "display": "\"Julius Sans One\", \"Times New Roman\", serif",
+    "body": "mundial, \"DM Sans\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif"
+  },
+
+  "cursors": {
+    "_說明": "原站用了兩張自訂游標圖（放在 freight.cargo.site）。把圖片下載到 assets/img/ 之後把路徑填進來；留 null 就用系統預設游標。原站還有第三條規則 `a { cursor: url(...ttf) }` 是無效的（拿字體檔當游標），所以沒有移植。",
+    "page": null,
+    "image": null
+  },
+
+  "grid": {
+    "_說明": "首頁縮圖網格。原站是 10 欄（Cargo 的 grid-col=\"x10\"），窄螢幕自動遞減。",
+    "columns": 10,
+    "columnsTablet": 5,
+    "columnsMobile": 2,
+    "gutter": "1.5rem",
+    "showTitles": true
+  }
+}

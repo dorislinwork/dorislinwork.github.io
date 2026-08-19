@@ -1,0 +1,19 @@
+# 作業系統產生的雜檔
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# 編輯器
+.vscode/
+.idea/
+
+# 原始設計檔不建議放進 repo（檔案大且不需要上線）
+*.ai
+*.psd
+*.indd
+*.sketch
+*.fig
+
+# 第一版（方向錯誤的佔位內容）。留在本機當紀錄，但不要進 repo ——
+# GitHub Pages 會把 repo 內所有檔案公開，推上去會變成可瀏覽的頁面。
+_archive-v1/

@@ -1,0 +1,2791 @@
+{
+  "exportedFrom": "https://doris-lin.com",
+  "exportVersion": 4,
+  "pageCount": 53,
+  "totalPages": 53,
+  "mediaCount": 106,
+  "pin": {
+    "logo": {
+      "url": "https://freight.cargo.site/w/800/q/75/i/0fd23f35abec55f8180077775c7b95c604f5759c1d1f7752afa7c2f35e6884d9/9.gif",
+      "w": 956,
+      "h": 356
+    },
+    "links": [
+      {
+        "text": "Playground",
+        "href": "/index"
+      },
+      {
+        "text": "Works",
+        "href": "/yihsuanlin3257"
+      },
+      {
+        "text": "Reel",
+        "href": "/Reel"
+      }
+    ]
+  },
+  "pages": [
+    {
+      "path": "/index",
+      "title": "index - Doris Lin",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": "h1",
+          "text": "Hi there!  I’m Doris Lin"
+        },
+        {
+          "type": "heading",
+          "level": "h1",
+          "text": "a 3D artist, motion designer, animator and a toast maker! 🥨"
+        }
+      ],
+      "thumbs": [
+        {
+          "href": "/Grandma-s-kitchen-copy",
+          "title": "Grandma’s kitchen copy",
+          "url": "https://freight.cargo.site/w/1000/q/75/i/2ac5f256447c2c6818bdf6b64756f1aad5768b1ef16b28910004ba8219808ab9/TP_TaipeiLumitree_Lumi2025_kitchen_00000_V06_00000.png",
+          "hash": "2ac5f256447c2c6818bdf6b64756f1aad5768b1ef16b28910004ba8219808ab9",
+          "file": "TP_TaipeiLumitree_Lumi2025_kitchen_00000_V06_00000.png",
+          "w": 1000,
+          "h": 813
+        },
+        {
+          "href": "/Grandma-s-kitchen",
+          "title": "Grandma’s kitchen",
+          "url": "https://freight.cargo.site/w/1000/q/75/i/2ac5f256447c2c6818bdf6b64756f1aad5768b1ef16b28910004ba8219808ab9/TP_TaipeiLumitree_Lumi2025_kitchen_00000_V06_00000.png",
+          "hash": "2ac5f256447c2c6818bdf6b64756f1aad5768b1ef16b28910004ba8219808ab9",
+          "file": "TP_TaipeiLumitree_Lumi2025_kitchen_00000_V06_00000.png",
+          "w": 1000,
+          "h": 813
+        },
+        {
+          "href": "/A-Journey-in-Tohoku",
+          "title": "A Journey in Tohoku❄️",
+          "url": "https://freight.cargo.site/w/464/q/94/i/3fa429aac90b393d0d1ba507e90048c18c554fa2459f8508c97d8c3546be44b4/reels_5-1.gif",
+          "hash": "3fa429aac90b393d0d1ba507e90048c18c554fa2459f8508c97d8c3546be44b4",
+          "file": "reels_5-1.gif",
+          "w": 464,
+          "h": 618
+        },
+        {
+          "href": "/Gua-Bao",
+          "title": "Gua Bao",
+          "url": "https://freight.cargo.site/w/800/q/75/i/526e24ffd2353f12a077983359cdfc60812e717a0233c2bdc600b42c652d596a/01V02.png",
+          "hash": "526e24ffd2353f12a077983359cdfc60812e717a0233c2bdc600b42c652d596a",
+          "file": "01V02.png",
+          "w": 800,
+          "h": 1067
+        },
+        {
+          "href": "/happiness-awaits",
+          "title": "happiness awaits 🐴🍎",
+          "url": "https://freight.cargo.site/w/800/q/75/i/6414df04a7101c963d2bd23bcc08c88bb66b5ee00aa771ef2c35982e3ec111e6/SOLO_00000.png",
+          "hash": "6414df04a7101c963d2bd23bcc08c88bb66b5ee00aa771ef2c35982e3ec111e6",
+          "file": "SOLO_00000.png",
+          "w": 800,
+          "h": 1067
+        },
+        {
+          "href": "/Christmas-Feast",
+          "title": "Christmas Feast",
+          "url": "https://freight.cargo.site/w/1000/q/75/i/6b8fb6b525e477e72c7af2ba92c5d8ad2b720d84fd6a74681d4048f3c660a9e0/Denoised-beauty-source_IG_00000_FIX.png",
+          "hash": "6b8fb6b525e477e72c7af2ba92c5d8ad2b720d84fd6a74681d4048f3c660a9e0",
+          "file": "Denoised-beauty-source_IG_00000_FIX.png",
+          "w": 1000,
+          "h": 800
+        },
+        {
+          "href": "/Taiwanese-sumer-vibe",
+          "title": "Taiwanese sumer vibe",
+          "url": "https://freight.cargo.site/w/1400/q/75/i/3e22852e135b2464e69aecc98551807d14e8f0c66260687a4d05dfd802f4c897/FullSizeRender_VSCO.jpg",
+          "hash": "3e22852e135b2464e69aecc98551807d14e8f0c66260687a4d05dfd802f4c897",
+          "file": "FullSizeRender_VSCO.jpg",
+          "w": 1400,
+          "h": 1050
+        },
+        {
+          "href": "/Playground",
+          "title": "Playground",
+          "url": "https://freight.cargo.site/w/1000/q/75/i/eff0418e566783458d8b3c6bea0e09d576e87901ba09fc0751191b28fde4000f/Denoised-beauty-source15_CC.png",
+          "hash": "eff0418e566783458d8b3c6bea0e09d576e87901ba09fc0751191b28fde4000f",
+          "file": "Denoised-beauty-source15_CC.png",
+          "w": 1000,
+          "h": 800
+        },
+        {
+          "href": "/Year-of-the-Dragon",
+          "title": "Year of the Dragon",
+          "url": "https://freight.cargo.site/w/800/q/75/i/f87b4c6cd58ba389d52641d515309daea802dd1a563729fe08c0cfe28d490468/2024_dragon_V02_final_CC.png",
+          "hash": "f87b4c6cd58ba389d52641d515309daea802dd1a563729fe08c0cfe28d490468",
+          "file": "2024_dragon_V02_final_CC.png",
+          "w": 800,
+          "h": 800
+        },
+        {
+          "href": "/goodmorningmacc-shenzaoclub",
+          "title": "goodmorningmacc &  shenzaoclub | 早安美之沈聯名動畫",
+          "url": "https://freight.cargo.site/w/1500/q/75/i/327d29dad1dd6a6ba98712041391646376085ce2676f8b4054270a3c00aed932/_1920-108_ALL_00504.png",
+          "hash": "327d29dad1dd6a6ba98712041391646376085ce2676f8b4054270a3c00aed932",
+          "file": "_1920-108_ALL_00504.png",
+          "w": 1500,
+          "h": 844
+        },
+        {
+          "href": "/Tommy-s-Oddly-Love",
+          "title": "Tommy’s Oddly Love",
+          "url": "https://freight.cargo.site/w/800/q/75/i/2967e361c1470f935c454c05d618fa6d854b453e37266e4c8bf1c9e53aae4ba4/Denoised-beauty-source-3_00195.png",
+          "hash": "2967e361c1470f935c454c05d618fa6d854b453e37266e4c8bf1c9e53aae4ba4",
+          "file": "Denoised-beauty-source-3_00195.png",
+          "w": 800,
+          "h": 1000
+        },
+        {
+          "href": "/Christmas-Plan",
+          "title": "Christmas Plan",
+          "url": "https://freight.cargo.site/w/1280/q/94/i/78eabd06c2b97ec416c21495ce2cf635aef533db6fe4ada505ef21e7fdc26d91/2312230000_00000.png",
+          "hash": "78eabd06c2b97ec416c21495ce2cf635aef533db6fe4ada505ef21e7fdc26d91",
+          "file": "2312230000_00000.png",
+          "w": 1280,
+          "h": 720
+        },
+        {
+          "href": "/Halloween-Costume-Party",
+          "title": "🕸️Halloween Costume Party 🪩",
+          "url": "https://freight.cargo.site/w/800/q/75/i/c47f725199680d97b1bdb178c2b60fc71f2756ad89a80d8b8fb582765f9506fa/IMAGE_00009.png",
+          "hash": "c47f725199680d97b1bdb178c2b60fc71f2756ad89a80d8b8fb582765f9506fa",
+          "file": "IMAGE_00009.png",
+          "w": 800,
+          "h": 1422
+        },
+        {
+          "href": "/Camping",
+          "title": "Camping",
+          "url": "https://freight.cargo.site/w/1000/q/75/i/47835fd1600d6dcfd089708a6423c152b03b75d01b0f2d3d2a0a1df3af71c48e/FINAL_VSCO.jpg",
+          "hash": "47835fd1600d6dcfd089708a6423c152b03b75d01b0f2d3d2a0a1df3af71c48e",
+          "file": "FINAL_VSCO.jpg",
+          "w": 1000,
+          "h": 800
+        },
+        {
+          "href": "/snaaaake",
+          "title": "snaaaake",
+          "url": "https://freight.cargo.site/w/800/q/75/i/558a23bb553f3eb22024a75a90a31b49cf3a9b4523421538b14f9d2fc1416792/V04.png",
+          "hash": "558a23bb553f3eb22024a75a90a31b49cf3a9b4523421538b14f9d2fc1416792",
+          "file": "V04.png",
+          "w": 800,
+          "h": 800
+        },
+        {
+          "href": "/Santa-s-After-Work-Party",
+          "title": "Santa's After-Work Party!",
+          "url": "https://freight.cargo.site/w/800/q/75/i/d242c90b1ed4b45d860037eb7728f9473d555ae2b120052f776f863c984a0048/Denoised-beauty-source_00000_V02.png",
+          "hash": "d242c90b1ed4b45d860037eb7728f9473d555ae2b120052f776f863c984a0048",
+          "file": "Denoised-beauty-source_00000_V02.png",
+          "w": 800,
+          "h": 800
+        },
+        {
+          "href": "/Dancing-Christmas-Tree",
+          "title": "Dancing Christmas Tree",
+          "url": "https://freight.cargo.site/w/800/q/75/i/59342d1c31062524d2b99ec182b1c91afb3b4e821130e20ff0b720feb787bc74/0eb28d6a-62b2-4d05-a167-d7be16338918.gif",
+          "hash": "59342d1c31062524d2b99ec182b1c91afb3b4e821130e20ff0b720feb787bc74",
+          "file": "0eb28d6a-62b2-4d05-a167-d7be16338918.gif",
+          "w": 1500,
+          "h": 1500
+        },
+        {
+          "href": "/Afternoon-Tea-Time",
+          "title": "Afternoon Tea Time",
+          "url": "https://freight.cargo.site/w/1500/q/75/i/a24b7540769da7e8266fa2f3bf02b1980f8a85cfeb4bd1d1f54406df92ba1f38/_SOLO_output-3_CC.png",
+          "hash": "a24b7540769da7e8266fa2f3bf02b1980f8a85cfeb4bd1d1f54406df92ba1f38",
+          "file": "_SOLO_output-3_CC.png",
+          "w": 1500,
+          "h": 1125
+        },
+        {
+          "href": "/Summer-Vibe",
+          "title": "Summer Vibe",
+          "url": "https://freight.cargo.site/w/800/q/75/i/418af7f873a923fdc612518997a50beb655caded5fd312ca8763127f6e9b00e3/Toast_rigged_ALL_V030015_V02_00007.png",
+          "hash": "418af7f873a923fdc612518997a50beb655caded5fd312ca8763127f6e9b00e3",
+          "file": "Toast_rigged_ALL_V030015_V02_00007.png",
+          "w": 800,
+          "h": 1422
+        },
+        {
+          "href": "/3D-Ceramic-Project-NO-O1",
+          "title": "3D Ceramic Project @ NO.O1",
+          "url": "https://freight.cargo.site/w/800/q/75/i/afbe95c8f4e8ec71fca897e9bae9eb2e85409b1282d4adb620d4ec5345056d45/final_v02_00124.png",
+          "hash": "afbe95c8f4e8ec71fca897e9bae9eb2e85409b1282d4adb620d4ec5345056d45",
+          "file": "final_v02_00124.png",
+          "w": 800,
+          "h": 800
+        },
+        {
+          "href": "/Toast-baby-pottery",
+          "title": "Toast baby | pottery",
+          "url": "https://freight.cargo.site/w/800/q/75/i/1689ed4a1c362a36155e0a0a978f460d312c9ae7f015779dbe57b35df6f8be48/7427BA54-4D05-442E-9F77-544D7C5D4F8C.jpg",
+          "hash": "1689ed4a1c362a36155e0a0a978f460d312c9ae7f015779dbe57b35df6f8be48",
+          "file": "7427BA54-4D05-442E-9F77-544D7C5D4F8C.jpg",
+          "w": 800,
+          "h": 1200
+        },
+        {
+          "href": "/Magical-Pumpkin-Soup",
+          "title": "Magical Pumpkin Soup 🥣🎃🧪",
+          "url": "https://freight.cargo.site/w/800/q/75/i/b08420dbf7e7d7dd4fe5ede26d3f607765b1a0d34a8a52f850264d783c62c066/__V030031_V07_CC0.jpg",
+          "hash": "b08420dbf7e7d7dd4fe5ede26d3f607765b1a0d34a8a52f850264d783c62c066",
+          "file": "__V030031_V07_CC0.jpg",
+          "w": 800,
+          "h": 800
+        },
+        {
+          "href": "/The-positive-Building-Papaya-milk",
+          "title": "The positive Building | Papaya milk",
+          "url": "https://freight.cargo.site/w/447/q/94/i/3d5dc04f770208371d120c4d2ce57961c8889237fc32f861eaeb2a1f03450174/.PNG",
+          "hash": "3d5dc04f770208371d120c4d2ce57961c8889237fc32f861eaeb2a1f03450174",
+          "file": ".PNG",
+          "w": 447,
+          "h": 430
+        },
+        {
+          "href": "/The-Daruma-doll-at-Katsuo-Ji-Temple",
+          "title": "The Daruma doll at Katsuo-Ji Temple",
+          "url": "https://freight.cargo.site/w/500/q/94/i/363dd7aebefbf8f20f041b169e9402bef3ae75e00d1cf6a6a62fd77e5f9cf280/__final_3_AdobeExpress.gif",
+          "hash": "363dd7aebefbf8f20f041b169e9402bef3ae75e00d1cf6a6a62fd77e5f9cf280",
+          "file": "__final_3_AdobeExpress.gif",
+          "w": 500,
+          "h": 500
+        },
+        {
+          "href": "/Traditional-Taiwanese-Bathroom",
+          "title": "Traditional Taiwanese Bathroom",
+          "url": "https://freight.cargo.site/w/720/q/94/i/3c70a65ab1a4417f527cca52710818adfda492daf3a40d1d7d56da526dd59602/230524___1__AdobeExpress.gif",
+          "hash": "3c70a65ab1a4417f527cca52710818adfda492daf3a40d1d7d56da526dd59602",
+          "file": "230524___1__AdobeExpress.gif",
+          "w": 720,
+          "h": 720
+        },
+        {
+          "href": "/Nodding-Off",
+          "title": "Nodding Off...",
+          "url": "https://freight.cargo.site/w/800/q/75/i/fcaadd5a22b3aa230bd8fa0ea8cadd7a9508f8307c538b49360d675f6f99f7c9/_00075.png",
+          "hash": "fcaadd5a22b3aa230bd8fa0ea8cadd7a9508f8307c538b49360d675f6f99f7c9",
+          "file": "_00075.png",
+          "w": 800,
+          "h": 800
+        },
+        {
+          "href": "/Toast-Baby-Take-a-Bread-series",
+          "title": "Toast Baby | Take a Bread series",
+          "url": "https://freight.cargo.site/w/800/q/75/i/e27b5d71e9fbde4f3591bb885c1438c7309a874baf5da1949dc04ca168fc9337/toast_V02.png",
+          "hash": "e27b5d71e9fbde4f3591bb885c1438c7309a874baf5da1949dc04ca168fc9337",
+          "file": "toast_V02.png",
+          "w": 800,
+          "h": 800
+        },
+        {
+          "href": "/The-year-of-the-Rabbit",
+          "title": "The year of the Rabbit",
+          "url": "https://freight.cargo.site/w/800/q/75/i/f034bd6beb05f48a61f595c22eb338610658062076b2265d71766aedbb48613b/2023_0120_V01_00000.png",
+          "hash": "f034bd6beb05f48a61f595c22eb338610658062076b2265d71766aedbb48613b",
+          "file": "2023_0120_V01_00000.png",
+          "w": 800,
+          "h": 800
+        },
+        {
+          "href": "/Little-Jam-Take-a-Bread-series",
+          "title": "Little Jam | Take a Bread series",
+          "url": "https://freight.cargo.site/w/800/q/75/i/f46abb00f3f6def1ebd15d59f28ac9a1d119132de246f58a16a14151f5200c02/little_Jam__V03.png",
+          "hash": "f46abb00f3f6def1ebd15d59f28ac9a1d119132de246f58a16a14151f5200c02",
+          "file": "little_Jam__V03.png",
+          "w": 800,
+          "h": 800
+        },
+        {
+          "href": "/ASUS-CES-2023",
+          "title": "ASUS CES 2023",
+          "url": "https://freight.cargo.site/w/800/q/75/i/99cc74b88a4cfcb1ebee8509e6fb9ea0ee4877a69aae93d5f022bbc3408f492a/ASUS_CES_ExpertBook-Lightness_1500x1500_nosub_0179.jpg",
+          "hash": "99cc74b88a4cfcb1ebee8509e6fb9ea0ee4877a69aae93d5f022bbc3408f492a",
+          "file": "ASUS_CES_ExpertBook-Lightness_1500x1500_nosub_0179.jpg",
+          "w": 800,
+          "h": 800
+        },
+        {
+          "href": "/Mooncake",
+          "title": "Mooncake!",
+          "url": "https://freight.cargo.site/w/1500/q/75/i/efab6a1dcdec8735cdb867fc1d9efc445eab045a5781495fa9dddf6e272977ca/.gif",
+          "hash": "efab6a1dcdec8735cdb867fc1d9efc445eab045a5781495fa9dddf6e272977ca",
+          "file": ".gif",
+          "w": 1920,
+          "h": 1280
+        },
+        {
+          "href": "/Halloween-Dog",
+          "title": "Halloween Dog",
+          "url": "https://freight.cargo.site/w/800/q/75/i/608918193d5fca9c88974ffc363c391635ff62e97374d73ebe167d4dba7b6468/final.gif",
+          "hash": "608918193d5fca9c88974ffc363c391635ff62e97374d73ebe167d4dba7b6468",
+          "file": "final.gif",
+          "w": 1280,
+          "h": 1280
+        },
+        {
+          "href": "/Matcha-Souffle",
+          "title": "Matcha Souffle",
+          "url": "https://freight.cargo.site/w/800/q/75/i/1c0c9baf2254df522c23d564ff26991a7ce06738113d1b55a034143057bbf22b/4.png",
+          "hash": "1c0c9baf2254df522c23d564ff26991a7ce06738113d1b55a034143057bbf22b",
+          "file": "4.png",
+          "w": 800,
+          "h": 800
+        },
+        {
+          "href": "/Happy-Toast",
+          "title": "Happy Toast 🍞",
+          "url": "https://freight.cargo.site/w/1500/q/75/i/a616b6dcbd90d0b2bb0644e6cb5c65b4fd69c965f05e8bb6050df89b4399d648/_.gif",
+          "hash": "a616b6dcbd90d0b2bb0644e6cb5c65b4fd69c965f05e8bb6050df89b4399d648",
+          "file": "_.gif",
+          "w": null,
+          "h": null
+        },
+        {
+          "href": "/Freedom-Frames",
+          "title": "自由的形狀 Freedom Frames",
+          "url": "https://freight.cargo.site/w/800/q/75/i/41d9b0833921211d76734cf0bbba942738bd98f2d5ef919524e2ac70219b7128/.gif",
+          "hash": "41d9b0833921211d76734cf0bbba942738bd98f2d5ef919524e2ac70219b7128",
+          "file": ".gif",
+          "w": null,
+          "h": null
+        },
+        {
+          "href": "/Chick",
+          "title": "Chick 🐤",
+          "url": "https://freight.cargo.site/w/1500/q/75/i/730df988c17836aaf56fbe3cef7818098ab5721c9225969c3619cb98d0aecad6/2_DeMain.gif",
+          "hash": "730df988c17836aaf56fbe3cef7818098ab5721c9225969c3619cb98d0aecad6",
+          "file": "2_DeMain.gif",
+          "w": null,
+          "h": null
+        },
+        {
+          "href": "/Turn-On",
+          "title": "Turn On!",
+          "url": "https://freight.cargo.site/w/800/q/75/i/d18f0fe5d0c81ceeb47c4458ad752f7c2928f29f53e2cbbab61c917dda2ed204/_V01_.gif",
+          "hash": "d18f0fe5d0c81ceeb47c4458ad752f7c2928f29f53e2cbbab61c917dda2ed204",
+          "file": "_V01_.gif",
+          "w": null,
+          "h": null
+        },
+        {
+          "href": "/Puffer-Fish",
+          "title": "Puffer Fish 🐡",
+          "url": "https://freight.cargo.site/w/800/q/75/i/19eefb5fa796d40a96e63180fa0cdba95c4d11b72d203ed5600aad1dff1eb7cc/0019.jpg",
+          "hash": "19eefb5fa796d40a96e63180fa0cdba95c4d11b72d203ed5600aad1dff1eb7cc",
+          "file": "0019.jpg",
+          "w": null,
+          "h": null
+        },
+        {
+          "href": "/Annie-at-Work",
+          "title": "Annie at Work",
+          "url": "https://freight.cargo.site/w/1500/q/75/i/e234323f6185e46309dd6a82a927a09a3df03961e1c720ac1011bb32ab565de0/1920x1080.gif",
+          "hash": "e234323f6185e46309dd6a82a927a09a3df03961e1c720ac1011bb32ab565de0",
+          "file": "1920x1080.gif",
+          "w": 1920,
+          "h": 1080
+        },
+        {
+          "href": "/WAAA-MY-POPCORN",
+          "title": "WAAA... MY POPCORN",
+          "url": "https://freight.cargo.site/w/800/q/75/i/0abe6037cfa59b414e925430f0256a8163f97468d24447c810d2a970a008e3fa/6.jpg",
+          "hash": "0abe6037cfa59b414e925430f0256a8163f97468d24447c810d2a970a008e3fa",
+          "file": "6.jpg",
+          "w": null,
+          "h": null
+        },
+        {
+          "href": "/Rudolph",
+          "title": "Rudolph!",
+          "url": "https://freight.cargo.site/w/1500/q/75/i/b98666aa7e20cf6c9ac1ad3ee6e97a1c9b4fd6ff083a2c1e1282609e520e7db1/-2022-08-01-003106.png",
+          "hash": "b98666aa7e20cf6c9ac1ad3ee6e97a1c9b4fd6ff083a2c1e1282609e520e7db1",
+          "file": "-2022-08-01-003106.png",
+          "w": null,
+          "h": null
+        },
+        {
+          "href": "/Can-t-Believe",
+          "title": "Can't Believe",
+          "url": "https://freight.cargo.site/w/1500/q/75/i/6507eaefa5441ca68fa8fa594e24cee37421e96be2b10d64fc4bb492949941ee/.gif",
+          "hash": "6507eaefa5441ca68fa8fa594e24cee37421e96be2b10d64fc4bb492949941ee",
+          "file": ".gif",
+          "w": null,
+          "h": null
+        },
+        {
+          "href": "/Compare",
+          "title": "Compare",
+          "url": "https://freight.cargo.site/w/800/q/75/i/528817bf1cdd981c995d2fcb758965d6534a4a00bb235de8d1786acf60180444/_.gif",
+          "hash": "528817bf1cdd981c995d2fcb758965d6534a4a00bb235de8d1786acf60180444",
+          "file": "_.gif",
+          "w": null,
+          "h": null
+        },
+        {
+          "href": "/eyes",
+          "title": "eyes",
+          "url": "https://freight.cargo.site/w/1500/q/75/i/6e689a2367cb4156f10e36e0f61fae127e093fa0a9f24375f537c2391c92cd29/.gif",
+          "hash": "6e689a2367cb4156f10e36e0f61fae127e093fa0a9f24375f537c2391c92cd29",
+          "file": ".gif",
+          "w": null,
+          "h": null
+        },
+        {
+          "href": "/Transform",
+          "title": "Transform",
+          "url": "https://freight.cargo.site/w/1920/q/75/i/bfdf0f85600ff1a505483ee11373457ad2cf16f79aafc99e29141244c3ab8bc4/practice_.gif",
+          "hash": "bfdf0f85600ff1a505483ee11373457ad2cf16f79aafc99e29141244c3ab8bc4",
+          "file": "practice_.gif",
+          "w": null,
+          "h": null
+        },
+        {
+          "href": "/Hide",
+          "title": "Hide",
+          "url": "https://freight.cargo.site/w/1500/q/75/i/fcfde3d857ef4f2312b8ac8e398b1d4f3053a61837b4e68f8a4665a2aa74b966/-2.gif",
+          "hash": "fcfde3d857ef4f2312b8ac8e398b1d4f3053a61837b4e68f8a4665a2aa74b966",
+          "file": "-2.gif",
+          "w": null,
+          "h": null
+        },
+        {
+          "href": "/REUNION",
+          "title": "REUNION",
+          "url": "https://freight.cargo.site/w/1500/q/75/i/1090809cc8062edf2aaa4e166606225db436f3e019cf9d179a0646fc6c957868/REUNION_.gif",
+          "hash": "1090809cc8062edf2aaa4e166606225db436f3e019cf9d179a0646fc6c957868",
+          "file": "REUNION_.gif",
+          "w": null,
+          "h": null
+        },
+        {
+          "href": "/Fragile",
+          "title": "Fragile",
+          "url": "https://freight.cargo.site/w/800/q/75/i/25798302c1b0e7bdf4379316ca6cc813962795aaee33d5e5b0ade0438a294310/_2022_.gif",
+          "hash": "25798302c1b0e7bdf4379316ca6cc813962795aaee33d5e5b0ade0438a294310",
+          "file": "_2022_.gif",
+          "w": null,
+          "h": null
+        },
+        {
+          "href": "/Follow",
+          "title": "Follow",
+          "url": "https://freight.cargo.site/w/1500/q/75/i/04edce1a423d497f1fe1ae8372685ced7d86d30c128643d622661baa5b74b36b/.gif",
+          "hash": "04edce1a423d497f1fe1ae8372685ced7d86d30c128643d622661baa5b74b36b",
+          "file": ".gif",
+          "w": null,
+          "h": null
+        },
+        {
+          "href": "/unspeakable",
+          "title": "unspeakable",
+          "url": "https://freight.cargo.site/w/1500/q/75/i/2aa00a7465e767b6c2bc70247ca5986fdcbdcaf386c5413fbc308de717184b3c/.gif",
+          "hash": "2aa00a7465e767b6c2bc70247ca5986fdcbdcaf386c5413fbc308de717184b3c",
+          "file": ".gif",
+          "w": null,
+          "h": null
+        },
+        {
+          "href": "/Mirror",
+          "title": "Mirror",
+          "url": "https://freight.cargo.site/w/1500/q/75/i/4ce315baa4b2610b43b9ca9def85c9f135621c747d58ba317407f31601831952/.gif",
+          "hash": "4ce315baa4b2610b43b9ca9def85c9f135621c747d58ba317407f31601831952",
+          "file": ".gif",
+          "w": null,
+          "h": null
+        }
+      ]
+    },
+    {
+      "path": "/Reel",
+      "title": "Reel - Doris Lin",
+      "blocks": [
+        {
+          "type": "embed",
+          "url": "https://player.vimeo.com/video/758821572?h=dc3a56c7d2&title=0&byline=0&portrait=0&speed=0&badge=0&autopause=0&player_id=0&app_id=58479"
+        },
+        {
+          "type": "heading",
+          "level": "h2",
+          "text": "Hello! I'm so happy to share my FIRST reel with you.\nHope you like it!"
+        }
+      ],
+      "thumbs": []
+    },
+    {
+      "path": "/Information",
+      "title": "Information - Doris Lin",
+      "blocks": [
+        {
+          "type": "media",
+          "tag": "img",
+          "url": "https://freight.cargo.site/w/800/q/75/i/1a6d0c5207c2278d84915f40cda3e4c4e519837cde34da7fe05e3a7e42158e2e/357678438_224001000529625_82048688281080320_n.jpg",
+          "hash": "1a6d0c5207c2278d84915f40cda3e4c4e519837cde34da7fe05e3a7e42158e2e",
+          "file": "357678438_224001000529625_82048688281080320_n.jpg",
+          "w": 800,
+          "h": 800,
+          "alt": "",
+          "caption": "",
+          "dataCaption": "",
+          "eye": null
+        },
+        {
+          "type": "heading",
+          "level": "h1",
+          "text": "Hey there!\nDoris Lin is a motion designer and 3D illustrator based in Taiwan\n(UTC+8)\nwho made her inspiration from animal and real life.She loves making furry things in her work."
+        },
+        {
+          "type": "heading",
+          "level": "h2",
+          "text": "I love to animate friendly things that I feel identified with , trying different things and making cute characters and animations .Recntly,I like to realize my idea in 3D."
+        },
+        {
+          "type": "heading",
+          "level": "h2",
+          "text": "Apart from work, I also enjoy watching various types of movies and taking photos on the street. I also like browsing different memes on the internet and using them as inspiration for my own creations. Sometimes, when I am working on my projects, I find myself amused and laughing out loud at what I have made."
+        },
+        {
+          "type": "heading",
+          "level": "h1",
+          "text": "✸\nExperience"
+        },
+        {
+          "type": "heading",
+          "level": "h2",
+          "text": "2022-2024 WildDesign  / 3D Designer"
+        },
+        {
+          "type": "heading",
+          "level": "h2",
+          "text": "2022-2022 Finger and Toe Animation Studio  / 2D Animator\n➔ The Jennie show - Animation series"
+        },
+        {
+          "type": "heading",
+          "level": "h2",
+          "text": "2021-2022 Indie design   / 2D Motion Designer"
+        },
+        {
+          "type": "heading",
+          "level": "h1",
+          "text": "✸\nBrands I’ve Designed & Animated For"
+        },
+        {
+          "type": "heading",
+          "level": "h2",
+          "text": "Asus/TaiwanPlus/ Golden Melody Awards/TigerParty/ViewSonic/RHINOSHIELD"
+        },
+        {
+          "type": "heading",
+          "level": "h1",
+          "text": "✸\nExbihtion"
+        },
+        {
+          "type": "heading",
+          "level": "h2",
+          "text": "Oddly in Love: Handle with Weirdness\nILLO, Turin (Graphic Days® – In the City), 2025"
+        },
+        {
+          "type": "heading",
+          "level": "h2",
+          "text": "回川 CONATION\nOnline Exhibition, 2021"
+        },
+        {
+          "type": "heading",
+          "level": "h2",
+          "text": "Vision Get Wild Expo, 2021"
+        },
+        {
+          "type": "heading",
+          "level": "h1",
+          "text": "✸ Selected"
+        },
+        {
+          "type": "heading",
+          "level": "h2",
+          "text": "ThreeDimensional, Victionary, 2025\n➔ The Playground"
+        },
+        {
+          "type": "heading",
+          "level": "h1",
+          "text": "✸ Education"
+        },
+        {
+          "type": "heading",
+          "level": "h2",
+          "text": "2017-2021 Shih Chien University  Department of Communications Design"
+        },
+        {
+          "type": "heading",
+          "level": "h1",
+          "text": "Come and say hey → dorislinwork@gmail.com"
+        }
+      ],
+      "thumbs": []
+    },
+    {
+      "path": "/Grandma-s-kitchen-copy",
+      "title": "Grandma’s kitchen copy - Doris Lin",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": "h1",
+          "text": "Grandma’s kitchen"
+        },
+        {
+          "type": "heading",
+          "level": "h2",
+          "text": "Personal work | 2026 |\nBack to Taiwanese grandma’s kitchen 🧑‍🍳\n以前專案的槍稿，把它好好撿起來改製(´･･`)\n當時做得很開心！參考各種阿媽家的用具🫯\n私心一定要做秋海棠玻璃更像阿媽家😆\n阿媽家必備：\n大同電鍋、金蘭醬油、台灣米酒、逼逼叫煮水壺、茄芷袋！\nI had so much fun making this! I drew inspiration from all the vintage items you’d find at Grandma's house."
+        },
+        {
+          "type": "media",
+          "tag": "img",
+          "url": "https://freight.cargo.site/w/1440/q/94/i/2ac5f256447c2c6818bdf6b64756f1aad5768b1ef16b28910004ba8219808ab9/TP_TaipeiLumitree_Lumi2025_kitchen_00000_V06_00000.png",
+          "hash": "2ac5f256447c2c6818bdf6b64756f1aad5768b1ef16b28910004ba8219808ab9",
+          "file": "TP_TaipeiLumitree_Lumi2025_kitchen_00000_V06_00000.png",
+          "w": 1440,
+          "h": 1170,
+          "alt": "",
+          "caption": "",
+          "dataCaption": "",
+          "eye": null
+        }
+      ],
+      "thumbs": []
+    },
+    {
+      "path": "/Grandma-s-kitchen",
+      "title": "Grandma’s kitchen - Doris Lin",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": "h1",
+          "text": "Grandma’s kitchen"
+        },
+        {
+          "type": "heading",
+          "level": "h2",
+          "text": "Personal work | 2026 |\nBack to Taiwanese grandma’s kitchen 🧑‍🍳\n以前專案的槍稿，把它好好撿起來改製(´･･`)\n當時做得很開心！參考各種阿媽家的用具🫯\n私心一定要做秋海棠玻璃更像阿媽家😆\n阿媽家必備：\n大同電鍋、金蘭醬油、台灣米酒、逼逼叫煮水壺、茄芷袋！\nI had so much fun making this! I drew inspiration from all the vintage items you’d find at Grandma's house."
+        },
+        {
+          "type": "media",
+          "tag": "img",
+          "url": "https://freight.cargo.site/w/1440/q/94/i/2ac5f256447c2c6818bdf6b64756f1aad5768b1ef16b28910004ba8219808ab9/TP_TaipeiLumitree_Lumi2025_kitchen_00000_V06_00000.png",
+          "hash": "2ac5f256447c2c6818bdf6b64756f1aad5768b1ef16b28910004ba8219808ab9",
+          "file": "TP_TaipeiLumitree_Lumi2025_kitchen_00000_V06_00000.png",
+          "w": 1440,
+          "h": 1170,
+          "alt": "",
+          "caption": "",
+          "dataCaption": "",
+          "eye": null
+        }
+      ],
+      "thumbs": []
+    },
+    {
+      "path": "/A-Journey-in-Tohoku",
+      "title": "A Journey in Tohoku❄️ - Doris Lin",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": "h1",
+          "text": "A Journey in Tohoku❄️"
+        },
+        {
+          "type": "heading",
+          "level": "h2",
+          "text": "Personal work | 2026 |"
+        },
+        {
+          "type": "heading",
+          "level": "h2",
+          "text": "I took a trip to Tohoku with my family in March.\nToastBaby and Little Jam want to share some travel photos with you✨\n• Seeing snow for the first time!\n• Eating green apples in Aomori 🍏\n• Building my first snowman !!\n• Snow tubing (was so scared at first!🫨）"
+        },
+        {
+          "type": "embed",
+          "url": "https://player.vimeo.com/video/1185026034?badge=0&autopause=0&player_id=0&app_id=58479&autoplay=1&loop=1"
+        },
+        {
+          "type": "media",
+          "tag": "img",
+          "url": "https://freight.cargo.site/w/900/q/75/i/cb0d0d01c4cafc02ae86e2b4a5140b03d07953ab9c8110cbec1dad19d2d53667/_0100000.png",
+          "hash": "cb0d0d01c4cafc02ae86e2b4a5140b03d07953ab9c8110cbec1dad19d2d53667",
+          "file": "_0100000.png",
+          "w": 900,
+          "h": 1201,
+          "alt": "",
+          "caption": "",
+          "dataCaption": "",
+          "eye": null
+        },
+        {
+          "type": "media",
+          "tag": "img",
+          "url": "https://freight.cargo.site/w/900/q/75/i/c4de359bd1a145e6ca893e9d1eb37edb0f098a21517b86e1c58d56a25afeebe2/_apple00000.png",
+          "hash": "c4de359bd1a145e6ca893e9d1eb37edb0f098a21517b86e1c58d56a25afeebe2",
+          "file": "_apple00000.png",
+          "w": 900,
+          "h": 1201,
+          "alt": "",
+          "caption": "",
+          "dataCaption": "",
+          "eye": null
+        },
+        {
+          "type": "media",
+          "tag": "img",
+          "url": "https://freight.cargo.site/w/900/q/75/i/ff0fc1d45108c8d1bb9f35b1ed25fc0325249e3b7693a7c76fa64eb90c5b7722/_Sled_00000.png",
+          "hash": "ff0fc1d45108c8d1bb9f35b1ed25fc0325249e3b7693a7c76fa64eb90c5b7722",
+          "file": "_Sled_00000.png",
+          "w": 900,
+          "h": 1201,
+          "alt": "",
+          "caption": "",
+          "dataCaption": "",
+          "eye": null
+        },
+        {
+          "type": "media",
+          "tag": "img",
+          "url": "https://freight.cargo.site/w/900/q/75/i/95171d528fd31152f996dd83f908ac69914fee6b728660c44fccd81c187a0714/_snowman_00000.png",
+          "hash": "95171d528fd31152f996dd83f908ac69914fee6b728660c44fccd81c187a0714",
+          "file": "_snowman_00000.png",
+          "w": 900,
+          "h": 1201,
+          "alt": "",
+          "caption": "",
+          "dataCaption": "",
+          "eye": null
+        }
+      ],
+      "thumbs": []
+    },
+    {
+      "path": "/Gua-Bao",
+      "title": "Gua Bao - Doris Lin",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": "h1",
+          "text": "Gua Bao"
+        },
+        {
+          "type": "heading",
+          "level": "h2",
+          "text": "Personal work | 2026 |"
+        },
+        {
+          "type": "heading",
+          "level": "h2",
+          "text": "The little elves went back to grandma’s house to help make GUA BAO (someone’s drunk in the back🍷）\nThe third pic is the gua bao my grandma made.\nGua bao is a traditional Taiwanese food! a soft bun filled with braised pork, cilantro, pickled greens, and peanut powder 🤏\nKinda like a Taiwanese burger! 🍔✨"
+        },
+        {
+          "type": "media",
+          "tag": "img",
+          "url": "https://freight.cargo.site/w/1188/q/94/i/526e24ffd2353f12a077983359cdfc60812e717a0233c2bdc600b42c652d596a/01V02.png",
+          "hash": "526e24ffd2353f12a077983359cdfc60812e717a0233c2bdc600b42c652d596a",
+          "file": "01V02.png",
+          "w": 1188,
+          "h": 1584,
+          "alt": "",
+          "caption": "",
+          "dataCaption": "",
+          "eye": null
+        },
+        {
+          "type": "media",
+          "tag": "img",
+          "url": "https://freight.cargo.site/w/1188/q/94/i/0cb171d4379bd72315c0d8d3eca333e1143dc64fa40280bae3c528b2ded41b23/TOP_03.png",
+          "hash": "0cb171d4379bd72315c0d8d3eca333e1143dc64fa40280bae3c528b2ded41b23",
+          "file": "TOP_03.png",
+          "w": 1188,
+          "h": 1584,
+          "alt": "",
+          "caption": "",
+          "dataCaption": "",
+          "eye": null
+        },
+        {
+          "type": "media",
+          "tag": "img",
+          "url": "https://freight.cargo.site/w/1188/q/94/i/e5c92fe108dde7f7edc5df3eb9ba21fdd384fdef711c9216569d8d81b0ab67cd/DRUNK02_00000.png",
+          "hash": "e5c92fe108dde7f7edc5df3eb9ba21fdd384fdef711c9216569d8d81b0ab67cd",
+          "file": "DRUNK02_00000.png",
+          "w": 1188,
+          "h": 1584,
+          "alt": "",
+          "caption": "",
+          "dataCaption": "",
+          "eye": null
+        }
+      ],
+      "thumbs": []
+    },
+    {
+      "path": "/happiness-awaits",
+      "title": "happiness awaits 🐴🍎  - Doris Lin",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": "h1",
+          "text": "2026 happiness awaits 🐴🍎"
+        },
+        {
+          "type": "heading",
+          "level": "h2",
+          "text": "Personal work | 2026 |"
+        },
+        {
+          "type": "heading",
+          "level": "h2",
+          "text": "The English word “horse” sounds like “好事” (hǎo shì) in Mandarin, which means good things.🐎\nand apples are a symbol of peace because they sound like the word for peace in Mandarin. when you repeat the sound “píng,” it sounds like “again and again,” which makes it a sweet way to wish someone continuous good luck.😆🍎\nHappy Lunar New Year! May happiness keep coming your way"
+        },
+        {
+          "type": "embed",
+          "url": "https://player.vimeo.com/video/1167081496?badge=0&autopause=0&player_id=0&app_id=58479&autoplay=1&loop=1"
+        },
+        {
+          "type": "media",
+          "tag": "img",
+          "url": "https://freight.cargo.site/w/900/q/75/i/8c7411ebfc52cf95f479def620a545ce4cc61a4d1820861229588dfa25bc252c/solo_00059.png",
+          "hash": "8c7411ebfc52cf95f479def620a545ce4cc61a4d1820861229588dfa25bc252c",
+          "file": "solo_00059.png",
+          "w": 900,
+          "h": 1200,
+          "alt": "",
+          "caption": "",
+          "dataCaption": "",
+          "eye": null
+        },
+        {
+          "type": "media",
+          "tag": "img",
+          "url": "https://freight.cargo.site/w/900/q/75/i/6414df04a7101c963d2bd23bcc08c88bb66b5ee00aa771ef2c35982e3ec111e6/SOLO_00000.png",
+          "hash": "6414df04a7101c963d2bd23bcc08c88bb66b5ee00aa771ef2c35982e3ec111e6",
+          "file": "SOLO_00000.png",
+          "w": 900,
+          "h": 1200,
+          "alt": "",
+          "caption": "",
+          "dataCaption": "",
+          "eye": null
+        }
+      ],
+      "thumbs": []
+    },
+    {
+      "path": "/Christmas-Feast",
+      "title": "Christmas Feast - Doris Lin",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": "h1",
+          "text": "Christmas Feast"
+        },
+        {
+          "type": "heading",
+          "level": "h2",
+          "text": "Personal work | 2025 |"
+        },
+        {
+          "type": "heading",
+          "level": "h2",
+          "text": "This Christmas, Tree Baby and the little spirits are preparing a festive feast together 🎄\nMerry Christmas! Hope everyone stays safe and happy always."
+        },
+        {
+          "type": "media",
+          "tag": "img",
+          "url": "https://freight.cargo.site/w/1485/q/94/i/6b8fb6b525e477e72c7af2ba92c5d8ad2b720d84fd6a74681d4048f3c660a9e0/Denoised-beauty-source_IG_00000_FIX.png",
+          "hash": "6b8fb6b525e477e72c7af2ba92c5d8ad2b720d84fd6a74681d4048f3c660a9e0",
+          "file": "Denoised-beauty-source_IG_00000_FIX.png",
+          "w": 1485,
+          "h": 1188,
+          "alt": "",
+          "caption": "",
+          "dataCaption": "",
+          "eye": null
+        },
+        {
+          "type": "media",
+          "tag": "img",
+          "url": "https://freight.cargo.site/w/1485/q/94/i/f6e324551cad2d8d1ed30370d0cfb75dc1a5859469c4e1078d143cc9e765e468/Denoised-beauty-source_SOLO_00000.png",
+          "hash": "f6e324551cad2d8d1ed30370d0cfb75dc1a5859469c4e1078d143cc9e765e468",
+          "file": "Denoised-beauty-source_SOLO_00000.png",
+          "w": 1485,
+          "h": 1188,
+          "alt": "",
+          "caption": "",
+          "dataCaption": "",
+          "eye": null
+        }
+      ],
+      "thumbs": []
+    },
+    {
+      "path": "/Taiwanese-sumer-vibe",
+      "title": "Taiwanese sumer vibe - Doris Lin",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": "h1",
+          "text": "Taiwanese sumer vibe"
+        },
+        {
+          "type": "heading",
+          "level": "h2",
+          "text": "Personal work | 2025 |"
+        },
+        {
+          "type": "heading",
+          "level": "h2",
+          "text": "Summer has arrived in Taiwan! One of the best things about it is enjoying a bowl of shaved ice topped with chewy tangyuan, taro balls, and Taiwan’s famously sweet mangoes.\nDipping tomatoes in soy sauce is a unique eating tradition you’ll find at old-school ice shops in southern Taiwan.\nDon’t leave Taiwan without trying it!!✨"
+        },
+        {
+          "type": "media",
+          "tag": "img",
+          "url": "https://freight.cargo.site/w/1400/q/94/i/3e22852e135b2464e69aecc98551807d14e8f0c66260687a4d05dfd802f4c897/FullSizeRender_VSCO.jpg",
+          "hash": "3e22852e135b2464e69aecc98551807d14e8f0c66260687a4d05dfd802f4c897",
+          "file": "FullSizeRender_VSCO.jpg",
+          "w": 1400,
+          "h": 1050,
+          "alt": "",
+          "caption": "",
+          "dataCaption": "",
+          "eye": null
+        },
+        {
+          "type": "media",
+          "tag": "img",
+          "url": "https://freight.cargo.site/w/600/q/75/i/9e890342bc2f8f864626320dbb35d2008e91c26606321e89f16d0b9897c2023e/Beauty-source_00000ICE.png",
+          "hash": "9e890342bc2f8f864626320dbb35d2008e91c26606321e89f16d0b9897c2023e",
+          "file": "Beauty-source_00000ICE.png",
+          "w": 600,
+          "h": 450,
+          "alt": "",
+          "caption": "",
+          "dataCaption": "",
+          "eye": null
+        },
+        {
+          "type": "media",
+          "tag": "img",
+          "url": "https://freight.cargo.site/w/600/q/75/i/39b1902924d6382bcc2a2664228db3bcc418b9090d5a36fa665b3e1d1775fbc3/Beauty-source_00000CUP.png",
+          "hash": "39b1902924d6382bcc2a2664228db3bcc418b9090d5a36fa665b3e1d1775fbc3",
+          "file": "Beauty-source_00000CUP.png",
+          "w": 600,
+          "h": 450,
+          "alt": "",
+          "caption": "",
+          "dataCaption": "",
+          "eye": null
+        },
+        {
+          "type": "media",
+          "tag": "img",
+          "url": "https://freight.cargo.site/w/600/q/75/i/8f0e09099f0a206f603e2105c0be12dd28bf1b3933add39d847f07562cbdc1bf/Beauty-source_00000_TOMATO.png",
+          "hash": "8f0e09099f0a206f603e2105c0be12dd28bf1b3933add39d847f07562cbdc1bf",
+          "file": "Beauty-source_00000_TOMATO.png",
+          "w": 600,
+          "h": 450,
+          "alt": "",
+          "caption": "",
+          "dataCaption": "",
+          "eye": null
+        }
+      ],
+      "thumbs": []
+    },
+    {
+      "path": "/Playground",
+      "title": "Playground - Doris Lin",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": "h1",
+          "text": "Playground"
+        },
+        {
+          "type": "heading",
+          "level": "h2",
+          "text": "Personal work | 2024 |"
+        },
+        {
+          "type": "heading",
+          "level": "h2",
+          "text": "Everywhere is our playground!\nDo you want to play with us?✨\nActually I used to love the banana seesaw,but later,my favorite become the elf with googgls 😻"
+        },
+        {
+          "type": "media",
+          "tag": "img",
+          "url": "https://freight.cargo.site/w/1500/q/94/i/eff0418e566783458d8b3c6bea0e09d576e87901ba09fc0751191b28fde4000f/Denoised-beauty-source15_CC.png",
+          "hash": "eff0418e566783458d8b3c6bea0e09d576e87901ba09fc0751191b28fde4000f",
+          "file": "Denoised-beauty-source15_CC.png",
+          "w": 1500,
+          "h": 1200,
+          "alt": "",
+          "caption": "",
+          "dataCaption": "",
+          "eye": null
+        },
+        {
+          "type": "media",
+          "tag": "img",
+          "url": "https://freight.cargo.site/w/1500/q/94/i/9deaf6000227f0d0dd07289aee365aad3b8d3d6f9b5dfc562adeb1db35449bd6/SOLO.png",
+          "hash": "9deaf6000227f0d0dd07289aee365aad3b8d3d6f9b5dfc562adeb1db35449bd6",
+          "file": "SOLO.png",
+          "w": 1500,
+          "h": 1200,
+          "alt": "",
+          "caption": "",
+          "dataCaption": "",
+          "eye": null
+        },
+        {
+          "type": "media",
+          "tag": "img",
+          "url": "https://freight.cargo.site/w/900/q/75/i/ddab0d90f6927cceb495bb3d216c1ba7e3c78a04d134ba0eebb018ca86802bc7/Denoised-beautySOLO02_CC.png",
+          "hash": "ddab0d90f6927cceb495bb3d216c1ba7e3c78a04d134ba0eebb018ca86802bc7",
+          "file": "Denoised-beautySOLO02_CC.png",
+          "w": 900,
+          "h": 720,
+          "alt": "",
+          "caption": "",
+          "dataCaption": "",
+          "eye": null
+        },
+        {
+          "type": "media",
+          "tag": "img",
+          "url": "https://freight.cargo.site/w/900/q/75/i/0189bc7928d06ed77810a06e1ae92a0851c59ccb9c55c71e6315d6db3872a2cd/Denoised-beautySOLO03_00000.png",
+          "hash": "0189bc7928d06ed77810a06e1ae92a0851c59ccb9c55c71e6315d6db3872a2cd",
+          "file": "Denoised-beautySOLO03_00000.png",
+          "w": 900,
+          "h": 720,
+          "alt": "",
+          "caption": "",
+          "dataCaption": "",
+          "eye": null
+        }
+      ],
+      "thumbs": []
+    },
+    {
+      "path": "/Year-of-the-Dragon",
+      "title": "Year of the Dragon - Doris Lin",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": "h1",
+          "text": "Year of the Dragon\n🐉"
+        },
+        {
+          "type": "heading",
+          "level": "h2",
+          "text": "Personal work | 2024 |"
+        },
+        {
+          "type": "heading",
+          "level": "h2",
+          "text": "Next week is the Lunar New Year ! Wishing everyone a prosperous Year of the Dragon!🐲💙"
+        },
+        {
+          "type": "heading",
+          "level": "h2",
+          "text": "肥肥龍配吐司，毛毛鱗片做得很開心，毛絨龍!\n下週就要過年了，希望大家龍黑皮！時間真的過得好快嗚嗚！！\n希望今年大家都能健康快樂，並慢慢完成自己的目標\nᕦ(＾＾)ᕤ"
+        },
+        {
+          "type": "media",
+          "tag": "img",
+          "url": "https://freight.cargo.site/w/1600/q/94/i/f87b4c6cd58ba389d52641d515309daea802dd1a563729fe08c0cfe28d490468/2024_dragon_V02_final_CC.png",
+          "hash": "f87b4c6cd58ba389d52641d515309daea802dd1a563729fe08c0cfe28d490468",
+          "file": "2024_dragon_V02_final_CC.png",
+          "w": 1600,
+          "h": 1600,
+          "alt": "",
+          "caption": "",
+          "dataCaption": "",
+          "eye": null
+        },
+        {
+          "type": "media",
+          "tag": "img",
+          "url": "https://freight.cargo.site/w/1600/q/94/i/1e42d48d887991aa44f8a826f411e5fff316730cb3d4d5a23316658eea82210b/2024_dragon_fur_00000.png",
+          "hash": "1e42d48d887991aa44f8a826f411e5fff316730cb3d4d5a23316658eea82210b",
+          "file": "2024_dragon_fur_00000.png",
+          "w": 1600,
+          "h": 1600,
+          "alt": "",
+          "caption": "",
+          "dataCaption": "",
+          "eye": null
+        },
+        {
+          "type": "heading",
+          "level": "h2",
+          "text": "Happy Lunar New Year!"
+        }
+      ],
+      "thumbs": []
+    },
+    {
+      "path": "/goodmorningmacc-shenzaoclub",
+      "title": "goodmorningmacc &  shenzaoclub | 早安美之沈聯名動畫  - Doris Lin",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": "h1",
+          "text": "Goodmorningmacc &\nShenzaoclub | 早安美之沈聯名動畫"
+        },
+        {
+          "type": "heading",
+          "level": "h2",
+          "text": "Client work | 2024"
+        },
+        {
+          "type": "heading",
+          "level": "h2",
+          "text": "Role |"
+        },
+        {
+          "type": "heading",
+          "level": "h2",
+          "text": "「早安美之沈」是由 Youtuber 陪沈團 的沈所創立的早餐品牌 「沈早俱樂部」，此次與早餐連鎖品牌 「早安美芝城」 攜手合作，推出全新聯名計畫！\n為了宣傳此次合作，我們特別製作了一支充滿可愛與活力的行銷短片，以「沈早俱樂部」的角色 沈早鳥 為主角，講述它與這次聯名產品——剝皮辣椒相遇後，擦出全新火花的精彩故事，呈現出活力滿滿的動畫。"
+        },
+        {
+          "type": "embed",
+          "url": "https://player.vimeo.com/video/1107691442?badge=0&autopause=0&player_id=0&app_id=58479&autoplay=1&loop=1"
+        },
+        {
+          "type": "heading",
+          "level": "h1",
+          "text": "Styleframe"
+        },
+        {
+          "type": "media",
+          "tag": "img",
+          "url": "https://freight.cargo.site/w/1920/q/75/i/327d29dad1dd6a6ba98712041391646376085ce2676f8b4054270a3c00aed932/_1920-108_ALL_00504.png",
+          "hash": "327d29dad1dd6a6ba98712041391646376085ce2676f8b4054270a3c00aed932",
+          "file": "_1920-108_ALL_00504.png",
+          "w": 1920,
+          "h": 1080,
+          "alt": "",
+          "caption": "",
+          "dataCaption": "",
+          "eye": null
+        },
+        {
+          "type": "media",
+          "tag": "img",
+          "url": "https://freight.cargo.site/w/1920/q/75/i/63e349f09850b858d3c9b1867c7d9e5661ec5473e4aecaccd3d275dcd5644577/_1920-108_ALL_00301.png",
+          "hash": "63e349f09850b858d3c9b1867c7d9e5661ec5473e4aecaccd3d275dcd5644577",
+          "file": "_1920-108_ALL_00301.png",
+          "w": 1920,
+          "h": 1080,
+          "alt": "",
+          "caption": "",
+          "dataCaption": "",
+          "eye": null
+        },
+        {
+          "type": "heading",
+          "level": "h1",
+          "text": "Storyboard"
+        },
+        {
+          "type": "media",
+          "tag": "img",
+          "url": "https://freight.cargo.site/w/2000/q/75/i/b8620bc9fe055e96f59ef0b37f6b4ec29913f93c71b52ff34de2ac4d053a859c/-1.png",
+          "hash": "b8620bc9fe055e96f59ef0b37f6b4ec29913f93c71b52ff34de2ac4d053a859c",
+          "file": "-1.png",
+          "w": 2000,
+          "h": 1128,
+          "alt": "",
+          "caption": "",
+          "dataCaption": "",
+          "eye": null
+        },
+        {
+          "type": "heading",
+          "level": "h1",
+          "text": "Credit"
+        },
+        {
+          "type": "heading",
+          "level": "h2",
+          "text": "client : ShenzaoClub\nDesign&Animation : Doris Lin\nSound Design : @sasanitenite"
+        }
+      ],
+      "thumbs": []
+    },
+    {
+      "path": "/Tommy-s-Oddly-Love",
+      "title": "Tommy’s Oddly Love - Doris Lin",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": "h1",
+          "text": "Tommy’s Oddly Love"
+        },
+        {
+          "type": "heading",
+          "level": "h2",
+          "text": "Personal work | 2025 |"
+        },
+        {
+          "type": "heading",
+          "level": "h2",
+          "text": "He is Tommy. Tommy is a Chihuahua and was also the first pet dog I ever had. He was a shy and quiet little boy, and he was my best companion. I had him from when I was 10 years old until last year, when I was 26.\nWhen I was about 13, I was standing on the street when Tommy suddenly peed on my foot!\nPeople often say that dogs pee to mark their territory. I like to think of it as his own unique way of showing love.\nHe passed away last year. When I think back on all the love he gave us, I want to record that funny and touching memory to thank him for growing up with me. I’m using the way I know best to preserve it  through my own creations."
+        },
+        {
+          "type": "embed",
+          "url": "https://player.vimeo.com/video/1079279831?badge=0&autopause=0&player_id=0&app_id=58479"
+        },
+        {
+          "type": "embed",
+          "url": "https://player.vimeo.com/video/1081396903?badge=0&autopause=0&player_id=0&app_id=58479"
+        },
+        {
+          "type": "media",
+          "tag": "img",
+          "url": "https://freight.cargo.site/w/900/q/75/i/2967e361c1470f935c454c05d618fa6d854b453e37266e4c8bf1c9e53aae4ba4/Denoised-beauty-source-3_00195.png",
+          "hash": "2967e361c1470f935c454c05d618fa6d854b453e37266e4c8bf1c9e53aae4ba4",
+          "file": "Denoised-beauty-source-3_00195.png",
+          "w": 900,
+          "h": 1125,
+          "alt": "",
+          "caption": "",
+          "dataCaption": "",
+          "eye": null
+        },
+        {
+          "type": "media",
+          "tag": "img",
+          "url": "https://freight.cargo.site/w/900/q/75/i/c37084f7d449c35773f59e20ace256033d4bb49f00268e0544614814deb16a4c/TOMMY_SOLO_250504_00065.png",
+          "hash": "c37084f7d449c35773f59e20ace256033d4bb49f00268e0544614814deb16a4c",
+          "file": "TOMMY_SOLO_250504_00065.png",
+          "w": 900,
+          "h": 1125,
+          "alt": "",
+          "caption": "",
+          "dataCaption": "",
+          "eye": null
+        },
+        {
+          "type": "heading",
+          "level": "h2",
+          "text": "He is Tommy."
+        },
+        {
+          "type": "media",
+          "tag": "img",
+          "url": "https://freight.cargo.site/w/600/q/75/i/be02df684cc377fe4ec6ce73441d701e8226a6b7a0e96914096ea4727c4b802c/01_00000.png",
+          "hash": "be02df684cc377fe4ec6ce73441d701e8226a6b7a0e96914096ea4727c4b802c",
+          "file": "01_00000.png",
+          "w": 600,
+          "h": 750,
+          "alt": "",
+          "caption": "",
+          "dataCaption": "",
+          "eye": null
+        },
+        {
+          "type": "media",
+          "tag": "img",
+          "url": "https://freight.cargo.site/w/600/q/75/i/3da8007575271ddc6097934a70a11e604ebe89f36039c443f5978c3ba00b102e/02_00000.png",
+          "hash": "3da8007575271ddc6097934a70a11e604ebe89f36039c443f5978c3ba00b102e",
+          "file": "02_00000.png",
+          "w": 600,
+          "h": 750,
+          "alt": "",
+          "caption": "",
+          "dataCaption": "",
+          "eye": null
+        },
+        {
+          "type": "media",
+          "tag": "img",
+          "url": "https://freight.cargo.site/w/600/q/75/i/757bffda83b60a85ebbe0a457337ced6af26b429b4ebc09c2ff7000a3d5e61dd/03_00000.png",
+          "hash": "757bffda83b60a85ebbe0a457337ced6af26b429b4ebc09c2ff7000a3d5e61dd",
+          "file": "03_00000.png",
+          "w": 600,
+          "h": 750,
+          "alt": "",
+          "caption": "",
+          "dataCaption": "",
+          "eye": null
+        },
+        {
+          "type": "media",
+          "tag": "img",
+          "url": "https://freight.cargo.site/w/1280/q/94/i/7c4dc725838f0b20d7152553a87978921982c2b6398fabe5dbe62175849fa1e6/OddlyInLove-09_mockup.png",
+          "hash": "7c4dc725838f0b20d7152553a87978921982c2b6398fabe5dbe62175849fa1e6",
+          "file": "OddlyInLove-09_mockup.png",
+          "w": 1280,
+          "h": 1920,
+          "alt": "",
+          "caption": "",
+          "dataCaption": "",
+          "eye": null
+        }
+      ],
+      "thumbs": []
+    },
+    {
+      "path": "/Christmas-Plan",
+      "title": "Christmas Plan  - Doris Lin",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": "h1",
+          "text": "Christmas Plan"
+        },
+        {
+          "type": "heading",
+          "level": "h2",
+          "text": "Personal work | 2023 |"
+        },
+        {
+          "type": "heading",
+          "level": "h2",
+          "text": "Merry Christmas!\nThe elves are trying to assemble the Christmas tree ⛄️"
+        },
+        {
+          "type": "media",
+          "tag": "img",
+          "url": "https://freight.cargo.site/w/1500/q/94/i/ccfb4a60f024995bb7157e38e9388b0626c2e17cabcf55ce6c768da3ab3b1d3a/231224_V02__CC.png",
+          "hash": "ccfb4a60f024995bb7157e38e9388b0626c2e17cabcf55ce6c768da3ab3b1d3a",
+          "file": "231224_V02__CC.png",
+          "w": 1500,
+          "h": 1125,
+          "alt": "",
+          "caption": "",
+          "dataCaption": "",
+          "eye": null
+        },
+        {
+          "type": "media",
+          "tag": "img",
+          "url": "https://freight.cargo.site/w/1500/q/94/i/f055a4e3e89707da62bd89f5295d42910a414d5de79656e1bc13e1f948d72fd9/SOLO_CC.png",
+          "hash": "f055a4e3e89707da62bd89f5295d42910a414d5de79656e1bc13e1f948d72fd9",
+          "file": "SOLO_CC.png",
+          "w": 1500,
+          "h": 1125,
+          "alt": "",
+          "caption": "",
+          "dataCaption": "",
+          "eye": null
+        }
+      ],
+      "thumbs": []
+    },
+    {
+      "path": "/Halloween-Costume-Party",
+      "title": "🕸️Halloween Costume Party 🪩 - Doris Lin",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": "h1",
+          "text": "🕸️ Halloween Costume Party 🪩"
+        },
+        {
+          "type": "heading",
+          "level": "h2",
+          "text": "Personal work | 2025 |"
+        },
+        {
+          "type": "embed",
+          "url": "https://player.vimeo.com/video/1133401086?badge=0&autopause=0&player_id=0&app_id=58479&autoplay=1&loop=1"
+        }
+      ],
+      "thumbs": []
+    },
+    {
+      "path": "/Camping",
+      "title": "Camping - Doris Lin",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": "h1",
+          "text": "Camping"
+        },
+        {
+          "type": "heading",
+          "level": "h2",
+          "text": "Personal work | 2025 |"
+        },
+        {
+          "type": "media",
+          "tag": "img",
+          "url": "https://freight.cargo.site/w/1800/q/75/i/47835fd1600d6dcfd089708a6423c152b03b75d01b0f2d3d2a0a1df3af71c48e/FINAL_VSCO.jpg",
+          "hash": "47835fd1600d6dcfd089708a6423c152b03b75d01b0f2d3d2a0a1df3af71c48e",
+          "file": "FINAL_VSCO.jpg",
+          "w": 1800,
+          "h": 1440,
+          "alt": "",
+          "caption": "",
+          "dataCaption": "",
+          "eye": null
+        },
+        {
+          "type": "media",
+          "tag": "img",
+          "url": "https://freight.cargo.site/w/1815/q/75/i/22a0462327b318881d68235db814750dd32317fa59ae77d595f1b5b6a9b30ad9/963F926D-B38E-4672-A10C-A97298F60D22.JPG",
+          "hash": "22a0462327b318881d68235db814750dd32317fa59ae77d595f1b5b6a9b30ad9",
+          "file": "963F926D-B38E-4672-A10C-A97298F60D22.JPG",
+          "w": 1815,
+          "h": 1452,
+          "alt": "",
+          "caption": "",
+          "dataCaption": "",
+          "eye": null
+        },
+        {
+          "type": "media",
+          "tag": "img",
+          "url": "https://freight.cargo.site/w/900/q/75/i/8603d9040b9e55f73fa17e04f50808541fe086d4b38e5bbd7d84e337c294ea24/7E75C3B4-20C9-494E-BA99-C86354EB1B65.JPG",
+          "hash": "8603d9040b9e55f73fa17e04f50808541fe086d4b38e5bbd7d84e337c294ea24",
+          "file": "7E75C3B4-20C9-494E-BA99-C86354EB1B65.JPG",
+          "w": 900,
+          "h": 720,
+          "alt": "",
+          "caption": "",
+          "dataCaption": "",
+          "eye": null
+        },
+        {
+          "type": "media",
+          "tag": "img",
+          "url": "https://freight.cargo.site/w/900/q/75/i/f4bcf7722aec93dd4c74f11f261916eea6ccf2a26f9904e214757d7c5a7288c0/SOLO_01_CC_VSCO.JPG",
+          "hash": "f4bcf7722aec93dd4c74f11f261916eea6ccf2a26f9904e214757d7c5a7288c0",
+          "file": "SOLO_01_CC_VSCO.JPG",
+          "w": 900,
+          "h": 720,
+          "alt": "",
+          "caption": "",
+          "dataCaption": "",
+          "eye": null
+        }
+      ],
+      "thumbs": []
+    },
+    {
+      "path": "/snaaaake",
+      "title": "snaaaake - Doris Lin",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": "h1",
+          "text": "snaaaake"
+        },
+        {
+          "type": "heading",
+          "level": "h2",
+          "text": "Personal work | 2025 |"
+        },
+        {
+          "type": "heading",
+          "level": "h2",
+          "text": "Happy year of the Snake!"
+        },
+        {
+          "type": "media",
+          "tag": "img",
+          "url": "https://freight.cargo.site/w/1300/q/94/i/558a23bb553f3eb22024a75a90a31b49cf3a9b4523421538b14f9d2fc1416792/V04.png",
+          "hash": "558a23bb553f3eb22024a75a90a31b49cf3a9b4523421538b14f9d2fc1416792",
+          "file": "V04.png",
+          "w": 1300,
+          "h": 1300,
+          "alt": "",
+          "caption": "",
+          "dataCaption": "",
+          "eye": null
+        }
+      ],
+      "thumbs": []
+    },
+    {
+      "path": "/Santa-s-After-Work-Party",
+      "title": "Santa's After-Work Party! - Doris Lin",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": "h1",
+          "text": "Santa's After-Work Party!"
+        },
+        {
+          "type": "heading",
+          "level": "h2",
+          "text": "Personal work | 2024 |"
+        },
+        {
+          "type": "heading",
+          "level": "h2",
+          "text": "Santa Needs a Christmas Gift Too!\nOn Christmas Day, the Christmas tree and elves threw an after-work party for Santa.\nThe moment he walked through the door, they surprised him with a delightful celebration."
+        },
+        {
+          "type": "media",
+          "tag": "img",
+          "url": "https://freight.cargo.site/w/1200/q/94/i/d242c90b1ed4b45d860037eb7728f9473d555ae2b120052f776f863c984a0048/Denoised-beauty-source_00000_V02.png",
+          "hash": "d242c90b1ed4b45d860037eb7728f9473d555ae2b120052f776f863c984a0048",
+          "file": "Denoised-beauty-source_00000_V02.png",
+          "w": 1200,
+          "h": 1200,
+          "alt": "",
+          "caption": "",
+          "dataCaption": "",
+          "eye": null
+        }
+      ],
+      "thumbs": []
+    },
+    {
+      "path": "/Dancing-Christmas-Tree",
+      "title": "Dancing Christmas Tree - Doris Lin",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": "h1",
+          "text": "Dancing Christmas Tree"
+        },
+        {
+          "type": "heading",
+          "level": "h2",
+          "text": "Personal work | 2022 |"
+        },
+        {
+          "type": "embed",
+          "url": "https://player.vimeo.com/video/784292404?h=59e67acea9&autoplay=1&loop=1&byline=0"
+        },
+        {
+          "type": "media",
+          "tag": "img",
+          "url": "https://freight.cargo.site/w/1500/q/75/i/a4ab44a8c7e56f8654f86041c51030479661ffa2df4879e67d1c0d4ca3e1cbc4/_00000.png",
+          "hash": "a4ab44a8c7e56f8654f86041c51030479661ffa2df4879e67d1c0d4ca3e1cbc4",
+          "file": "_00000.png",
+          "w": 1500,
+          "h": 1500,
+          "alt": "",
+          "caption": "",
+          "dataCaption": "",
+          "eye": null
+        },
+        {
+          "type": "media",
+          "tag": "img",
+          "url": "https://freight.cargo.site/w/1500/q/75/i/707ab2612c49326cc90923e2c645c17e69dadf9d59f4f6879e4608cabfc011c8/_00000.png",
+          "hash": "707ab2612c49326cc90923e2c645c17e69dadf9d59f4f6879e4608cabfc011c8",
+          "file": "_00000.png",
+          "w": 1500,
+          "h": 1500,
+          "alt": "",
+          "caption": "",
+          "dataCaption": "",
+          "eye": null
+        },
+        {
+          "type": "media",
+          "tag": "img",
+          "url": "https://freight.cargo.site/w/1500/q/75/i/437e9a9ce02374b237bc41a11b426f8f06d812c0b61bf534d77a838e29c1c435/_00000.png",
+          "hash": "437e9a9ce02374b237bc41a11b426f8f06d812c0b61bf534d77a838e29c1c435",
+          "file": "_00000.png",
+          "w": 1500,
+          "h": 1500,
+          "alt": "",
+          "caption": "",
+          "dataCaption": "",
+          "eye": null
+        },
+        {
+          "type": "media",
+          "tag": "img",
+          "url": "https://freight.cargo.site/w/1500/q/75/i/6a58b31559e5638c4bb993d85287aea84a232a761e10d46c71bcf688bf751397/_00049.png",
+          "hash": "6a58b31559e5638c4bb993d85287aea84a232a761e10d46c71bcf688bf751397",
+          "file": "_00049.png",
+          "w": 1500,
+          "h": 1500,
+          "alt": "",
+          "caption": "",
+          "dataCaption": "",
+          "eye": null
+        }
+      ],
+      "thumbs": []
+    },
+    {
+      "path": "/Afternoon-Tea-Time",
+      "title": "Afternoon Tea Time - Doris Lin",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": "h1",
+          "text": "Afternoon Tea Time"
+        },
+        {
+          "type": "heading",
+          "level": "h2",
+          "text": "Personal work | 2024 |"
+        },
+        {
+          "type": "embed",
+          "url": "https://player.vimeo.com/video/927052864?h=b3f89a08ad&loop=1&color=ff0179"
+        },
+        {
+          "type": "media",
+          "tag": "img",
+          "url": "https://freight.cargo.site/w/900/q/75/i/689eb4bb27779ebd3125ea2b335ece4e2dc773bc86d0ba2708009dcc8c179873/_SOLO_output-4_CC.png",
+          "hash": "689eb4bb27779ebd3125ea2b335ece4e2dc773bc86d0ba2708009dcc8c179873",
+          "file": "_SOLO_output-4_CC.png",
+          "w": 900,
+          "h": 675,
+          "alt": "",
+          "caption": "",
+          "dataCaption": "",
+          "eye": null
+        },
+        {
+          "type": "media",
+          "tag": "img",
+          "url": "https://freight.cargo.site/w/900/q/75/i/a24b7540769da7e8266fa2f3bf02b1980f8a85cfeb4bd1d1f54406df92ba1f38/_SOLO_output-3_CC.png",
+          "hash": "a24b7540769da7e8266fa2f3bf02b1980f8a85cfeb4bd1d1f54406df92ba1f38",
+          "file": "_SOLO_output-3_CC.png",
+          "w": 900,
+          "h": 675,
+          "alt": "",
+          "caption": "",
+          "dataCaption": "",
+          "eye": null
+        }
+      ],
+      "thumbs": []
+    },
+    {
+      "path": "/Summer-Vibe",
+      "title": "Summer Vibe - Doris Lin",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": "h1",
+          "text": "Summer Vibe"
+        },
+        {
+          "type": "heading",
+          "level": "h2",
+          "text": "Personal work | 2024 |"
+        },
+        {
+          "type": "heading",
+          "level": "h2",
+          "text": "Bye bye Summer ☀️🍉"
+        },
+        {
+          "type": "embed",
+          "url": "https://player.vimeo.com/video/1015350505?badge=0&autopause=0&player_id=0&app_id=58479"
+        },
+        {
+          "type": "media",
+          "tag": "img",
+          "url": "https://freight.cargo.site/w/1080/q/94/i/418af7f873a923fdc612518997a50beb655caded5fd312ca8763127f6e9b00e3/Toast_rigged_ALL_V030015_V02_00007.png",
+          "hash": "418af7f873a923fdc612518997a50beb655caded5fd312ca8763127f6e9b00e3",
+          "file": "Toast_rigged_ALL_V030015_V02_00007.png",
+          "w": 1080,
+          "h": 1920,
+          "alt": "",
+          "caption": "",
+          "dataCaption": "",
+          "eye": null
+        }
+      ],
+      "thumbs": []
+    },
+    {
+      "path": "/3D-Ceramic-Project-NO-O1",
+      "title": "3D Ceramic Project @ NO.O1 - Doris Lin",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": "h1",
+          "text": "3D Ceramic Project @ NO.O1"
+        },
+        {
+          "type": "heading",
+          "level": "h2",
+          "text": "Personal work | 2024 |"
+        },
+        {
+          "type": "heading",
+          "level": "h2",
+          "text": "\"I guess I'll go back to using the computer for 3D 😭.\"\nThis is a sentence my friend, who taught me pottery most frequently in the second half of last year, said. One day, I had an epiphany! It's okay to start with 3D!\nThe starting point of this project is small, a bit whimsical, purely to fulfill my small wish. The main idea is to digitally sculpt pottery on the computer, trying to maintain the steps of making pottery and using shapes to record a certain day, creating the image in my mind. However, I won't give up on making pottery entirely, after all, the unique surprises that come out every time it's fired are indeed one of the joys of pottery!\n(´,,ᴖ ᴖ,,｀)\n─ NO.O1 : 20240103"
+        },
+        {
+          "type": "media",
+          "tag": "img",
+          "url": "https://freight.cargo.site/w/1500/q/94/i/afbe95c8f4e8ec71fca897e9bae9eb2e85409b1282d4adb620d4ec5345056d45/final_v02_00124.png",
+          "hash": "afbe95c8f4e8ec71fca897e9bae9eb2e85409b1282d4adb620d4ec5345056d45",
+          "file": "final_v02_00124.png",
+          "w": 1500,
+          "h": 1500,
+          "alt": "",
+          "caption": "",
+          "dataCaption": "",
+          "eye": null
+        },
+        {
+          "type": "embed",
+          "url": "https://player.vimeo.com/video/900698879?h=2f591eb5c5&autoplay=1&loop=1"
+        }
+      ],
+      "thumbs": []
+    },
+    {
+      "path": "/Toast-baby-pottery",
+      "title": "Toast baby | pottery  - Doris Lin",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": "h1",
+          "text": "Toast baby | pottery"
+        },
+        {
+          "type": "heading",
+          "level": "h2",
+          "text": "Personal work | 2023 |\nMy first pottery creation is complete! It‘s my Toast Baby!"
+        },
+        {
+          "type": "heading",
+          "level": "h2",
+          "text": "Although there are some uneven colors and a few details didn’t turn out perfectly, I still really love it!\nI intentionally added a hole that can hold a pen, and I‘m very satisfied with it! I just love these kinds of slightly practical little trinkets.🤩"
+        },
+        {
+          "type": "media",
+          "tag": "img",
+          "url": "https://freight.cargo.site/w/2000/q/75/i/1689ed4a1c362a36155e0a0a978f460d312c9ae7f015779dbe57b35df6f8be48/7427BA54-4D05-442E-9F77-544D7C5D4F8C.jpg",
+          "hash": "1689ed4a1c362a36155e0a0a978f460d312c9ae7f015779dbe57b35df6f8be48",
+          "file": "7427BA54-4D05-442E-9F77-544D7C5D4F8C.jpg",
+          "w": 2000,
+          "h": 3000,
+          "alt": "",
+          "caption": "",
+          "dataCaption": "",
+          "eye": null
+        },
+        {
+          "type": "media",
+          "tag": "img",
+          "url": "https://freight.cargo.site/w/700/q/75/i/e7520dd228e5445b9d879c86f7937da865820b0ca3b9727621a26b2ea7120ea8/B54003FC-42F0-4BC3-8A58-5FC767DF2773.jpg",
+          "hash": "e7520dd228e5445b9d879c86f7937da865820b0ca3b9727621a26b2ea7120ea8",
+          "file": "B54003FC-42F0-4BC3-8A58-5FC767DF2773.jpg",
+          "w": 700,
+          "h": 1050,
+          "alt": "",
+          "caption": "",
+          "dataCaption": "",
+          "eye": null
+        },
+        {
+          "type": "media",
+          "tag": "img",
+          "url": "https://freight.cargo.site/w/700/q/75/i/41dc92a73f87c39b8e672b2999af8283c649a21db6c0c5d22c87efdc2e683ec9/477D989C-169F-4014-97F5-82BF93734B4D.jpg",
+          "hash": "41dc92a73f87c39b8e672b2999af8283c649a21db6c0c5d22c87efdc2e683ec9",
+          "file": "477D989C-169F-4014-97F5-82BF93734B4D.jpg",
+          "w": 700,
+          "h": 1050,
+          "alt": "",
+          "caption": "",
+          "dataCaption": "",
+          "eye": null
+        },
+        {
+          "type": "media",
+          "tag": "img",
+          "url": "https://freight.cargo.site/w/700/q/75/i/4e797ce0dd207c18f8ad9c5b223277c3242d455d34cf67c9e5ce4048544f064a/F95ACA7E-C0E9-4379-9C7A-6B0F528CD831.jpg",
+          "hash": "4e797ce0dd207c18f8ad9c5b223277c3242d455d34cf67c9e5ce4048544f064a",
+          "file": "F95ACA7E-C0E9-4379-9C7A-6B0F528CD831.jpg",
+          "w": 700,
+          "h": 1050,
+          "alt": "",
+          "caption": "",
+          "dataCaption": "",
+          "eye": null
+        }
+      ],
+      "thumbs": []
+    },
+    {
+      "path": "/Magical-Pumpkin-Soup",
+      "title": "Magical Pumpkin Soup 🥣🎃🧪 - Doris Lin",
+      "blocks": [
+        {
+          "type": "media",
+          "tag": "img",
+          "url": "https://freight.cargo.site/w/1280/q/75/i/b08420dbf7e7d7dd4fe5ede26d3f607765b1a0d34a8a52f850264d783c62c066/__V030031_V07_CC0.jpg",
+          "hash": "b08420dbf7e7d7dd4fe5ede26d3f607765b1a0d34a8a52f850264d783c62c066",
+          "file": "__V030031_V07_CC0.jpg",
+          "w": 1280,
+          "h": 1280,
+          "alt": "",
+          "caption": "",
+          "dataCaption": "",
+          "eye": null
+        },
+        {
+          "type": "media",
+          "tag": "img",
+          "url": "https://freight.cargo.site/w/1280/q/75/i/fb262827a777d8fcb5d073ff69ccd7847f9ea29772a42d10bc6b75b390a25f4b/__00000.png",
+          "hash": "fb262827a777d8fcb5d073ff69ccd7847f9ea29772a42d10bc6b75b390a25f4b",
+          "file": "__00000.png",
+          "w": 1280,
+          "h": 1280,
+          "alt": "",
+          "caption": "",
+          "dataCaption": "",
+          "eye": null
+        },
+        {
+          "type": "heading",
+          "level": "h1",
+          "text": "Magical pumpkin soup 🥣🎃🧟‍♂️🔮🧪"
+        },
+        {
+          "type": "heading",
+          "level": "h2",
+          "text": "Personal work | 2023 |\nHow about a bowl of soup on a cool autumn night?\n🧙🧪🧟‍♂️"
+        }
+      ],
+      "thumbs": []
+    },
+    {
+      "path": "/The-positive-Building-Papaya-milk",
+      "title": "The positive Building | Papaya milk - Doris Lin",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": "h1",
+          "text": "The positive Building| Papaya milk"
+        },
+        {
+          "type": "heading",
+          "level": "h2",
+          "text": "Personal work | 2023 |"
+        },
+        {
+          "type": "heading",
+          "level": "h2",
+          "text": "No one can resist the tempting deliciousness of papaya milk! Drinking papaya milk with friends, savoring its goodness, and dancing joyfully is one of the most joyful things in the world!🥛✨"
+        },
+        {
+          "type": "embed",
+          "url": "https://player.vimeo.com/video/861530394?h=756dc339ec&autoplay=1&color=ff0179"
+        }
+      ],
+      "thumbs": []
+    },
+    {
+      "path": "/The-Daruma-doll-at-Katsuo-Ji-Temple",
+      "title": "The Daruma doll at Katsuo-Ji Temple - Doris Lin",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": "h1",
+          "text": "The Daruma doll at Katsuo-Ji Temple"
+        },
+        {
+          "type": "heading",
+          "level": "h2",
+          "text": "Personal work | 2023 |"
+        },
+        {
+          "type": "heading",
+          "level": "h2",
+          "text": "Last month, I traveled to Osaka and visited Katsuo-ji Temple, which was one of my favorite spots throughout the trip. The temple was filled with adorable Daruma dolls.\nLater, I looked up information about Daruma and was amazed to learn that the dolls represent a legendary monk who meditated facing a wall for nine years, causing his arms and legs to atrophy, resulting in the unique shape we see today. Knowing this, I couldn‘t resist creating an animated Daruma doll secretly stretching its limbs when no one was watching."
+        },
+        {
+          "type": "embed",
+          "url": "https://player.vimeo.com/video/850017375?h=c546d2be41"
+        }
+      ],
+      "thumbs": []
+    },
+    {
+      "path": "/Traditional-Taiwanese-Bathroom",
+      "title": "Traditional Taiwanese Bathroom - Doris Lin",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": "h1",
+          "text": "Traditional Taiwanese Bathroom"
+        },
+        {
+          "type": "heading",
+          "level": "h2",
+          "text": "Personal work | 2023 |"
+        },
+        {
+          "type": "heading",
+          "level": "h2",
+          "text": "I have always loved the traditional Taiwanese ceramic tiles and mosaic tile bathtubs that can be found at my grandmother's house. Even now, the tiles on the walls and floors of my childhood home's kitchen are still these traditional floral tiles! They are really adorable! When I was a child, I would even count the tiles in the mosaic tile bathtub, and I remember how slippery it was and how afraid I was of slipping inside.\nTraditional Taiwanese tulip-patterned ceramic tiles are most commonly used in kitchens and bathrooms. As for traditional mosaic tile bathtubs, they are made of colorful stones in five different hues: red, green, blue, white, and yellow. These materials evoke a sense of nostalgia and are considered traditional building materials in Taiwan."
+        },
+        {
+          "type": "embed",
+          "url": "https://player.vimeo.com/video/830842294?h=f7185556ff&loop=1&byline=0&portrait=0"
+        },
+        {
+          "type": "media",
+          "tag": "img",
+          "url": "https://freight.cargo.site/w/1500/q/94/i/280f10050e74204fdd76e6d6a1ed77ed332ac5f3b707586f3a5901e6a94eb393/_00076.png",
+          "hash": "280f10050e74204fdd76e6d6a1ed77ed332ac5f3b707586f3a5901e6a94eb393",
+          "file": "_00076.png",
+          "w": 1500,
+          "h": 1500,
+          "alt": "",
+          "caption": "",
+          "dataCaption": "",
+          "eye": null
+        },
+        {
+          "type": "media",
+          "tag": "img",
+          "url": "https://freight.cargo.site/w/1440/q/94/i/e393f76b19477c29997fab0c01c835c14c550c804844547d80b989a237022d1c/230523_-1_00084.png",
+          "hash": "e393f76b19477c29997fab0c01c835c14c550c804844547d80b989a237022d1c",
+          "file": "230523_-1_00084.png",
+          "w": 1440,
+          "h": 1440,
+          "alt": "",
+          "caption": "",
+          "dataCaption": "",
+          "eye": null
+        },
+        {
+          "type": "media",
+          "tag": "img",
+          "url": "https://freight.cargo.site/w/1440/q/94/i/b6a6e8a7bddc25e283f2f35ae356d413a27798f6978d28fdeec6fce7c5a0ba10/230523_-1_00039.png",
+          "hash": "b6a6e8a7bddc25e283f2f35ae356d413a27798f6978d28fdeec6fce7c5a0ba10",
+          "file": "230523_-1_00039.png",
+          "w": 1440,
+          "h": 1440,
+          "alt": "",
+          "caption": "",
+          "dataCaption": "",
+          "eye": null
+        }
+      ],
+      "thumbs": []
+    },
+    {
+      "path": "/Nodding-Off",
+      "title": "Nodding Off... - Doris Lin",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": "h1",
+          "text": "Nodding Off..."
+        },
+        {
+          "type": "heading",
+          "level": "h2",
+          "text": "Personal work | 2023 |"
+        },
+        {
+          "type": "heading",
+          "level": "h2",
+          "text": "The toy nodded off while feeling tired.\nThe recent weather is good for sleeping 😪💤\nHave you ever been abruptly awakened while sleeping?"
+        },
+        {
+          "type": "embed",
+          "url": "https://player.vimeo.com/video/804158033?h=e0954711fc&autoplay=1&loop=1"
+        },
+        {
+          "type": "media",
+          "tag": "img",
+          "url": "https://freight.cargo.site/w/1500/q/94/i/19bcc45d2a7cbbe282733602361835795bc7ba5c91fe6c9360a381b5cf4378d0/_00000.png",
+          "hash": "19bcc45d2a7cbbe282733602361835795bc7ba5c91fe6c9360a381b5cf4378d0",
+          "file": "_00000.png",
+          "w": 1500,
+          "h": 1500,
+          "alt": "",
+          "caption": "",
+          "dataCaption": "",
+          "eye": null
+        },
+        {
+          "type": "media",
+          "tag": "img",
+          "url": "https://freight.cargo.site/w/900/q/75/i/fcaadd5a22b3aa230bd8fa0ea8cadd7a9508f8307c538b49360d675f6f99f7c9/_00075.png",
+          "hash": "fcaadd5a22b3aa230bd8fa0ea8cadd7a9508f8307c538b49360d675f6f99f7c9",
+          "file": "_00075.png",
+          "w": 900,
+          "h": 900,
+          "alt": "",
+          "caption": "",
+          "dataCaption": "",
+          "eye": null
+        },
+        {
+          "type": "media",
+          "tag": "img",
+          "url": "https://freight.cargo.site/w/900/q/75/i/7b11c14cce9f4faeef5a202ffb6f0729f1a87beeef583ffd012e737ac356f4f9/_00159.png",
+          "hash": "7b11c14cce9f4faeef5a202ffb6f0729f1a87beeef583ffd012e737ac356f4f9",
+          "file": "_00159.png",
+          "w": 900,
+          "h": 900,
+          "alt": "",
+          "caption": "",
+          "dataCaption": "",
+          "eye": null
+        }
+      ],
+      "thumbs": []
+    },
+    {
+      "path": "/Toast-Baby-Take-a-Bread-series",
+      "title": "Toast Baby | Take a Bread series - Doris Lin",
+      "blocks": [
+        {
+          "type": "media",
+          "tag": "img",
+          "url": "https://freight.cargo.site/w/1200/q/94/i/e27b5d71e9fbde4f3591bb885c1438c7309a874baf5da1949dc04ca168fc9337/toast_V02.png",
+          "hash": "e27b5d71e9fbde4f3591bb885c1438c7309a874baf5da1949dc04ca168fc9337",
+          "file": "toast_V02.png",
+          "w": 1200,
+          "h": 1200,
+          "alt": "",
+          "caption": "",
+          "dataCaption": "",
+          "eye": null
+        },
+        {
+          "type": "heading",
+          "level": "h1",
+          "text": "Toast Baby | Take a Bread series"
+        },
+        {
+          "type": "heading",
+          "level": "h2",
+          "text": "Personal work | 2023 |\nThis is a series of creative works about Toastie Baby and his good friends, all created during leisure time. I hope to take a break with everyone and enjoy eating bread together!\nLet’s take a Bread!🥐️\n@takeabread_doris"
+        }
+      ],
+      "thumbs": []
+    },
+    {
+      "path": "/The-year-of-the-Rabbit",
+      "title": "The year of the Rabbit - Doris Lin",
+      "blocks": [
+        {
+          "type": "media",
+          "tag": "img",
+          "url": "https://freight.cargo.site/w/1500/q/75/i/f034bd6beb05f48a61f595c22eb338610658062076b2265d71766aedbb48613b/2023_0120_V01_00000.png",
+          "hash": "f034bd6beb05f48a61f595c22eb338610658062076b2265d71766aedbb48613b",
+          "file": "2023_0120_V01_00000.png",
+          "w": 1500,
+          "h": 1500,
+          "alt": "",
+          "caption": "",
+          "dataCaption": "",
+          "eye": null
+        },
+        {
+          "type": "heading",
+          "level": "h1",
+          "text": "The year of the Rabbit"
+        },
+        {
+          "type": "heading",
+          "level": "h2",
+          "text": "Personal work | 2023 |\nIn Chinese culture, oranges represent auspiciousness.\nThis year is the Year of the Rabbit, and I want to use the most comfortable appearance of the rabbit to convey the hope that everyone can be as free as the rabbit this year."
+        }
+      ],
+      "thumbs": []
+    },
+    {
+      "path": "/Little-Jam-Take-a-Bread-series",
+      "title": "Little Jam | Take a Bread series - Doris Lin",
+      "blocks": [
+        {
+          "type": "media",
+          "tag": "img",
+          "url": "https://freight.cargo.site/w/1280/q/94/i/f46abb00f3f6def1ebd15d59f28ac9a1d119132de246f58a16a14151f5200c02/little_Jam__V03.png",
+          "hash": "f46abb00f3f6def1ebd15d59f28ac9a1d119132de246f58a16a14151f5200c02",
+          "file": "little_Jam__V03.png",
+          "w": 1280,
+          "h": 1280,
+          "alt": "",
+          "caption": "",
+          "dataCaption": "",
+          "eye": null
+        },
+        {
+          "type": "heading",
+          "level": "h1",
+          "text": "Little Jam | Take a Bread series"
+        },
+        {
+          "type": "heading",
+          "level": "h2",
+          "text": "Personal work | 2023 |\nLittle Jam is Toast Baby's best friend!\nHe's usually orange-flavored, but he turns into strawberry flavor when he's happy.\nThis is a series of creative works about Toastie Baby and his good friends, all created during leisure time. I hope to take a break with everyone and enjoy eating bread together!\nLet’s take a Bread!🥐️\n@takeabread_doris"
+        }
+      ],
+      "thumbs": []
+    },
+    {
+      "path": "/ASUS-CES-2023",
+      "title": "ASUS CES 2023  - Doris Lin",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": "h1",
+          "text": "ASUS CES 2023 #Lightness"
+        },
+        {
+          "type": "heading",
+          "level": "h2",
+          "text": "Animation,Styleframe | 2023 |"
+        },
+        {
+          "type": "heading",
+          "level": "h2",
+          "text": "Wild Design has produced five global teaser trailers for the ASUS CES 2023 event.\nThese trailers revolve around ASUS's new technology, 3D OLED, and extend into five video concepts that showcase the potential of naked-eye 3D through visual representation. Using abstract and playful techniques in each video, we aim to convey the craft and design philosophy of our products."
+        },
+        {
+          "type": "embed",
+          "url": "https://player.vimeo.com/video/821546299?h=f45ca15869&loop=1&byline=0&portrait=0"
+        },
+        {
+          "type": "media",
+          "tag": "img",
+          "url": "https://freight.cargo.site/w/900/q/75/i/99cc74b88a4cfcb1ebee8509e6fb9ea0ee4877a69aae93d5f022bbc3408f492a/ASUS_CES_ExpertBook-Lightness_1500x1500_nosub_0179.jpg",
+          "hash": "99cc74b88a4cfcb1ebee8509e6fb9ea0ee4877a69aae93d5f022bbc3408f492a",
+          "file": "ASUS_CES_ExpertBook-Lightness_1500x1500_nosub_0179.jpg",
+          "w": 900,
+          "h": 900,
+          "alt": "",
+          "caption": "",
+          "dataCaption": "",
+          "eye": null
+        },
+        {
+          "type": "media",
+          "tag": "img",
+          "url": "https://freight.cargo.site/w/900/q/75/i/809d386b5c889f7f98c41ed9e8a62681cef1a7e386369f719c750b2945212a3b/ASUS_CES_ExpertBook-Lightness_1500x1500_nosub_0303.jpg",
+          "hash": "809d386b5c889f7f98c41ed9e8a62681cef1a7e386369f719c750b2945212a3b",
+          "file": "ASUS_CES_ExpertBook-Lightness_1500x1500_nosub_0303.jpg",
+          "w": 900,
+          "h": 900,
+          "alt": "",
+          "caption": "",
+          "dataCaption": "",
+          "eye": null
+        },
+        {
+          "type": "heading",
+          "level": "h2",
+          "text": "Production House：野人設計 WILD DESIGN\nClients：華碩 ASUSDirector：陳志育 Ida Chen\nProject Manager：吳昱緯 Phil Wu、游佳怡 Chia Yi Yu\nCreative：陳志育 Ida Chen\nStyleframes：林意媗 Doris Lin\nAnimation：林意媗 Doris Lin\nSound Design：陳敬恆 Quiet Chen"
+        }
+      ],
+      "thumbs": []
+    },
+    {
+      "path": "/Mooncake",
+      "title": "Mooncake! - Doris Lin",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": "h1",
+          "text": "Mooncake!"
+        },
+        {
+          "type": "heading",
+          "level": "h2",
+          "text": "Personal work | 2022 |"
+        },
+        {
+          "type": "embed",
+          "url": "https://player.vimeo.com/video/756670394?h=94a32ae758&loop=1&title=0"
+        }
+      ],
+      "thumbs": []
+    },
+    {
+      "path": "/Halloween-Dog",
+      "title": "Halloween Dog - Doris Lin",
+      "blocks": [
+        {
+          "type": "embed",
+          "url": "https://player.vimeo.com/video/768100469?h=741d48194d&badge=0&autopause=0&player_id=0&app_id=58479"
+        },
+        {
+          "type": "heading",
+          "level": "h1",
+          "text": "Halloween Dog"
+        },
+        {
+          "type": "heading",
+          "level": "h2",
+          "text": "Personal work | 2022 |"
+        }
+      ],
+      "thumbs": []
+    },
+    {
+      "path": "/Matcha-Souffle",
+      "title": "Matcha Souffle - Doris Lin",
+      "blocks": [
+        {
+          "type": "media",
+          "tag": "img",
+          "url": "https://freight.cargo.site/w/1280/q/94/i/1c0c9baf2254df522c23d564ff26991a7ce06738113d1b55a034143057bbf22b/4.png",
+          "hash": "1c0c9baf2254df522c23d564ff26991a7ce06738113d1b55a034143057bbf22b",
+          "file": "4.png",
+          "w": 1280,
+          "h": 1280,
+          "alt": "",
+          "caption": "",
+          "dataCaption": "",
+          "eye": null
+        },
+        {
+          "type": "heading",
+          "level": "h1",
+          "text": "Matcha Souffle"
+        },
+        {
+          "type": "heading",
+          "level": "h2",
+          "text": "Personal work | 2022 |"
+        }
+      ],
+      "thumbs": []
+    },
+    {
+      "path": "/Happy-Toast",
+      "title": "Happy Toast 🍞  - Doris Lin",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": "h1",
+          "text": "Happy Toast"
+        },
+        {
+          "type": "heading",
+          "level": "h2",
+          "text": "Personal work | 2022 |"
+        },
+        {
+          "type": "embed",
+          "url": "https://player.vimeo.com/video/690373504?h=ddc4bee778"
+        }
+      ],
+      "thumbs": []
+    },
+    {
+      "path": "/Freedom-Frames",
+      "title": "自由的形狀 Freedom Frames - Doris Lin",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": "h1",
+          "text": "自由的形狀 Freedom Frames"
+        },
+        {
+          "type": "heading",
+          "level": "h2",
+          "text": "Motion Design ｜ 2021 |"
+        },
+        {
+          "type": "heading",
+          "level": "h2",
+          "text": "Credit"
+        },
+        {
+          "type": "heading",
+          "level": "h2",
+          "text": "Graphics Design｜\nKuo Yi Chiau 郭一樵\nMotion Design｜\nDoris Lin 林意媗"
+        },
+        {
+          "type": "embed",
+          "url": "https://player.vimeo.com/video/691752710?autoplay=1&loop=1h=922c4cda9b&badge=0&autopause=0&player_id=0&app_id=58479"
+        }
+      ],
+      "thumbs": []
+    },
+    {
+      "path": "/Chick",
+      "title": "Chick 🐤 - Doris Lin",
+      "blocks": [
+        {
+          "type": "media",
+          "tag": "img",
+          "url": "https://freight.cargo.site/w/1500/q/75/i/6380b7f949d7f6d73fa9b8435dfb18633624c7973a06fcbe42259506e153331c/2_DeMain_0099.png",
+          "hash": "6380b7f949d7f6d73fa9b8435dfb18633624c7973a06fcbe42259506e153331c",
+          "file": "2_DeMain_0099.png",
+          "w": 1500,
+          "h": 844,
+          "alt": "",
+          "caption": "",
+          "dataCaption": "",
+          "eye": null
+        },
+        {
+          "type": "heading",
+          "level": "h1",
+          "text": "Chick in Sweet and Sour Sauce"
+        },
+        {
+          "type": "heading",
+          "level": "h2",
+          "text": "Personal work | 2022 |"
+        },
+        {
+          "type": "media",
+          "tag": "img",
+          "url": "https://freight.cargo.site/w/1500/q/75/i/29db35a8d9cab1033978c19a19d41119d2bcf31812d64b8bdb264500243b9feb/-1_-1_-1_-1_-1.png",
+          "hash": "29db35a8d9cab1033978c19a19d41119d2bcf31812d64b8bdb264500243b9feb",
+          "file": "-1_-1_-1_-1_-1.png",
+          "w": 1500,
+          "h": 844,
+          "alt": "",
+          "caption": "",
+          "dataCaption": "",
+          "eye": null
+        },
+        {
+          "type": "embed",
+          "url": "https://player.vimeo.com/video/675757717?h=bb22d1774a&autoplay=1&loop=1&byline=0&portrait=0"
+        }
+      ],
+      "thumbs": []
+    },
+    {
+      "path": "/Turn-On",
+      "title": "Turn On! - Doris Lin",
+      "blocks": [
+        {
+          "type": "embed",
+          "url": "https://player.vimeo.com/video/710100214?h=147cc8d6cb&loop=1&title=0&byline=0&portrait=0"
+        },
+        {
+          "type": "heading",
+          "level": "h1",
+          "text": "Turn On!"
+        },
+        {
+          "type": "heading",
+          "level": "h2",
+          "text": "Personal work | 2022 |"
+        },
+        {
+          "type": "media",
+          "tag": "img",
+          "url": "https://freight.cargo.site/w/1000/q/94/i/ad0a5480ee2d2e66783206ef0795eb23474aeb7768e798e75b54a72c6a333f16/3cube0115.png",
+          "hash": "ad0a5480ee2d2e66783206ef0795eb23474aeb7768e798e75b54a72c6a333f16",
+          "file": "3cube0115.png",
+          "w": 1000,
+          "h": 1000,
+          "alt": "",
+          "caption": "",
+          "dataCaption": "",
+          "eye": null
+        }
+      ],
+      "thumbs": []
+    },
+    {
+      "path": "/Puffer-Fish",
+      "title": "Puffer Fish 🐡 - Doris Lin",
+      "blocks": [
+        {
+          "type": "media",
+          "tag": "img",
+          "url": "https://freight.cargo.site/w/1500/q/75/i/19eefb5fa796d40a96e63180fa0cdba95c4d11b72d203ed5600aad1dff1eb7cc/0019.jpg",
+          "hash": "19eefb5fa796d40a96e63180fa0cdba95c4d11b72d203ed5600aad1dff1eb7cc",
+          "file": "0019.jpg",
+          "w": 1500,
+          "h": 2001,
+          "alt": "",
+          "caption": "",
+          "dataCaption": "",
+          "eye": null
+        },
+        {
+          "type": "heading",
+          "level": "h1",
+          "text": "Puffer Fish"
+        },
+        {
+          "type": "heading",
+          "level": "h2",
+          "text": "Personal work | 2022 |"
+        },
+        {
+          "type": "heading",
+          "level": "h2",
+          "text": "想做一隻毛毛飄飄的河豚🐡\nJust want to make a furry puffer fish."
+        },
+        {
+          "type": "embed",
+          "url": "https://player.vimeo.com/video/690373556?autoplay=1&loop=1 h=edd2cdc6f6&badge=0&autopause=0&player_id=0&app_id=58479"
+        }
+      ],
+      "thumbs": []
+    },
+    {
+      "path": "/Annie-at-Work",
+      "title": "Annie at Work - Doris Lin",
+      "blocks": [
+        {
+          "type": "media",
+          "tag": "img",
+          "url": "https://freight.cargo.site/w/1500/q/75/i/3881742bf8944e7d4db6652575b0125744a98cae2c1da80da332730f2dc88208/0084.png",
+          "hash": "3881742bf8944e7d4db6652575b0125744a98cae2c1da80da332730f2dc88208",
+          "file": "0084.png",
+          "w": 1500,
+          "h": 844,
+          "alt": "",
+          "caption": "",
+          "dataCaption": "",
+          "eye": null
+        },
+        {
+          "type": "heading",
+          "level": "h1",
+          "text": "Annie at Work"
+        },
+        {
+          "type": "heading",
+          "level": "h2",
+          "text": "Personal work | 2021 |"
+        },
+        {
+          "type": "embed",
+          "url": "https://player.vimeo.com/video/690374586?h=d1d37c50d7&autoplay=1&loop=1&byline=0&portrait=0"
+        }
+      ],
+      "thumbs": []
+    },
+    {
+      "path": "/WAAA-MY-POPCORN",
+      "title": "WAAA... MY POPCORN - Doris Lin",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": "h1",
+          "text": "WAAA... MY POPCORN"
+        },
+        {
+          "type": "heading",
+          "level": "h2",
+          "text": "Personal work | 2022 |"
+        },
+        {
+          "type": "media",
+          "tag": "img",
+          "url": "https://freight.cargo.site/w/1280/q/94/i/0abe6037cfa59b414e925430f0256a8163f97468d24447c810d2a970a008e3fa/6.jpg",
+          "hash": "0abe6037cfa59b414e925430f0256a8163f97468d24447c810d2a970a008e3fa",
+          "file": "6.jpg",
+          "w": 1280,
+          "h": 1280,
+          "alt": "",
+          "caption": "",
+          "dataCaption": "",
+          "eye": null
+        }
+      ],
+      "thumbs": []
+    },
+    {
+      "path": "/Rudolph",
+      "title": "Rudolph!  - Doris Lin",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": "h1",
+          "text": "Rudolph! |\nInteractive Projection Game"
+        },
+        {
+          "type": "heading",
+          "level": "h2",
+          "text": "Personal project | 2020 |"
+        },
+        {
+          "type": "heading",
+          "level": "h2",
+          "text": "“Rudolph” is an interactive projection table game. The goal of the game is to collect as much garbage as possible in 100 seconds. There are up and downhills and rivers in the game, also the traps of the spike, which might let players undergo the short-lived death.\nPlayers have three actual item boards respectively used as three different functions.\nFor example, Rudolph can jump with the “pudding” board, the “conveyor belt” makes Rudolph speed up, and the “fan” helps to move further.\nThere are also many different terrains in the game. Players need to put each item board in the proper places and have the flexibility to use them under time pressure to get points, which gives players excitement and pleasure."
+        },
+        {
+          "type": "heading",
+          "level": "h2",
+          "text": "➡  More About"
+        },
+        {
+          "type": "embed",
+          "url": "https://player.vimeo.com/video/758826204?h=c7c9f82065&badge=0&autopause=0&player_id=0&app_id=58479"
+        }
+      ],
+      "thumbs": []
+    },
+    {
+      "path": "/Can-t-Believe",
+      "title": "Can't Believe - Doris Lin",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": "h1",
+          "text": "OUUCH! | Can’t Believe."
+        },
+        {
+          "type": "heading",
+          "level": "h2",
+          "text": "Graduation project | 2021 |"
+        },
+        {
+          "type": "heading",
+          "level": "h2",
+          "text": "<OUUCH!>is a series of works about my anxiety.There are eight sprites in the series."
+        },
+        {
+          "type": "heading",
+          "level": "h2",
+          "text": "This peice is about that I always have a hard time believing other people compliment me."
+        },
+        {
+          "type": "heading",
+          "level": "h2",
+          "text": "→ More<OUUCH!>"
+        },
+        {
+          "type": "embed",
+          "url": "https://player.vimeo.com/video/692726110?h=0bf3ade597&badge=0&autopause=0&player_id=0&app_id=58479"
+        }
+      ],
+      "thumbs": []
+    },
+    {
+      "path": "/Compare",
+      "title": "Compare - Doris Lin",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": "h1",
+          "text": "OUUCH! | Compare"
+        },
+        {
+          "type": "heading",
+          "level": "h2",
+          "text": "Graduation project | 2021 |"
+        },
+        {
+          "type": "heading",
+          "level": "h2",
+          "text": "<OUUCH!>is a series of works about my anxiety.There are eight sprites in the series."
+        },
+        {
+          "type": "embed",
+          "url": "https://player.vimeo.com/video/692735800?h=338b6ebfbc&autoplay=1&loop=1&byline=0&portrait=0"
+        }
+      ],
+      "thumbs": []
+    },
+    {
+      "path": "/eyes",
+      "title": "eyes - Doris Lin",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": "h1",
+          "text": "OUUCH! | Eyes"
+        },
+        {
+          "type": "heading",
+          "level": "h2",
+          "text": "Graduation project | 2021 |"
+        },
+        {
+          "type": "heading",
+          "level": "h2",
+          "text": "<OUUCH!>is a series of works about my anxiety.There are eight sprites in the series."
+        },
+        {
+          "type": "heading",
+          "level": "h2",
+          "text": "This peice is about me being in crowd and always feeling anxious about people’s eyes."
+        },
+        {
+          "type": "heading",
+          "level": "h2",
+          "text": "→ More<OUUCH!>"
+        },
+        {
+          "type": "embed",
+          "url": "https://player.vimeo.com/video/692734401?h=443640baec&autoplay=1&loop=1&byline=0&portrait=0"
+        }
+      ],
+      "thumbs": []
+    },
+    {
+      "path": "/Transform",
+      "title": "Transform - Doris Lin",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": "h1",
+          "text": "Transform"
+        },
+        {
+          "type": "heading",
+          "level": "h2",
+          "text": "Personal work | 2021 |"
+        },
+        {
+          "type": "embed",
+          "url": "https://player.vimeo.com/video/697830291?h=036e65596d&autoplay=1&loop=1&title=0&byline=0&portrait=0"
+        }
+      ],
+      "thumbs": []
+    },
+    {
+      "path": "/Hide",
+      "title": "Hide - Doris Lin",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": "h1",
+          "text": "OUUCH! | Hide"
+        },
+        {
+          "type": "heading",
+          "level": "h2",
+          "text": "Graduation project | 2021 |"
+        },
+        {
+          "type": "heading",
+          "level": "h2",
+          "text": "<OUUCH!>is a series of works about my anxiety.There are eight sprites in the series."
+        },
+        {
+          "type": "heading",
+          "level": "h2",
+          "text": "→ More<OUUCH!>"
+        },
+        {
+          "type": "embed",
+          "url": "https://player.vimeo.com/video/692736666?h=9f29fb043d&autoplay=1&loop=1&byline=0&portrait=0"
+        }
+      ],
+      "thumbs": []
+    },
+    {
+      "path": "/REUNION",
+      "title": "REUNION - Doris Lin",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": "h1",
+          "text": "REUNION"
+        },
+        {
+          "type": "heading",
+          "level": "h2",
+          "text": "Personal work | 2021 |"
+        },
+        {
+          "type": "embed",
+          "url": "https://player.vimeo.com/video/692736735?h=ce2c3482a4&loop=1&byline=0&portrait=0"
+        }
+      ],
+      "thumbs": []
+    },
+    {
+      "path": "/Fragile",
+      "title": "Fragile - Doris Lin",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": "h1",
+          "text": "OUUCH! | Fragile"
+        },
+        {
+          "type": "heading",
+          "level": "h2",
+          "text": "Graduation project | 2021 |"
+        },
+        {
+          "type": "heading",
+          "level": "h2",
+          "text": "<OUUCH!>is a series of works about my anxiety.There are eight sprites in the series."
+        },
+        {
+          "type": "embed",
+          "url": "https://player.vimeo.com/video/692735484?h=91e25d682c&autoplay=1&loop=1&byline=0&portrait=0"
+        }
+      ],
+      "thumbs": []
+    },
+    {
+      "path": "/Follow",
+      "title": "Follow  - Doris Lin",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": "h1",
+          "text": "OUUCH! | Follow"
+        },
+        {
+          "type": "heading",
+          "level": "h2",
+          "text": "Graduation project | 2021 |"
+        },
+        {
+          "type": "heading",
+          "level": "h2",
+          "text": "<OUUCH!>is a series of works about my anxiety.There are eight sprites in the series."
+        },
+        {
+          "type": "heading",
+          "level": "h2",
+          "text": "This is to say that I am often afraid of being different from others, trying to make myself look like everyone else, but finding myself even more uncomfortable."
+        },
+        {
+          "type": "heading",
+          "level": "h2",
+          "text": "→ More<OUUCH!>"
+        },
+        {
+          "type": "embed",
+          "url": "https://player.vimeo.com/video/692734091?h=3b7f338393&autoplay=1&loop=1&byline=0&portrait=0"
+        }
+      ],
+      "thumbs": []
+    },
+    {
+      "path": "/unspeakable",
+      "title": "unspeakable - Doris Lin",
+      "blocks": [
+        {
+          "type": "heading",
+          "level": "h1",
+          "text": "OUUCH! | Unspeakable"
+        },
+        {
+          "type": "heading",
+          "level": "h2",
+          "text": "Graduation project | 2021 |"
+        },
+        {
+          "type": "heading",
+          "level": "h2",
+          "text": "<OUUCH!>is a series of works about my anxiety.There are eight sprites in the series."
+        },
+        {
+          "type": "embed",
+          "url": "https://player.vimeo.com/video/692736282?h=dedecd5c2a&autoplay=1&loop=1&byline=0&portrait=0"
+        }
+      ],
+      "thumbs": []
+    }
+  ]
+}

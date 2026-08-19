@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>效果測試 — 移植版</title>
+<meta name="robots" content="noindex">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Julius+Sans+One&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;1,9..40,400&display=swap">
+<link rel="stylesheet" href="https://use.typekit.net/kln0qcj.css">
+
+<style>
+:root{
+  --bg:#fff; --ink:#000; --accent:#f02; --accent-hover:#ff8787; --accent-active:#252525;
+  --caption-color:rgba(0,0,0,.3); --caption-size:1.4rem;
+  --font-display:"Julius Sans One","Times New Roman",serif;
+  --font-body:mundial,"DM Sans",-apple-system,"Segoe UI",sans-serif;
+  --grid-cols:10; --grid-cols-tablet:5; --grid-cols-mobile:2; --grid-gutter:1.5rem;
+  --pad:3.5rem;
+}
+</style>
+<link rel="stylesheet" href="../src/css/site.css">
+<link rel="stylesheet" href="../src/css/effects.css">
+
+<style>
+  /* 只有這個測試頁需要的樣式 */
+  .probe { border-top: 1px solid rgba(0,0,0,.12); padding: 6rem var(--pad); }
+  .probe-label {
+    font-family: var(--font-body);
+    font-size: 1.3rem; letter-spacing: .12em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 2rem;
+  }
+  .probe-note {
+    font-size: 1.5rem; color: rgba(0,0,0,.55); max-width: 60ch; margin-top: 2rem;
+    line-height: 1.6;
+  }
+  .probe-note code { background: rgba(0,0,0,.06); padding: .1em .35em; }
+  .spacer { height: 60vh; display: grid; place-items: center; color: rgba(0,0,0,.25); font-size: 1.4rem; }
+  .eye-row { display: flex; gap: 3rem; flex-wrap: wrap; align-items: center; margin-top: 1rem; }
+  .eye-row figure { text-align: center; }
+  .eye-row img { width: 100px; }
+  .eye-row figcaption { margin-top: .8rem; font-size: 1.2rem; color: rgba(0,0,0,.45); }
+</style>
+</head>
+
+<body>
+
+<div class="probe" style="border-top:0">
+  <p class="probe-label">01 — Hero 逐字浮現（載入時就播）</p>
+  <div data-stagger-scope>
+    <h1 class="display-xl">Hi there! I'm Doris Lin</h1>
+    <p class="display-l" data-split>a 3D artist, motion designer, animator and a toast maker! 🥨</p>
+    <p class="stagger-item probe-note">
+      這一段是 <code>.stagger-item</code>，會等上面的字跑完才整段淡入。
+      重點檢查：句尾的 🥨 有沒有被拆壞成亂碼方框 —— 沒有的話表示 emoji 處理正確。
+    </p>
+  </div>
+</div>
+
+<div class="spacer">↓ 往下捲，測捲動觸發 ↓</div>
+
+<div class="probe">
+  <p class="probe-label">02 — 捲動才觸發的浮現</p>
+  <h1 class="display-l">This line waits until you scroll to it.</h1>
+  <p class="probe-note">
+    這行在載入時應該是<strong>看不見</strong>的，捲到才由下往上逐字浮現。
+    如果它一開始就看得到、沒有動畫，表示 IntersectionObserver 沒接上。
+  </p>
+</div>
+
+<div class="probe">
+  <p class="probe-label">03 — Wiggle（滑鼠移過去 / 點一下）</p>
+  <p style="font-size:3.2rem;font-family:var(--font-display)">
+    <a class="wiggle-text link-accent" href="#">hover over me</a>
+  </p>
+  <p style="font-size:2.4rem;margin-top:2rem">
+    <span class="wiggle-text">也可以用在一般文字上 🥨</span>
+  </p>
+  <p class="probe-note">
+    每個字會依序往上跳 8px 並轉 -8 度再彈回來，帶一點過衝。
+    原站只吃 hover，這版加了觸控與鍵盤 focus 也會觸發。
+  </p>
+</div>
+
+<div class="probe">
+  <p class="probe-label">04 — 眼睛追滑鼠（原 eyeroll.js）</p>
+  <div class="eye-row">
+    <figure>
+      <img src="eye.svg" alt="測試用眼睛" data-eye data-rollspeed="1" width="200" height="200">
+      <figcaption>rollspeed 1（立刻跟上）</figcaption>
+    </figure>
+    <figure>
+      <img src="eye.svg" alt="測試用眼睛" data-eye data-rollspeed="0.35" width="200" height="200">
+      <figcaption>rollspeed 0.35（有阻尼）</figcaption>
+    </figure>
+    <figure>
+      <img src="eye.svg" alt="測試用眼睛" data-eye data-rollspeed="0.1" width="200" height="200">
+      <figcaption>rollspeed 0.1（很黏）</figcaption>
+    </figure>
+    <figure>
+      <img src="arrow.svg" alt="測試用箭頭" data-eye data-rollspeed="0.6" data-rotation="180" width="200" height="200">
+      <figcaption>rotation 180（起始角度偏移）</figcaption>
+    </figure>
+    <figure>
+      <img src="eye.svg" alt="測試用眼睛" data-eye data-rollspeed="0.8" data-range="0.4" width="200" height="200">
+      <figcaption>range 0.4（轉動幅度縮小）</figcaption>
+    </figure>
+  </div>
+  <p class="probe-note">
+    在畫面上到處移動滑鼠。瞳孔（紅點）應該一直指向游標，
+    rollspeed 越小跟得越慢。捲動頁面後也要還是對得準 —— 那表示位置重算有生效。
+  </p>
+</div>
+
+<div class="probe">
+  <p class="probe-label">05 — 縮圖網格（10 欄）</p>
+  <div class="thumbnails" style="padding-inline:0">
+    <a class="thumbnail" href="#"><div class="thumbnail-frame"><img src="arrow.svg" alt="" width="200" height="200"></div><div class="thumbnail-title">Gua Bao</div></a>
+    <a class="thumbnail" href="#"><div class="thumbnail-frame"><img src="eye.svg" alt="" width="200" height="200"></div><div class="thumbnail-title">Mooncake</div></a>
+    <a class="thumbnail" href="#"><div class="thumbnail-frame"><img src="arrow.svg" alt="" width="200" height="200"></div><div class="thumbnail-title">Year of the Dragon</div></a>
+    <a class="thumbnail" href="#"><div class="thumbnail-frame"><img src="eye.svg" alt="" width="200" height="200"></div><div class="thumbnail-title">Fragile</div></a>
+    <a class="thumbnail" href="#"><div class="thumbnail-frame"><img src="arrow.svg" alt="" width="200" height="200"></div><div class="thumbnail-title">Happy Toast</div></a>
+    <a class="thumbnail" href="#"><div class="thumbnail-frame"><img src="eye.svg" alt="" width="200" height="200"></div><div class="thumbnail-title">Camping</div></a>
+    <a class="thumbnail" href="#"><div class="thumbnail-frame"><img src="arrow.svg" alt="" width="200" height="200"></div><div class="thumbnail-title">REUNION</div></a>
+    <a class="thumbnail" href="#"><div class="thumbnail-frame"><img src="eye.svg" alt="" width="200" height="200"></div><div class="thumbnail-title">Transform</div></a>
+    <a class="thumbnail" href="#"><div class="thumbnail-frame"><img src="arrow.svg" alt="" width="200" height="200"></div><div class="thumbnail-title">snaaaake</div></a>
+    <a class="thumbnail" href="#"><div class="thumbnail-frame"><img src="eye.svg" alt="" width="200" height="200"></div><div class="thumbnail-title">Chick</div></a>
+  </div>
+  <p class="probe-note">
+    桌機 10 欄、平板 5 欄、手機 2 欄。把視窗拉窄看看有沒有正常換。
+    這是原站 <code>grid-col="x10"</code> 的對應實作。
+  </p>
+</div>
+
+<div class="probe">
+  <p class="probe-label">06 — 字體是否載入</p>
+  <p style="font-family:var(--font-display);font-size:3.2rem">Julius Sans One — ABCDEFG 12345</p>
+  <p style="font-family:mundial,sans-serif;font-size:2.4rem;margin-top:1.5rem">mundial — ABCDEFG 12345</p>
+  <p style="font-family:'DM Sans',sans-serif;font-size:2.4rem;margin-top:1.5rem">DM Sans — ABCDEFG 12345</p>
+  <p class="probe-note">
+    三行字型要各自不同。<strong>mundial 那行如果看起來跟系統預設一樣，就是 Adobe Fonts 沒載入</strong> ——
+    那個 kit（<code>kln0qcj</code>）綁定網域，要到 Adobe Fonts 後台把 <code>localhost</code>
+    和之後的 github.io 網域加進去。
+  </p>
+</div>
+
+<div class="probe">
+  <p class="probe-label">07 — 減少動態效果</p>
+  <p class="probe-note">
+    在 Windows 設定搜尋「動畫效果」把它關掉，再重新載入這一頁：
+    所有動畫都應該停用，而且<strong>文字全部直接可見</strong>，不能有任何一段是隱形的。
+  </p>
+</div>
+
+<script src="../src/js/effects.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,111 @@
+/* ==========================================================================
+   Text Effects — 從 Cargo 站原樣移植
+   --------------------------------------------------------------------------
+   class 名稱、緩動曲線、時間、位移量全部沿用你原本寫的那份，
+   所以視覺上跟 doris-lin.com 一致。跟原版的差異只有兩處，都標在下面。
+
+   涵蓋三件事：
+   1. 所有 h1 捲到才逐字浮現（不用手動加 class）
+   2. .stagger-item —— 副標、按鈕整段淡入
+   3. .wiggle-text —— hover／點擊觸發逐字跳動
+   ========================================================================== */
+
+/* 每個字共用的容器 */
+.text-letter {
+  display: inline-block;
+  will-change: transform;
+}
+
+/* 捲動浮現：預設完全可見，只有確定要播放時 JS 才會加上 .text-armed
+   把文字瞬間藏起來，接著加 .reveal-in 讓它淡入上移。
+   這樣就算 JS 出錯，文字也不會消失。 */
+.text-armed .text-letter {
+  transform: translateY(110%);
+  opacity: 0;
+  transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.text-armed .text-letter.reveal-in {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+/* 單字容器。逐字 inline-block 會讓換行斷在單字中間，
+   所以每個單字包一層，單字之間才是真正的斷行點。
+   ＊這是原版沒有的修正，純粹修好換行，視覺上看不出差別。 */
+.text-word {
+  display: inline-block;
+  white-space: pre;
+}
+
+/* 想要「字從一條線後面升起來」的裁切效果，就在標題加 class="text-clip"。
+   預設不開，因為原版沒有，開了字距觀感會不一樣。 */
+.text-clip .text-word {
+  overflow: hidden;
+  vertical-align: bottom;
+  padding-bottom: 0.14em;
+  margin-bottom: -0.14em;
+}
+
+/* 副標、按鈕等整段淡入的 follower */
+.stagger-item {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.stagger-item.is-revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Wiggle：hover / 點擊觸發的逐字跳動，跟上面的浮現效果各自獨立，
+   就算文字還沒被浮現效果處理過，也可以先觸發 wiggle。 */
+.wiggle-text {
+  display: inline-block;
+  cursor: pointer;
+}
+
+.wiggle-text.is-wiggling .text-letter {
+  animation: wiggleLetter 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes wiggleLetter {
+  0% {
+    transform: translateY(0) rotate(0deg);
+  }
+  35% {
+    transform: translateY(-8px) rotate(-8deg);
+  }
+  65% {
+    transform: translateY(2px) rotate(5deg);
+  }
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+}
+
+/* 眼睛追滑鼠：旋轉由 JS 寫進 style.transform，
+   這裡只負責原點與初始狀態。 */
+[data-eye] {
+  transform-origin: center;
+  will-change: transform;
+}
+
+/* ＊與原版的差異 2：原版 .wiggle-text 只吃 hover，觸控裝置點不到。
+   這裡讓它同時吃 pointer 事件（JS 端處理），CSS 不需要額外規則。 */
+
+@media (prefers-reduced-motion: reduce) {
+  .text-letter,
+  .stagger-item {
+    transition: none !important;
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  [data-eye] {
+    transform: none !important;
+  }
+}
