@@ -98,8 +98,21 @@ h1, h2, h3 {
 
 .link-accent { color: var(--accent, #f02); }
 /* 舊站 bodycopy a 是純黑、比周圍文字重一點 */
-.prose a, .body-text a { color: var(--ink-strong, #000); }
-.link-accent:hover { color: var(--accent-hover, #ff5b90); }
+.prose a, .body-text a, .case-body a, .info a { color: var(--ink-strong, #000); }
+
+/* 舊站 bodycopy a:hover 是 rgba(255, 91, 144, 1)。
+   所有「帶連結的文字」滑過都變粉紅，包含縮圖標題。 */
+.link-accent:hover,
+.prose a:hover,
+.body-text a:hover,
+.case-body a:hover,
+.info a:hover,
+.case-nav a:hover,
+.footer a:hover,
+.thumbnail:hover .thumbnail-title {
+  color: var(--accent-hover, #ff5b90);
+}
+
 .link-accent:active { color: var(--accent-active, #252525); }
 
 /* --------------------------------------------------------------------------
@@ -138,9 +151,11 @@ h1, h2, h3 {
   position: sticky;
   top: 0;
   z-index: 20;
+  /* 上下左右 35px 對應舊站 #tag_menu 的 top/left: 35px */
   padding: 3.5rem var(--pad, 3.5rem) 2rem;
   display: flex;
-  align-items: baseline;
+  /* logo 是有高度的影片，用 flex-start 讓連結與 logo 頂端對齊 */
+  align-items: flex-start;
   justify-content: space-between;
   gap: 2rem;
   flex-wrap: wrap;
@@ -178,15 +193,30 @@ h1, h2, h3 {
   letter-spacing: 0.02em;
 }
 
+/* 動態 logo。舊站顯示寬度 398px，窄螢幕按比例縮到不超過一半版面。 */
+.nav-brand-logo {
+  display: block;
+  flex: none;
+  line-height: 0;
+  width: min(var(--logo-width, 398px), 46vw);
+}
+.nav-brand-logo video {
+  width: 100%;
+  height: auto;
+  /* 影片是黑線白底，這裡不加圓角與陰影，保持跟舊站一樣的乾淨感 */
+}
+
 .nav-links {
   display: flex;
+  align-items: baseline;
   gap: 1.8rem;
   font-size: 1.5rem;
 }
-.nav-links a { color: var(--accent, #f02); }
+/* 舊站導覽是 bodycopy 連結：平常黑字、滑過變粉紅 */
+.nav-links a { color: var(--ink-strong, #000); }
 .nav-links a:hover { color: var(--accent-hover, #ff5b90); }
 .nav-links a:active { color: var(--accent-active, #252525); }
-.nav-links a[aria-current="page"] { color: var(--accent-active, #252525); }
+.nav-links a[aria-current="page"] { color: var(--accent, #f02); }
 
 /* --------------------------------------------------------------------------
    5. 首頁 hero
@@ -249,7 +279,6 @@ h1, h2, h3 {
   line-height: 1.25;
   color: var(--ink, #000);
 }
-.thumbnail:hover .thumbnail-title { color: var(--accent, #f02); }
 
 /* --------------------------------------------------------------------------
    7. 作品內頁

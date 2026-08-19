@@ -123,6 +123,7 @@ function themeVars() {
     `--grid-cols-tablet: ${g.columnsTablet ?? 5};`,
     `--grid-cols-mobile: ${g.columnsMobile ?? 2};`,
     `--grid-gutter: ${g.gutter || '1.5rem'};`,
+    `--logo-width: ${(site.logo || {}).displayWidth || '398px'};`,
     `--pad: 3.5rem;`,
   ];
 
@@ -156,14 +157,26 @@ function layout(o) {
     ? `\n<link rel="stylesheet" href="https://use.typekit.net/${f.typekitKit}.css">`
     : '';
 
+  // 導覽連結。舊站四個連結都套 wiggle-text（滑過逐字跳動），這裡沿用。
   const navLinks = (site.nav || [])
-    .filter((n) => !isNote(n.label || ''))
+    .filter((n) => n && n.label && !isNote(n.label))
     .map((n) => {
-      const href = base + n.href;
-      const cur = n.href === o.current ? ' aria-current="page"' : '';
-      return `<a href="${esc(href)}"${cur}>${esc(n.label)}</a>`;
+      const href = n.external ? n.href : base + n.href;
+      const cur = !n.external && n.href === o.current ? ' aria-current="page"' : '';
+      const ext = n.external ? ' target="_blank" rel="noopener"' : '';
+      return `<a class="wiggle-text" href="${esc(href)}"${cur}${ext}>${esc(n.label)}</a>`;
     })
     .join('\n        ');
+
+  /* 品牌區：有設定 logo 就用動態 logo，否則退回文字。
+     logo 是 <video autoplay muted loop>，等同舊站的 GIF 但小 97%。 */
+  const logo = site.logo || {};
+  const brand = logo.video
+    ? `<a class="nav-brand nav-brand-logo" href="${esc(base + (logo.href || 'index.html'))}" aria-label="${esc(logo.alt || site.name)}">
+    <video src="${esc(base + logo.video)}"${logo.w ? ` width="${esc(logo.w)}"` : ''}${logo.h ? ` height="${esc(logo.h)}"` : ''}`
+      + `${logo.poster ? ` poster="${esc(base + logo.poster)}"` : ''} autoplay muted loop playsinline preload="auto"></video>
+  </a>`
+    : `<a class="nav-brand" href="${esc(base)}index.html">${esc(site.name)}</a>`;
 
   const mail = site.email || {};
 
@@ -195,7 +208,7 @@ function layout(o) {
 <a class="skip" href="#main">Skip to content</a>
 
 <header class="nav" data-hide-on-scroll="${(site.header || {}).hideOnScroll === false ? 'false' : 'true'}">
-  <a class="nav-brand" href="${base}index.html">${esc(site.name)}</a>
+  ${brand}
   <nav class="nav-links" aria-label="Main">
         ${navLinks}
   </nav>

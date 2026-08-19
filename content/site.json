@@ -12,11 +12,24 @@
     "sub": "a 3D artist, motion designer, animator and a toast maker! 🥨"
   },
 
+  "logo": {
+    "_說明": "舊站左上角的動態 logo。原始是 956×356 的 GIF，顯示尺寸 398×148（Cargo 的 data-scale 53%）。已轉成 MP4（2.94MB → 63KB）加一張 WebP 第一幀當 poster。",
+    "video": "assets/img/logo.mp4",
+    "poster": "assets/img/logo.webp",
+    "w": 800,
+    "h": 298,
+    "displayWidth": "398px",
+    "alt": "Doris Lin",
+    "href": "index.html"
+  },
+
   "nav": [
-    { "label": "Work", "href": "index.html" },
+    { "label": "Playground", "href": "index.html" },
+    { "label": "Works", "href": "https://www.behance.net/yihsuanlin3257", "external": true },
     { "label": "Reel", "href": "work/Reel.html" },
-    { "label": "Information", "href": "information.html" }
+    { "label": "Info", "href": "information.html" }
   ],
+  "_nav註": "標籤與連結目標照舊站：Playground 連首頁、Works 連到你的 Behance（外部）、Info 是 Information 頁。四個都會套用 wiggle 逐字跳動效果。",
 
   "email": {
     "_說明": "拆成兩段是為了讓爬垃圾信的機器人抓不到，JS 會在瀏覽器端組起來。",
