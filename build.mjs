@@ -100,7 +100,7 @@ function ratioNum(ratio) {
   return Number.isFinite(n) && n > 0 ? +n.toFixed(4) : 1.8132;
 }
 
-function themeVars() {
+function themeVars(base) {
   const t = site.theme || {};
   const g = site.grid || {};
   const f = site.fonts || {};
@@ -145,13 +145,28 @@ function themeVars() {
     `--pad: ${g.pad || '4rem'};`,
   ];
 
-  let css = `:root{${lines.join('')}}`;
+  /* 自訂游標：一般狀態粉紅圓點，可點擊的東西變灰。
+     這裡只注入變數，實際的 cursor 規則寫在 src/css/site.css ——
+     因為 site.css 是後載入的，重置區那條 `button { cursor: pointer }` 會蓋掉
+     寫在這裡的同特異度規則。變數放這邊、規則放那邊，順序才對。
 
-  // 自訂游標：只有填了路徑才輸出，避免指向不存在的檔案
-  if (c.page) css += `html{cursor:url("${c.page}"),auto}`;
-  if (c.image) css += `.case-media img,.thumbnail-frame img{cursor:url("${c.image}"),auto}`;
+     圖檔由 tools/make-cursors.mjs 產生。檔案不存在就不輸出變數，site.css 的
+     var() fallback 會接手（auto / pointer），不會留下指向不存在檔案的宣告。
+     熱點放在圖的正中央，所以實際指到的位置就是圓點中心。
+     變數值本身也帶 auto / pointer 當第二層 fallback，圖載不到時行為跟一般網站一樣。 */
+  if (c.enabled !== false) {
+    const size = Number(c.size) || 32;
+    const hot = `${size / 2} ${size / 2}`;
+    const has = (key) => existsSync(join(ROOT, `assets/img/cursor-${key}.png`));
+    if (has('default')) {
+      lines.push(`--cursor-default: url("${base}assets/img/cursor-default.png") ${hot}, auto;`);
+    }
+    if (has('link')) {
+      lines.push(`--cursor-link: url("${base}assets/img/cursor-link.png") ${hot}, pointer;`);
+    }
+  }
 
-  return css;
+  return `:root{${lines.join('')}}`;
 }
 
 /* ------------------------------------------------------------ 版面殼 ---- */
@@ -217,7 +232,7 @@ function layout(o) {
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>${gf}${tk}
 
-<style>${themeVars()}</style>
+<style>${themeVars(base)}</style>
 <link rel="stylesheet" href="${base}assets/css/site.css">
 <link rel="stylesheet" href="${base}assets/css/effects.css">
 </head>

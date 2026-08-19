@@ -44,6 +44,18 @@ html { font-size: 62.5%; }
 img, svg, video { display: block; max-width: 100%; height: auto; }
 img { border: 0; padding: 0; vertical-align: bottom; }
 button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+
+/* ---- 自訂游標 ----
+   一般狀態是粉紅圓點，滑到可以點的東西變灰。
+   --cursor-default / --cursor-link 由 build.mjs 依 site.json 的 cursors 注入，
+   值本身已經帶 auto / pointer 當 fallback。沒有產生圖檔時變數不存在，
+   下面的 var() fallback 接手，行為就跟一般網站一樣。
+   這幾條必須放在上面 button 那條重置之後，否則 button 會拿不到灰色游標。
+   圖檔產生方式：node tools/make-cursors.mjs */
+html { cursor: var(--cursor-default, auto); }
+a, button, summary, [role="button"], .thumbnail { cursor: var(--cursor-link, pointer); }
+/* 輸入框保留 I 型游標，不然看不出可以打字（目前站上沒有表單，先擋著） */
+input, textarea { cursor: text; }
 ul, ol { list-style: none; padding: 0; }
 a { color: inherit; text-decoration: none; }
 a:active { opacity: 0.7; }

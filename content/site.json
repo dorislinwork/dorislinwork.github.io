@@ -147,9 +147,17 @@
   },
 
   "cursors": {
-    "_說明": "原站用了兩張自訂游標圖（放在 freight.cargo.site）。把圖片下載到 assets/img/ 之後把路徑填進來；留 null 就用系統預設游標。原站還有第三條規則 `a { cursor: url(...ttf) }` 是無效的（拿字體檔當游標），所以沒有移植。",
-    "page": null,
-    "image": null
+    "_說明": "自訂游標。一般狀態是粉紅圓點，滑到可以點的東西（連結、按鈕、縮圖）變灰。圖檔由 node tools/make-cursors.mjs 產生到 assets/img/，改完顏色或大小要重跑那支再 build。原站還有一條 a { cursor: url(...ttf) } 是無效的（拿字體檔當游標），沒有移植 —— 這裡算是把它本來想做的事做出來。",
+    "enabled": true,
+    "size": 32,
+    "dotRadius": 9,
+    "ringWidth": 1.5,
+    "_size說明": "size 是圖檔邊長（瀏覽器對游標圖有上限，32 最保險，不要超過 128）。dotRadius 是圓點半徑、ringWidth 是外面那圈白邊的寬度。白邊是為了讓游標在深色底上也看得見 —— 首頁滑過縮圖時整張圖會被作品自己的顏色蓋住。",
+    "colors": {
+      "default": "#ff5b90",
+      "link": "#8a8a8a"
+    },
+    "_colors說明": "default 是一般狀態，用的是全站唯一的那個粉紅（theme.accentHover）。link 是滑到可點擊元素時的灰。想改成深灰就填 #252525。"
   },
 
   "header": {
