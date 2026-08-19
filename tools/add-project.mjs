@@ -258,7 +258,7 @@ if (existingIdx > -1) {
   console.log(`\n已新增到列表最前面：${slug}`);
 }
 
-writeFileSync(jsonPath, JSON.stringify(data, null, 2), 'utf8');
+writeFileSync(jsonPath, JSON.stringify(data, null, 2) + '\n', 'utf8');
 
 // 立刻讀回來驗證，確保沒有寫出壞掉的 JSON
 try {
@@ -266,6 +266,15 @@ try {
 } catch (e) {
   console.error('寫出的 JSON 壞了，請用 git checkout content/projects.json 還原');
   process.exit(1);
+}
+
+/* 首頁滑過縮圖時的色塊顏色是每件作品自己的，從縮圖取平均色算出來。
+   新作品還沒有顏色，所以順手補上 —— 這支工具只補缺的，不會蓋掉已經設定好的。
+   沒補的話這件作品的色塊會退回強調色，跟其他件不一致。 */
+try {
+  execFileSync(process.execPath, [join(ROOT, 'tools/set-card-colors.mjs')], { stdio: 'inherit' });
+} catch {
+  console.log('\n⚠ 取色失敗（不影響其他部分）。稍後可以自己跑：node tools/set-card-colors.mjs');
 }
 
 const mb = (b) => (b / 1048576).toFixed(1) + ' MB';

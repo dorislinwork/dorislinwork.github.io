@@ -30,8 +30,16 @@ body {
   overflow-x: hidden;
 }
 
-/* 用 62.5% 讓 1rem = 10px，方便對照原站的 1.4rem 等數值 */
+/* 用 62.5% 讓 1rem = 10px，方便對照原站的 1.4rem 等數值。
+   注意：Bito 是 16px 基準，所以從那邊抄過來的數值都要換算 ——
+   他們的 1.5rem 欄距 = 24px = 這裡的 2.4rem。 */
 html { font-size: 62.5%; }
+
+/* 左右邊界。內容寬度上限是 --max，超過就居中，但邊界永遠至少留 --pad。
+   只能用在 padding 上（裡面的 100% 要對容器寬度計算）。 */
+:root {
+  --edge: calc(max(0px, (100% - var(--max, 160rem)) / 2) + var(--pad, 4rem));
+}
 
 img, svg, video { display: block; max-width: 100%; height: auto; }
 img { border: 0; padding: 0; vertical-align: bottom; }
@@ -109,7 +117,7 @@ h1, h2, h3 {
 .info a:hover,
 .case-nav a:hover,
 .footer a:hover,
-.thumbnail:hover .thumbnail-title {
+.thumbnail:hover .thumbnail-mobile-info .thumbnail-name {
   color: var(--accent-hover, #ff5b90);
 }
 
@@ -152,7 +160,7 @@ h1, h2, h3 {
   top: 0;
   z-index: 20;
   /* 上下左右 35px 對應舊站 #tag_menu 的 top/left: 35px */
-  padding: 3.5rem var(--pad, 3.5rem) 2rem;
+  padding: 3.5rem var(--edge) 2rem;
   display: flex;
   /* logo 是有高度的影片，用 flex-start 讓連結與 logo 頂端對齊 */
   align-items: flex-start;
@@ -229,49 +237,55 @@ h1, h2, h3 {
    5. 首頁 hero
    -------------------------------------------------------------------------- */
 .hero {
-  padding: clamp(4rem, 12vh, 12rem) var(--pad, 3.5rem) clamp(5rem, 10vh, 10rem);
-  max-width: 90rem;
+  padding: clamp(4rem, 12vh, 12rem) var(--edge) clamp(5rem, 10vh, 10rem);
 }
+/* 文字不要拉太寬。用 max-width 會破壞跟網格對齊的左邊界，所以限制在內層。 */
+.hero > * { max-width: 90rem; }
 .hero h1 + h1 { margin-top: 1.2rem; }
 
 /* --------------------------------------------------------------------------
    6. 縮圖網格
-   欄數由 build.mjs 從 site.json 注入（--grid-cols 等）。
+   欄數、比例、間距都由 build.mjs 從 site.json 注入（--grid-cols、--span 等）。
+
+   版型參考 bito.tv：12 欄網格，每件作品佔 4 欄 = 一行三格，滑過時色塊由上往下
+   蓋住縮圖、文字延遲浮現。跟 Bito 的差別是他們一行兩格、而且每件作品在後台另外
+   備了直式素材；這裡只有一套素材，直式高卡是裁切的。
    -------------------------------------------------------------------------- */
 .thumbnails {
   display: grid;
-  grid-template-columns: repeat(var(--grid-cols, 10), minmax(0, 1fr));
-  gap: var(--grid-gutter, 1.5rem);
-  padding: 0 var(--pad, 3.5rem) clamp(6rem, 12vh, 12rem);
+  grid-template-columns: repeat(var(--grid-cols, 12), minmax(0, 1fr));
+  gap: var(--grid-gutter, 2.4rem);
+  /* 內容寬度上限 --max，超過就居中。用 padding 而不是 max-width + auto margin，
+     這樣同一條算式可以套在 hero 與頁尾上，左邊界對得齊。 */
+  padding-inline: var(--edge);
+  padding-bottom: clamp(6rem, 12vh, 12rem);
   align-items: start;
 }
-@media (max-width: 1100px) {
-  .thumbnails { grid-template-columns: repeat(var(--grid-cols-tablet, 5), minmax(0, 1fr)); }
-}
-@media (max-width: 620px) {
-  .thumbnails { grid-template-columns: repeat(var(--grid-cols-mobile, 2), minmax(0, 1fr)); }
-}
 
-/* 可變欄寬：每個作品可以自己決定佔幾欄。
-   預設 1 欄、正方形，也就是跟原本完全一樣，
-   只有在 projects.json 給了 span / ratio 的作品才會變大。
-   平板與手機的欄數由 build 依比例換算，不會爆版。 */
+/* 可變欄寬。預設值來自 :root 的 --span（一行三格 = 4 欄），
+   個別作品想放大就在 projects.json 加 span / spanTablet / spanMobile。 */
 .thumbnail {
   display: block;
-  grid-column: span var(--span, 1);
+  position: relative;
+  overflow: hidden;
+  grid-column: span var(--span, 4);
 }
 @media (max-width: 1100px) {
-  .thumbnail { grid-column: span var(--span-t, 1); }
+  .thumbnail { grid-column: span var(--span-t, 6); }
 }
 @media (max-width: 620px) {
-  .thumbnail { grid-column: span var(--span-m, 1); }
+  .thumbnail {
+    grid-column: span var(--span-m, 12);
+    /* 手機的標題在圖片下方，不能被裁掉 */
+    overflow: visible;
+  }
 }
 
 .thumbnail-frame {
   position: relative;
   overflow: hidden;
   background: rgba(0, 0, 0, 0.04);
-  aspect-ratio: var(--ratio, 1);
+  aspect-ratio: var(--card-ratio, 631 / 348);
 }
 .thumbnail-frame img,
 .thumbnail-frame video {
@@ -280,11 +294,105 @@ h1, h2, h3 {
   object-fit: cover;
 }
 
-.thumbnail-title {
-  margin-top: 0.8rem;
-  font-size: 1.3rem;
-  line-height: 1.25;
-  color: var(--ink, #000);
+/* ---- 直式高卡 ----
+   佔兩列高，讓網格不是死板的方格。哪幾件當高卡是 build.mjs 算的，會優先挑
+   原本就是直式的作品，並且驗證過不會在網格中間留下空洞。
+
+   高度是 ::before 用百分比 padding 撐出來的：兩列 + 一個 row-gap
+   = 200% / 比例 + gutter。padding 的百分比是對「自身寬度」計算的，所以不必知道
+   實際像素寬，換比例或縮放視窗都會自己跟上。
+   圖片改成絕對定位鋪滿整張卡 —— 但不能只靠絕對定位，那樣高卡在文件流裡高度是
+   零，一旦某一列剛好整列都是高卡，該列就會塌成一條細線。 */
+.thumbnail--tall { grid-row: span 2; }
+.thumbnail--tall::before {
+  content: '';
+  display: block;
+  padding-top: calc(200% / var(--card-ratio-num, 1.8132) + var(--grid-gutter, 2.4rem));
+}
+.thumbnail--tall .thumbnail-frame {
+  position: absolute;
+  inset: 0;
+  aspect-ratio: auto;
+}
+
+/* ---- 滑過的色塊 ----
+   顏色是每件作品自己的（--card-color，由 tools/set-card-colors.mjs 從縮圖取平均色
+   寫進 projects.json）。沒有顏色就退回強調色。 */
+.thumbnail-overlay {
+  position: absolute;
+  inset: 0;
+  background: var(--card-color, var(--accent, #f02));
+  transform: translateY(-101%);
+  transition: transform .7s cubic-bezier(.89, -.01, .37, 1);
+  pointer-events: none;
+}
+.thumbnail:hover .thumbnail-overlay,
+.thumbnail:focus-visible .thumbnail-overlay { transform: translateY(0); }
+
+.thumbnail-info {
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 1.6rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  color: #fff;
+  opacity: 0;
+  transition: opacity .7s;
+  transition-delay: .3s;
+  pointer-events: none;
+}
+/* 淺色底的作品要用黑字，由 projects.json 的 cardColorDark 決定 */
+.thumbnail-info.is-dark { color: #000; }
+.thumbnail:hover .thumbnail-info,
+.thumbnail:focus-visible .thumbnail-info { opacity: 1; }
+
+.thumbnail-name {
+  font-size: 1.8rem;
+  font-weight: 500;
+  line-height: 1.2;
+}
+.thumbnail-meta {
+  font-size: 1.6rem;
+  line-height: 1.2;
+}
+
+/* 手機不用色塊，標題放到圖片下方 */
+.thumbnail-mobile-info { display: none; }
+@media (max-width: 620px) {
+  .thumbnail-overlay, .thumbnail-info { display: none; }
+  .thumbnail-mobile-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    margin-top: 0.8rem;
+  }
+  .thumbnail-mobile-info .thumbnail-name { font-size: 1.6rem; color: var(--ink, #000); }
+  .thumbnail-mobile-info .thumbnail-meta {
+    font-size: 1.4rem;
+    color: var(--caption-color, rgba(0, 0, 0, .3));
+  }
+  /* 一行一格時直式高卡沒有意義，回到一般比例 */
+  .thumbnail--tall { grid-row: span 1; }
+  .thumbnail--tall::before { display: none; }
+  .thumbnail--tall .thumbnail-frame {
+    position: relative;
+    aspect-ratio: var(--card-ratio, 631 / 348);
+  }
+}
+/* 平板一行兩格，三欄的咬合節奏換成兩欄會留洞，所以取消直式高卡 */
+@media (max-width: 1100px) and (min-width: 621px) {
+  .thumbnail--tall { grid-row: span 1; }
+  .thumbnail--tall::before { display: none; }
+  .thumbnail--tall .thumbnail-frame {
+    position: relative;
+    aspect-ratio: var(--card-ratio, 631 / 348);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .thumbnail-overlay, .thumbnail-info { transition-duration: .01ms; }
 }
 
 /* --------------------------------------------------------------------------
@@ -359,9 +467,10 @@ figure { margin: 0; }
    8. Information 頁
    -------------------------------------------------------------------------- */
 .info {
-  padding: clamp(2rem, 5vh, 5rem) var(--pad, 3.5rem) clamp(6rem, 12vh, 12rem);
-  max-width: 90rem;
+  padding: clamp(2rem, 5vh, 5rem) var(--edge) clamp(6rem, 12vh, 12rem);
 }
+/* 跟 hero 同樣的處理：左邊界要對齊導覽列，所以寬度限制放在內層 */
+.info > * { max-width: 90rem; }
 .info-body { margin-top: clamp(2rem, 4vh, 4rem); font-size: var(--body-size, 1.4rem); line-height: 1.5; }
 .info-block { margin-top: clamp(3rem, 6vh, 6rem); }
 .info-block h2 { font-size: 1.4rem; letter-spacing: 0.12em; text-transform: uppercase; }
@@ -381,7 +490,7 @@ figure { margin: 0; }
    9. 頁尾
    -------------------------------------------------------------------------- */
 .footer {
-  padding: 3rem var(--pad, 3.5rem) 4rem;
+  padding: 3rem var(--edge) 4rem;
   font-size: 1.3rem;
   display: flex;
   flex-wrap: wrap;

@@ -93,6 +93,13 @@ function posterUrl(m, slug, base) {
 
 /* ------------------------------------------------------- 主題變數注入 ---- */
 
+/** "631 / 348" → 1.8132。給 calc() 用，因為 calc 不能拿分數寫法去除。 */
+function ratioNum(ratio) {
+  const [a, b] = String(ratio || '631 / 348').split('/').map((s) => Number(s.trim()));
+  const n = a / (b || 1);
+  return Number.isFinite(n) && n > 0 ? +n.toFixed(4) : 1.8132;
+}
+
 function themeVars() {
   const t = site.theme || {};
   const g = site.grid || {};
@@ -122,12 +129,20 @@ function themeVars() {
     `--body-size: ${ty.bodySize || '1.4rem'};`,
     `--body-lh: ${ty.bodyLineHeight || '1.2'};`,
     `--heading-weight: ${ty.headingWeight || '700'};`,
-    `--grid-cols: ${g.columns ?? 10};`,
-    `--grid-cols-tablet: ${g.columnsTablet ?? 5};`,
-    `--grid-cols-mobile: ${g.columnsMobile ?? 2};`,
-    `--grid-gutter: ${g.gutter || '1.5rem'};`,
+    // 網格：12 欄，每件作品預設佔 4 欄 = 一行三格。
+    // 個別作品可以在 projects.json 用 span / spanTablet / spanMobile 蓋掉。
+    `--grid-cols: ${g.columns ?? 12};`,
+    `--span: ${g.span ?? 4};`,
+    `--span-t: ${g.spanTablet ?? 6};`,
+    `--span-m: ${g.spanMobile ?? 12};`,
+    `--grid-gutter: ${g.gutter || '2.4rem'};`,
+    // 縮圖比例。--card-ratio-num 是同一個值的數值版，直式高卡的 calc() 要用
+    // （calc 沒辦法拿 "631 / 348" 這種寫法去做除法）。
+    `--card-ratio: ${g.ratio || '631 / 348'};`,
+    `--card-ratio-num: ${ratioNum(g.ratio)};`,
+    `--max: ${g.maxWidth || '160rem'};`,
     `--logo-width: ${(site.logo || {}).displayWidth || '398px'};`,
-    `--pad: 3.5rem;`,
+    `--pad: ${g.pad || '4rem'};`,
   ];
 
   let css = `:root{${lines.join('')}}`;
@@ -306,6 +321,110 @@ function renderBlock(b, i, slug, base) {
       </figure>`;
 }
 
+/* 首頁網格的統計，產生後印出來看。renderIndex() 會填。 */
+let INDEX_STATS = null;
+
+/* ------------------------------------------------------ 直式高卡的位置 ---- */
+
+/* 首頁有一部分縮圖是「直式高卡」（grid-row: span 2），版面才不會是死板的方格。
+   哪幾件當高卡不能隨便挑：高卡佔兩列，位置沒排好就會在網格中間留下永久空洞
+   （CSS 自動排版的游標只會前進，被跳過的格子填不回來）。
+   所以這裡邊排邊模擬，並且優先讓「原本就是直式」的作品當高卡 —— 那樣它不必被
+   裁成橫式，是同一套素材下最省裁切的分配。 */
+function pickTallCards(ratios, cols, opts) {
+  const { portraitMax = 0.95, minGap = 4 } = opts || {};
+  const n = ratios.length;
+
+  const grid = [];
+  const at = (r, c) => (grid[r] ? grid[r][c] : undefined);
+  const put = (r, c) => { (grid[r] ||= [])[c] = 1; };
+
+  /** 從游標往後找第一個放得下高度 h 的位置 */
+  const spot = (from, h) => {
+    let p = from;
+    for (;;) {
+      const r = Math.floor(p / cols), c = p % cols;
+      let free = true;
+      for (let k = 0; k < h; k++) if (at(r + k, c) !== undefined) { free = false; break; }
+      if (free) return { p, r, c };
+      p++;
+    }
+  };
+
+  /** 游標之前還有空格 = 永久空洞 */
+  const holeBefore = (p) => {
+    for (let q = 0; q < p; q++) if (at(Math.floor(q / cols), q % cols) === undefined) return true;
+    return false;
+  };
+
+  const tall = new Set();
+  const perCol = new Array(cols).fill(0);
+  const perRow = new Map();
+  let cur = 0;
+  let lastTall = -99;
+
+  for (let i = 0; i < n; i++) {
+    const portrait = (ratios[i] || 1) < portraitMax;
+    let asTall = false;
+    // 尾巴不放高卡，最後一列才容易填滿
+    if ((portrait || i - lastTall > minGap) && i < n - cols) {
+      const t = spot(cur, 2);
+      const balanced = perCol[t.c] <= Math.min(...perCol) + (portrait ? 1 : 0);
+      // 一列最多 cols-1 張高卡：整列都是高卡會變成一整條直式帶狀，失去交錯的節奏
+      const cap = cols - 1;
+      const rowOk = (perRow.get(t.r) || 0) < cap && (perRow.get(t.r + 1) || 0) < cap;
+      if (!holeBefore(t.p) && balanced && rowOk) asTall = true;
+    }
+    const h = asTall ? 2 : 1;
+    const s = spot(cur, h);
+    for (let k = 0; k < h; k++) put(s.r + k, s.c);
+    cur = s.p;
+    if (asTall) {
+      tall.add(i); perCol[s.c]++; lastTall = i;
+      perRow.set(s.r, (perRow.get(s.r) || 0) + 1);
+      perRow.set(s.r + 1, (perRow.get(s.r + 1) || 0) + 1);
+    }
+  }
+
+  // 最後一列如果缺格，逐張把尾端的高卡改回普通卡直到填滿。
+  // 每移掉一張整個排版都會變，所以每次都要重新模擬，不能只算一次。
+  let res = gridHoles(tall, n, cols);
+  while (res.holes && tall.size) {
+    tall.delete(Math.max(...tall));
+    res = gridHoles(tall, n, cols);
+  }
+  return tall;
+}
+
+/** 重跑一次自動排版，回報空格。產生後用來自我檢查，不影響輸出。 */
+function gridHoles(tall, n, cols) {
+  const grid = [];
+  const at = (r, c) => (grid[r] ? grid[r][c] : undefined);
+  const put = (r, c) => { (grid[r] ||= [])[c] = 1; };
+  let cur = 0, maxRow = 0;
+  for (let i = 0; i < n; i++) {
+    const h = tall.has(i) ? 2 : 1;
+    let p = cur;
+    for (;;) {
+      const r = Math.floor(p / cols), c = p % cols;
+      let free = true;
+      for (let k = 0; k < h; k++) if (at(r + k, c) !== undefined) { free = false; break; }
+      if (free) {
+        for (let k = 0; k < h; k++) put(r + k, c);
+        maxRow = Math.max(maxRow, r + h - 1);
+        cur = p;
+        break;
+      }
+      p++;
+    }
+  }
+  let holes = 0;
+  for (let r = 0; r <= maxRow; r++) {
+    for (let c = 0; c < cols; c++) if (at(r, c) === undefined) holes++;
+  }
+  return { holes, rows: maxRow + 1 };
+}
+
 /* ------------------------------------------------------------ 首頁 ---- */
 
 function renderIndex() {
@@ -313,49 +432,87 @@ function renderIndex() {
 
   const tw = MEDIA.thumbWidth || 800;
 
+  const g = site.grid || {};
+  const cols = g.columns ?? 12;
+  const showTitles = g.showTitles !== false;
+
   // hideFromGrid 的作品仍會有自己的頁面，只是不出現在首頁網格（例如 Reel 在導覽列）
-  const thumbs = projects.filter((p) => !p.hideFromGrid).map((p, i) => {
+  const shown = projects.filter((p) => !p.hideFromGrid);
+
+  /* 直式高卡。比例取自 projects.json 的 thumb w/h（tools/set-card-colors.mjs 會補齊），
+     所以 build 不需要動到 ffmpeg，維持零依賴。 */
+  const tallCfg = g.tall || {};
+  const ratios = shown.map((p) => {
+    const t = p.thumb || (p.blocks || []).find((b) => b.type === 'media');
+    return t && t.w && t.h ? t.w / t.h : 1;
+  });
+  const tall = tallCfg.enabled === false
+    ? new Set()
+    : pickTallCards(ratios, Math.max(1, Math.floor(cols / (g.span ?? 4))), tallCfg);
+
+  const thumbs = shown.map((p, i) => {
     const t = p.thumb || (p.blocks || []).find((b) => b.type === 'media') || null;
+    const isTall = tall.has(i);
     let inner = '';
 
     if (t) {
       const src = mediaUrl(t, p.slug, tw, '');
-      const dim = `${t.w ? ` width="${esc(t.w)}"` : ''}${t.h ? ` height="${esc(t.h)}"` : ''}`;
       if (isVideo(t)) {
-        // poster 讓影片還沒載入時先顯示第一幀，網格不會出現空格
+        // poster 讓影片還沒載入時先顯示第一幀，網格不會出現空格。
+        // 只播畫面內的影片是 site.js 做的（首頁有 20 支自動循環影片）。
         const poster = posterUrl(t, p.slug, '');
-        inner = `<video src="${esc(src)}"${dim} autoplay muted loop playsinline`
-          + `${poster ? ` poster="${esc(poster)}"` : ''} preload="${i < 10 ? 'auto' : 'none'}"></video>`;
+        inner = `<video src="${esc(src)}" autoplay muted loop playsinline`
+          + `${poster ? ` poster="${esc(poster)}"` : ''} preload="${i < 6 ? 'auto' : 'none'}"></video>`;
       } else {
-        // 縮圖只要一半寬度就夠，10 欄網格單格很小
+        // 一行三格，單格約佔視窗三分之一寬
         const half = mediaUrl(t, p.slug, Math.round(tw / 2), '');
         const srcset = (MEDIA_SOURCE === 'cargo' && t.hash)
-          ? ` srcset="${esc(half)} ${Math.round(tw / 2)}w, ${esc(src)} ${tw}w" sizes="(max-width: 620px) 50vw, 12vw"`
+          ? ` srcset="${esc(half)} ${Math.round(tw / 2)}w, ${esc(src)} ${tw}w" sizes="(max-width: 620px) 100vw, 33vw"`
           : '';
-        inner = `<img src="${esc(src)}"${srcset} alt="${esc(p.title)}"${dim}`
-          + `${i < 10 ? '' : ' loading="lazy"'} decoding="async">`;
+        inner = `<img src="${esc(src)}"${srcset} alt="${esc(p.title)}"`
+          + `${i < 6 ? '' : ' loading="lazy"'} decoding="async">`;
       }
     }
 
-    /* 可變欄寬。span 是桌機要佔幾欄，平板與手機依欄數比例換算並夾住上下限，
-       所以放大過的作品在窄螢幕不會爆版。沒給 span 就是 1，外觀跟原本一樣。 */
-    const g = site.grid || {};
-    const cols = g.columns ?? 10;
-    const span = Math.max(1, Math.min(Number(p.span) || 1, cols));
-    const scale = (target) => Math.max(1, Math.min(Math.round(span * target / cols), target));
+    /* 可變欄寬。預設由 :root 的 --span 決定（一行三格 = 4 欄），
+       個別作品想放大就在 projects.json 加 span / spanTablet / spanMobile。 */
     const styleBits = [];
-    if (span > 1) {
-      styleBits.push(`--span:${span}`);
-      styleBits.push(`--span-t:${scale(g.columnsTablet ?? 5)}`);
-      styleBits.push(`--span-m:${scale(g.columnsMobile ?? 2)}`);
+    const span = Number(p.span) > 0 ? Math.min(Number(p.span), cols) : 0;
+    if (span) styleBits.push(`--span:${span}`);
+    if (Number(p.spanTablet) > 0) styleBits.push(`--span-t:${Math.min(Number(p.spanTablet), cols)}`);
+    if (Number(p.spanMobile) > 0) styleBits.push(`--span-m:${Math.min(Number(p.spanMobile), cols)}`);
+    if (p.ratio) {
+      // 個別比例也要給數值版，否則這張如果是高卡，撐高度的 calc 會用到全站預設值
+      styleBits.push(`--card-ratio:${p.ratio}`);
+      styleBits.push(`--card-ratio-num:${ratioNum(p.ratio)}`);
     }
-    if (p.ratio) styleBits.push(`--ratio:${p.ratio}`);
+    // hover 色塊的顏色。tools/set-card-colors.mjs 從縮圖取平均色寫進 projects.json，
+    // 不喜歡就直接改那裡的 cardColor。
+    if (p.cardColor) styleBits.push(`--card-color:${p.cardColor}`);
     const style = styleBits.length ? ` style="${esc(styleBits.join(';'))}"` : '';
 
-    return `    <a class="thumbnail" href="work/${esc(p.slug)}.html"${style}>
+    const meta = [p.year, p.role].filter(Boolean).join(' · ');
+    const info = !showTitles ? '' : `
+      <div class="thumbnail-info${p.cardColorDark ? ' is-dark' : ''}" aria-hidden="true">
+        <span class="thumbnail-name">${esc(p.title)}</span>
+${meta ? `        <span class="thumbnail-meta">${esc(meta)}</span>\n` : ''}      </div>
+      <div class="thumbnail-mobile-info">
+        <span class="thumbnail-name">${esc(p.title)}</span>
+${meta ? `        <span class="thumbnail-meta">${esc(meta)}</span>\n` : ''}      </div>`;
+
+    return `    <a class="thumbnail${isTall ? ' thumbnail--tall' : ''}" href="work/${esc(p.slug)}.html"${style}>
       <div class="thumbnail-frame">${inner}</div>
-${(site.grid || {}).showTitles !== false ? `      <div class="thumbnail-title">${esc(p.title)}</div>\n` : ''}    </a>`;
+      <div class="thumbnail-overlay" aria-hidden="true"></div>${info}
+    </a>`;
   }).join('\n');
+
+  // 自我檢查：排版不該有空洞。有的話在 build 輸出警告，不要靜靜地產生壞版面。
+  const perRowCols = Math.max(1, Math.floor(cols / (g.span ?? 4)));
+  const { holes, rows } = gridHoles(tall, shown.length, perRowCols);
+  if (holes) {
+    console.log(`  ⚠ 首頁網格有 ${holes} 個空格（${perRowCols} 欄、${rows} 列）`);
+  }
+  INDEX_STATS = { count: shown.length, tall: tall.size, rows, holes, perRowCols };
 
   const body = `  <section class="hero" data-stagger-scope>
     <h1 class="display-xl">${esc(h.headline || site.name)}</h1>
@@ -551,6 +708,11 @@ const empty = projects.filter((p) => !(p.blocks || []).length);
 console.log(`\n✓ 產生完成（媒體來源：${MEDIA_SOURCE}）`);
 console.log(`  ${projects.length} 個作品頁、${written.length} 個檔案`);
 console.log(`  圖片 ${images}、Vimeo 嵌入 ${embeds}、文字段落 ${paras}`);
+if (INDEX_STATS) {
+  console.log(`  首頁 ${INDEX_STATS.count} 張縮圖、一行 ${INDEX_STATS.perRowCols} 格、`
+    + `${INDEX_STATS.tall} 張直式高卡、${INDEX_STATS.rows} 列`
+    + `${INDEX_STATS.holes ? `、⚠ ${INDEX_STATS.holes} 個空格` : '、無空格'}`);
+}
 if (empty.length) {
   console.log(`\n⚠ 完全沒有內容的作品（${empty.length}）：${empty.map((p) => p.slug).join(', ')}`);
 }

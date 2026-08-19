@@ -27,6 +27,7 @@ publish.cmd "新增作品 My New Work"
 node tools/serve.mjs . 8080        本機預覽（開 http://localhost:8080）
 node build.mjs                    只重新產生網站，不上線
 node tools/check.mjs .            檢查連結與標記
+node tools/set-card-colors.mjs    補首頁色塊顏色（新增作品後會自動跑）
 node tools/remove-project.mjs X   移除作品 X
 publish.cmd "訊息"                產生 + 檢查 + commit + push
 ```
@@ -63,6 +64,7 @@ publish.cmd "訊息"                產生 + 檢查 + commit + push
 │   ├── add-project.mjs              新增／更新作品（自動轉檔）
 │   ├── remove-project.mjs           移除作品
 │   ├── check.mjs                    檢查連結、圖片屬性、標題結構
+│   ├── set-card-colors.mjs          從縮圖取平均色，算首頁滑過的色塊顏色
 │   ├── serve.mjs                    本機預覽伺服器
 │   ├── convert-gifs.mjs             動畫 GIF → MP4（需要 ffmpeg）
 │   ├── import-cargo-export.mjs      匯出資料 → projects.json
@@ -152,24 +154,67 @@ node tools/remove-project.mjs My-New-Work
 
 **只是想暫時下架**就不要用這個 —— 在那一筆加 `"draft": true` 即可，資料會留著。
 
-### 讓某件作品在首頁佔更大版面
+### 首頁版面
 
-在 `content/projects.json` 那一筆加兩個欄位：
+2026-08-20 起首頁改成參考 [bito.tv](https://bito.tv) 的版型（舊站是 10 欄小方格）：
+
+- 12 欄網格，每件作品佔 4 欄 → **一行三格**。1100px 以下一行兩格、620px 以下一行一格
+- 縮圖比例 `631 / 348`（Bito 的原始值），左右邊界 40px，內容寬度上限 1600px 居中
+- 一部分縮圖是**佔兩列高的直式卡**，版面才不是死板的方格
+- 滑過縮圖時，**該件作品自己的顏色**由上往下蓋住整張圖，標題與年份延遲 0.3 秒浮現。手機不用色塊，標題顯示在圖片下方
+
+要調整就改 `content/site.json` 的 `grid`（每個欄位都有 `_說明`）：
+
+| 欄位 | 說明 |
+| --- | --- |
+| `span` | 桌機每件佔幾欄。`4` = 一行三格、`6` = 一行兩格、`3` = 一行四格 |
+| `spanTablet` / `spanMobile` | 1100px 以下、620px 以下各佔幾欄 |
+| `ratio` | 縮圖比例。`631 / 348` 寬幅、`1` 正方、`4 / 3` 橫式、`3 / 4` 直立 |
+| `gutter` / `pad` / `maxWidth` | 欄距、左右邊界、內容寬度上限。**本站 1rem = 10px** |
+| `tall.enabled` | `false` = 取消直式高卡，全部一樣大 |
+| `showTitles` | `false` = 完全不顯示標題文字 |
+
+**個別作品**想跟其他人不一樣，在 `content/projects.json` 那一筆加：
 
 ```json
-{ "slug": "Tommy-s-Oddly-Love", "span": 3, "ratio": "4/3" }
+{ "slug": "Tommy-s-Oddly-Love", "span": 8, "ratio": "4 / 3", "cardColor": "#f02" }
 ```
 
 | 欄位 | 說明 |
 | --- | --- |
-| `span` | 桌機要佔幾欄（總共 10 欄）。不寫就是 1 |
-| `ratio` | 縮圖長寬比。`1` 正方（預設）、`3/4` 直立、`4/3` 橫式、`16/9` 寬幅 |
+| `span` | 這一件在桌機佔幾欄（12 欄裡）。也可加 `spanTablet` / `spanMobile` |
+| `ratio` | 這一件的縮圖比例 |
+| `cardColor` | 滑過時的色塊顏色。不寫的話由 `tools/set-card-colors.mjs` 自動取色 |
+| `cardColorDark` | `true` = 色塊上的文字用黑色（淺色底才需要） |
 
-平板與手機的欄數會依比例自動換算並夾住上限，所以放大過的作品在窄螢幕不會爆版（例：桌機 10 欄的 `span: 3` → 平板 5 欄變 2 → 手機 2 欄變 1）。
+新增作品時也可以直接給：`--span 8 --ratio "4 / 3"`
 
-新增作品時也可以直接給：`--span 3 --ratio 4/3`
+### 滑過縮圖的色塊顏色
 
-> 舊站是固定 10 欄、每格一樣大，所以這是**新增的彈性，不是還原**。不填 `span` 的話首頁跟舊站一致。
+每件作品的顏色是**從它自己的縮圖取平均色**再拉飽和度算出來的，存在 `projects.json` 的 `cardColor`。
+
+```
+node tools/set-card-colors.mjs           只補還沒有顏色的（add-project.mjs 會自動跑）
+node tools/set-card-colors.mjs --force   全部重算
+node tools/set-card-colors.mjs --dry     只看結果不寫檔
+```
+
+**不喜歡某一件的顏色就直接改 `projects.json` 裡的 `cardColor`**，這支工具不會覆蓋已經填好的值（除非加 `--force`）。淺色底看不清白字時加 `"cardColorDark": true` 讓文字變黑。
+
+先算好存進 json 而不是每次 build 現算，是為了讓 `build.mjs` 保持零依賴、幾百毫秒跑完，而且顏色是設計決定，存成資料才改得動。
+
+### 哪幾件會變成直式高卡
+
+`build.mjs` 自己挑，規則是：
+
+1. **原本就是直式的作品優先**（比例低於 `tall.portraitMax`，預設 0.95）—— 那樣不必把直式圖裁成橫式，是同一套素材下最省裁切的分配
+2. 其餘每隔 `tall.minGap` 件放一張
+3. 高卡在三欄之間輪替，一列最多兩張
+4. 挑完會**模擬 CSS 自動排版驗證不留空洞** —— 高卡佔兩列，位置沒排好就會在網格中間留下永久空格
+
+build 會印出結果（例：`首頁 49 張縮圖、一行 3 格、11 張直式高卡、20 列、無空格`）。如果出現 `⚠ N 個空格`就是有問題，跟我說或把 `tall.enabled` 設成 false。
+
+> 直式高卡的圖是**裁切**的。Bito 之所以好看是因為他們每件作品在後台另外備了直式素材；這裡只有一套。想做到那樣得針對高卡的作品重新輸出直式構圖。
 
 ### 導覽列行為
 
@@ -220,15 +265,17 @@ node tools/remove-project.mjs My-New-Work
   "accent": "#f02"
 },
 "grid": {
-  "columns": 10,
-  "columnsTablet": 5,
-  "columnsMobile": 2
+  "columns": 12,
+  "span": 4,
+  "ratio": "631 / 348"
 }
 ```
 
-改完 `node build.mjs`。這些值會被寫成 CSS 變數注入每一頁，`src/css/site.css` 只讀變數，所以不用去翻 CSS。
+改完 `node build.mjs`。這些值會被寫成 CSS 變數注入每一頁，`src/css/site.css` 只讀變數，所以不用去翻 CSS。首頁網格的完整說明見上面〈首頁版面〉。
 
-換字體改 `fonts` 那一區。**`mundial` 是 Adobe Typekit（kit `kln0qcj`），kit 綁網域** —— 新網域要先到 [Adobe Fonts 後台](https://fonts.adobe.com/my_fonts#web_projects-section) 把 `dorislinwork.github.io` 和 `localhost` 加進這個 web project，否則字體不會載入。
+換字體改 `fonts` 那一區。`mundial` 是 Adobe Typekit（kit `kln0qcj`），目前只用在圖說（`--font-caption`），標題與正文是 DM Sans。
+
+> 2026-08-20 實測：這個 kit 的 CSS 與字體檔用 `dorislinwork.github.io` 或隨便一個網域當 referer 都回 200，**實際上沒有鎖網域**，所以 `mundial` 在線上應該正常載入。Adobe 文件上寫 kit 要綁網域，如果哪天真的掉字了，就到 [Adobe Fonts 後台](https://fonts.adobe.com/my_fonts#web_projects-section) 把網域和 `localhost` 加進這個 web project。
 
 ---
 

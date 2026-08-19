@@ -48,7 +48,8 @@
         }
       ],
       "draft": true,
-      "_註": "網址結尾是 -copy，原站留下的重複頁，設為 draft 不產生。要保留就刪掉 draft。"
+      "_註": "網址結尾是 -copy，原站留下的重複頁，設為 draft 不產生。要保留就刪掉 draft。",
+      "cardColor": "#c6713a"
     },
     {
       "slug": "Grandma-s-kitchen",
@@ -76,7 +77,8 @@
           "alt": "",
           "caption": ""
         }
-      ]
+      ],
+      "cardColor": "#c6713a"
     },
     {
       "slug": "A-Journey-in-Tohoku",
@@ -166,7 +168,8 @@
           "alt": "",
           "caption": ""
         }
-      ]
+      ],
+      "cardColor": "#41a2c8"
     },
     {
       "slug": "Gua-Bao",
@@ -230,7 +233,8 @@
           "alt": "",
           "caption": ""
         }
-      ]
+      ],
+      "cardColor": "#c87d41"
     },
     {
       "slug": "happiness-awaits",
@@ -288,7 +292,8 @@
           "alt": "",
           "caption": ""
         }
-      ]
+      ],
+      "cardColor": "#c85341"
     },
     {
       "slug": "Christmas-Feast",
@@ -334,7 +339,8 @@
           "alt": "",
           "caption": ""
         }
-      ]
+      ],
+      "cardColor": "#a91d04"
     },
     {
       "slug": "Taiwanese-sumer-vibe",
@@ -404,7 +410,9 @@
           "alt": "",
           "caption": ""
         }
-      ]
+      ],
+      "cardColor": "#89c841",
+      "cardColorDark": true
     },
     {
       "slug": "Playground",
@@ -474,7 +482,8 @@
           "alt": "",
           "caption": ""
         }
-      ]
+      ],
+      "cardColor": "#d18b38"
     },
     {
       "slug": "Year-of-the-Dragon",
@@ -537,7 +546,8 @@
           "level": "h2",
           "text": "Happy Lunar New Year!"
         }
-      ]
+      ],
+      "cardColor": "#2e81a5"
     },
     {
       "slug": "goodmorningmacc-shenzaoclub",
@@ -626,7 +636,9 @@
           "level": "h2",
           "text": "client : ShenzaoClub Design&Animation : Doris Lin Sound Design : @sasanitenite"
         }
-      ]
+      ],
+      "cardColor": "#f1c006",
+      "cardColorDark": true
     },
     {
       "slug": "Tommy-s-Oddly-Love",
@@ -741,7 +753,8 @@
           "alt": "",
           "caption": ""
         }
-      ]
+      ],
+      "cardColor": "#c88241"
     },
     {
       "slug": "Christmas-Plan",
@@ -784,7 +797,8 @@
           "alt": "",
           "caption": ""
         }
-      ]
+      ],
+      "cardColor": "#c6893a"
     },
     {
       "slug": "Halloween-Costume-Party",
@@ -810,7 +824,8 @@
           "autoplay": true,
           "loop": true
         }
-      ]
+      ],
+      "cardColor": "#56288b"
     },
     {
       "slug": "Camping",
@@ -868,7 +883,8 @@
           "alt": "",
           "caption": ""
         }
-      ]
+      ],
+      "cardColor": "#4db327"
     },
     {
       "slug": "snaaaake",
@@ -901,7 +917,8 @@
           "alt": "",
           "caption": ""
         }
-      ]
+      ],
+      "cardColor": "#41c877"
     },
     {
       "slug": "Santa-s-After-Work-Party",
@@ -941,7 +958,8 @@
           "alt": "",
           "caption": ""
         }
-      ]
+      ],
+      "cardColor": "#b25b1e"
     },
     {
       "slug": "Dancing-Christmas-Tree",
@@ -1007,7 +1025,8 @@
           "alt": "",
           "caption": ""
         }
-      ]
+      ],
+      "cardColor": "#a98531"
     },
     {
       "slug": "Afternoon-Tea-Time",
@@ -1053,7 +1072,8 @@
           "alt": "",
           "caption": ""
         }
-      ]
+      ],
+      "cardColor": "#916a2a"
     },
     {
       "slug": "Summer-Vibe",
@@ -1094,7 +1114,8 @@
           "alt": "",
           "caption": ""
         }
-      ]
+      ],
+      "cardColor": "#41c869"
     },
     {
       "slug": "3D-Ceramic-Project-NO-O1",
@@ -1150,7 +1171,9 @@
           "autoplay": true,
           "loop": true
         }
-      ]
+      ],
+      "cardColor": "#41c8bc",
+      "cardColorDark": true
     },
     {
       "slug": "Toast-baby-pottery",
@@ -1216,7 +1239,8 @@
           "alt": "",
           "caption": ""
         }
-      ]
+      ],
+      "cardColor": "#865a27"
     },
     {
       "slug": "Magical-Pumpkin-Soup",
@@ -1254,7 +1278,8 @@
           "alt": "",
           "caption": ""
         }
-      ]
+      ],
+      "cardColor": "#864527"
     },
     {
       "slug": "The-positive-Building-Papaya-milk",
@@ -1284,7 +1309,8 @@
           "autoplay": true,
           "loop": false
         }
-      ]
+      ],
+      "cardColor": "#c89141"
     },
     {
       "slug": "The-Daruma-doll-at-Katsuo-Ji-Temple",
@@ -1318,7 +1344,8 @@
           "autoplay": false,
           "loop": false
         }
-      ]
+      ],
+      "cardColor": "#b56732"
     },
     {
       "slug": "Traditional-Taiwanese-Bathroom",
@@ -1382,7 +1409,8 @@
           "alt": "",
           "caption": ""
         }
-      ]
+      ],
+      "cardColor": "#cb7e3e"
     },
     {
       "slug": "Nodding-Off",
@@ -1450,7 +1478,8 @@
           "alt": "",
           "caption": ""
         }
-      ]
+      ],
+      "cardColor": "#c89341"
     },
     {
       "slug": "Toast-Baby-Take-a-Bread-series",
@@ -1478,7 +1507,8 @@
           "alt": "",
           "caption": ""
         }
-      ]
+      ],
+      "cardColor": "#cea53b"
     },
     {
       "slug": "The-year-of-the-Rabbit",
@@ -1506,7 +1536,8 @@
           "alt": "",
           "caption": ""
         }
-      ]
+      ],
+      "cardColor": "#c841b1"
     },
     {
       "slug": "Little-Jam-Take-a-Bread-series",
@@ -1534,7 +1565,8 @@
           "alt": "",
           "caption": ""
         }
-      ]
+      ],
+      "cardColor": "#df992a"
     },
     {
       "slug": "ASUS-CES-2023",
@@ -1616,7 +1648,8 @@
           "type": "text",
           "text": "Sound Design：陳敬恆 Quiet Chen"
         }
-      ]
+      ],
+      "cardColor": "#275286"
     },
     {
       "slug": "Mooncake",
@@ -1642,7 +1675,8 @@
           "autoplay": false,
           "loop": true
         }
-      ]
+      ],
+      "cardColor": "#863627"
     },
     {
       "slug": "Halloween-Dog",
@@ -1668,7 +1702,8 @@
           "autoplay": false,
           "loop": false
         }
-      ]
+      ],
+      "cardColor": "#862741"
     },
     {
       "slug": "Matcha-Souffle",
@@ -1696,7 +1731,9 @@
           "alt": "",
           "caption": ""
         }
-      ]
+      ],
+      "cardColor": "#f1f910",
+      "cardColorDark": true
     },
     {
       "slug": "Happy-Toast",
@@ -1710,8 +1747,8 @@
       "thumb": {
         "hash": "a616b6dcbd90d0b2bb0644e6cb5c65b4fd69c965f05e8bb6050df89b4399d648",
         "file": "_.gif",
-        "w": null,
-        "h": null
+        "w": 800,
+        "h": 450
       },
       "blocks": [
         {
@@ -1722,7 +1759,8 @@
           "autoplay": false,
           "loop": false
         }
-      ]
+      ],
+      "cardColor": "#8a18eb"
     },
     {
       "slug": "Freedom-Frames",
@@ -1736,8 +1774,8 @@
       "thumb": {
         "hash": "41d9b0833921211d76734cf0bbba942738bd98f2d5ef919524e2ac70219b7128",
         "file": ".gif",
-        "w": null,
-        "h": null
+        "w": 800,
+        "h": 800
       },
       "blocks": [
         {
@@ -1758,7 +1796,8 @@
           "autoplay": true,
           "loop": true
         }
-      ]
+      ],
+      "cardColor": "#c84c41"
     },
     {
       "slug": "Chick",
@@ -1772,8 +1811,8 @@
       "thumb": {
         "hash": "730df988c17836aaf56fbe3cef7818098ab5721c9225969c3619cb98d0aecad6",
         "file": "2_DeMain.gif",
-        "w": null,
-        "h": null
+        "w": 800,
+        "h": 450
       },
       "blocks": [
         {
@@ -1804,7 +1843,8 @@
           "autoplay": true,
           "loop": true
         }
-      ]
+      ],
+      "cardColor": "#8d6e29"
     },
     {
       "slug": "Turn-On",
@@ -1818,8 +1858,8 @@
       "thumb": {
         "hash": "d18f0fe5d0c81ceeb47c4458ad752f7c2928f29f53e2cbbab61c917dda2ed204",
         "file": "_V01_.gif",
-        "w": null,
-        "h": null
+        "w": 800,
+        "h": 800
       },
       "blocks": [
         {
@@ -1840,7 +1880,8 @@
           "alt": "",
           "caption": ""
         }
-      ]
+      ],
+      "cardColor": "#e29127"
     },
     {
       "slug": "Puffer-Fish",
@@ -1854,8 +1895,8 @@
       "thumb": {
         "hash": "19eefb5fa796d40a96e63180fa0cdba95c4d11b72d203ed5600aad1dff1eb7cc",
         "file": "0019.jpg",
-        "w": null,
-        "h": null
+        "w": 1600,
+        "h": 2134
       },
       "blocks": [
         {
@@ -1881,7 +1922,9 @@
           "autoplay": true,
           "loop": true
         }
-      ]
+      ],
+      "cardColor": "#92c841",
+      "cardColorDark": true
     },
     {
       "slug": "Annie-at-Work",
@@ -1917,7 +1960,8 @@
           "autoplay": true,
           "loop": true
         }
-      ]
+      ],
+      "cardColor": "#c1a138"
     },
     {
       "slug": "WAAA-MY-POPCORN",
@@ -1931,8 +1975,8 @@
       "thumb": {
         "hash": "0abe6037cfa59b414e925430f0256a8163f97468d24447c810d2a970a008e3fa",
         "file": "6.jpg",
-        "w": null,
-        "h": null
+        "w": 1280,
+        "h": 1280
       },
       "blocks": [
         {
@@ -1945,7 +1989,8 @@
           "alt": "",
           "caption": ""
         }
-      ]
+      ],
+      "cardColor": "#a29c2f"
     },
     {
       "slug": "Rudolph",
@@ -1959,8 +2004,8 @@
       "thumb": {
         "hash": "b98666aa7e20cf6c9ac1ad3ee6e97a1c9b4fd6ff083a2c1e1282609e520e7db1",
         "file": "-2022-08-01-003106.png",
-        "w": null,
-        "h": null
+        "w": 800,
+        "h": 561
       },
       "blocks": [
         {
@@ -1992,7 +2037,8 @@
           "autoplay": false,
           "loop": false
         }
-      ]
+      ],
+      "cardColor": "#d99530"
     },
     {
       "slug": "Can-t-Believe",
@@ -2006,8 +2052,8 @@
       "thumb": {
         "hash": "6507eaefa5441ca68fa8fa594e24cee37421e96be2b10d64fc4bb492949941ee",
         "file": ".gif",
-        "w": null,
-        "h": null
+        "w": 800,
+        "h": 450
       },
       "blocks": [
         {
@@ -2031,7 +2077,8 @@
           "autoplay": false,
           "loop": false
         }
-      ]
+      ],
+      "cardColor": "#278667"
     },
     {
       "slug": "Compare",
@@ -2045,8 +2092,8 @@
       "thumb": {
         "hash": "528817bf1cdd981c995d2fcb758965d6534a4a00bb235de8d1786acf60180444",
         "file": "_.gif",
-        "w": null,
-        "h": null
+        "w": 800,
+        "h": 1066
       },
       "blocks": [
         {
@@ -2061,7 +2108,8 @@
           "autoplay": true,
           "loop": true
         }
-      ]
+      ],
+      "cardColor": "#f91610"
     },
     {
       "slug": "eyes",
@@ -2075,8 +2123,8 @@
       "thumb": {
         "hash": "6e689a2367cb4156f10e36e0f61fae127e093fa0a9f24375f537c2391c92cd29",
         "file": ".gif",
-        "w": null,
-        "h": null
+        "w": 800,
+        "h": 450
       },
       "blocks": [
         {
@@ -2100,7 +2148,8 @@
           "autoplay": true,
           "loop": true
         }
-      ]
+      ],
+      "cardColor": "#b19633"
     },
     {
       "slug": "Transform",
@@ -2114,8 +2163,8 @@
       "thumb": {
         "hash": "bfdf0f85600ff1a505483ee11373457ad2cf16f79aafc99e29141244c3ab8bc4",
         "file": "practice_.gif",
-        "w": null,
-        "h": null
+        "w": 800,
+        "h": 450
       },
       "blocks": [
         {
@@ -2126,7 +2175,8 @@
           "autoplay": true,
           "loop": true
         }
-      ]
+      ],
+      "cardColor": "#0619a8"
     },
     {
       "slug": "Hide",
@@ -2140,8 +2190,8 @@
       "thumb": {
         "hash": "fcfde3d857ef4f2312b8ac8e398b1d4f3053a61837b4e68f8a4665a2aa74b966",
         "file": "-2.gif",
-        "w": null,
-        "h": null
+        "w": 800,
+        "h": 450
       },
       "blocks": [
         {
@@ -2161,7 +2211,8 @@
           "autoplay": true,
           "loop": true
         }
-      ]
+      ],
+      "cardColor": "#4731a7"
     },
     {
       "slug": "REUNION",
@@ -2175,8 +2226,8 @@
       "thumb": {
         "hash": "1090809cc8062edf2aaa4e166606225db436f3e019cf9d179a0646fc6c957868",
         "file": "REUNION_.gif",
-        "w": null,
-        "h": null
+        "w": 800,
+        "h": 450
       },
       "blocks": [
         {
@@ -2187,7 +2238,8 @@
           "autoplay": false,
           "loop": true
         }
-      ]
+      ],
+      "cardColor": "#c8aa41"
     },
     {
       "slug": "Fragile",
@@ -2201,8 +2253,8 @@
       "thumb": {
         "hash": "25798302c1b0e7bdf4379316ca6cc813962795aaee33d5e5b0ade0438a294310",
         "file": "_2022_.gif",
-        "w": null,
-        "h": null
+        "w": 800,
+        "h": 1066
       },
       "blocks": [
         {
@@ -2217,7 +2269,8 @@
           "autoplay": true,
           "loop": true
         }
-      ]
+      ],
+      "cardColor": "#0b04a9"
     },
     {
       "slug": "Follow",
@@ -2231,8 +2284,8 @@
       "thumb": {
         "hash": "04edce1a423d497f1fe1ae8372685ced7d86d30c128643d622661baa5b74b36b",
         "file": ".gif",
-        "w": null,
-        "h": null
+        "w": 800,
+        "h": 450
       },
       "blocks": [
         {
@@ -2256,7 +2309,8 @@
           "autoplay": true,
           "loop": true
         }
-      ]
+      ],
+      "cardColor": "#d08a39"
     },
     {
       "slug": "unspeakable",
@@ -2270,8 +2324,8 @@
       "thumb": {
         "hash": "2aa00a7465e767b6c2bc70247ca5986fdcbdcaf386c5413fbc308de717184b3c",
         "file": ".gif",
-        "w": null,
-        "h": null
+        "w": 800,
+        "h": 450
       },
       "blocks": [
         {
@@ -2286,7 +2340,8 @@
           "autoplay": true,
           "loop": true
         }
-      ]
+      ],
+      "cardColor": "#8e10f9"
     },
     {
       "slug": "Reel",
