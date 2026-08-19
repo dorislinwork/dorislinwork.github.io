@@ -194,7 +194,7 @@ function layout(o) {
 <body>
 <a class="skip" href="#main">Skip to content</a>
 
-<header class="nav">
+<header class="nav" data-hide-on-scroll="${(site.header || {}).hideOnScroll === false ? 'false' : 'true'}">
   <a class="nav-brand" href="${base}index.html">${esc(site.name)}</a>
   <nav class="nav-links" aria-label="Main">
         ${navLinks}
@@ -321,7 +321,22 @@ function renderIndex() {
       }
     }
 
-    return `    <a class="thumbnail" href="work/${esc(p.slug)}.html">
+    /* 可變欄寬。span 是桌機要佔幾欄，平板與手機依欄數比例換算並夾住上下限，
+       所以放大過的作品在窄螢幕不會爆版。沒給 span 就是 1，外觀跟原本一樣。 */
+    const g = site.grid || {};
+    const cols = g.columns ?? 10;
+    const span = Math.max(1, Math.min(Number(p.span) || 1, cols));
+    const scale = (target) => Math.max(1, Math.min(Math.round(span * target / cols), target));
+    const styleBits = [];
+    if (span > 1) {
+      styleBits.push(`--span:${span}`);
+      styleBits.push(`--span-t:${scale(g.columnsTablet ?? 5)}`);
+      styleBits.push(`--span-m:${scale(g.columnsMobile ?? 2)}`);
+    }
+    if (p.ratio) styleBits.push(`--ratio:${p.ratio}`);
+    const style = styleBits.length ? ` style="${esc(styleBits.join(';'))}"` : '';
+
+    return `    <a class="thumbnail" href="work/${esc(p.slug)}.html"${style}>
       <div class="thumbnail-frame">${inner}</div>
 ${(site.grid || {}).showTitles !== false ? `      <div class="thumbnail-title">${esc(p.title)}</div>\n` : ''}    </a>`;
   }).join('\n');

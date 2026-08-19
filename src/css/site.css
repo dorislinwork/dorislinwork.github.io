@@ -138,13 +138,38 @@ h1, h2, h3 {
   position: sticky;
   top: 0;
   z-index: 20;
-  background: var(--bg, #fff);
   padding: 3.5rem var(--pad, 3.5rem) 2rem;
   display: flex;
   align-items: baseline;
   justify-content: space-between;
   gap: 2rem;
   flex-wrap: wrap;
+  /* 一開始沒有背景，跟頁面融在一起（跟舊站在最上面時的樣子一致） */
+  background: transparent;
+  transition: transform .4s cubic-bezier(.22, .8, .25, 1),
+              background-color .3s ease,
+              box-shadow .3s ease;
+}
+
+/* 捲離頂部後才給背景，否則壓在圖片上會看不清楚 */
+.nav.is-scrolled {
+  background: var(--bg, #fff);
+  box-shadow: 0 1px 0 rgba(0, 0, 0, .08);
+}
+
+/* 往下捲時收起來。往上捲會移除這個 class。 */
+.nav.is-hidden {
+  transform: translateY(-100%);
+}
+
+/* 選單開著、或有元素在導覽列內取得焦點時，不准躲起來 */
+.nav:focus-within {
+  transform: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav { transition: none; }
+  .nav.is-hidden { transform: none; }
 }
 
 .nav-brand {
@@ -190,13 +215,26 @@ h1, h2, h3 {
   .thumbnails { grid-template-columns: repeat(var(--grid-cols-mobile, 2), minmax(0, 1fr)); }
 }
 
-.thumbnail { display: block; }
+/* 可變欄寬：每個作品可以自己決定佔幾欄。
+   預設 1 欄、正方形，也就是跟原本完全一樣，
+   只有在 projects.json 給了 span / ratio 的作品才會變大。
+   平板與手機的欄數由 build 依比例換算，不會爆版。 */
+.thumbnail {
+  display: block;
+  grid-column: span var(--span, 1);
+}
+@media (max-width: 1100px) {
+  .thumbnail { grid-column: span var(--span-t, 1); }
+}
+@media (max-width: 620px) {
+  .thumbnail { grid-column: span var(--span-m, 1); }
+}
 
 .thumbnail-frame {
   position: relative;
   overflow: hidden;
   background: rgba(0, 0, 0, 0.04);
-  aspect-ratio: 1;
+  aspect-ratio: var(--ratio, 1);
 }
 .thumbnail-frame img,
 .thumbnail-frame video {

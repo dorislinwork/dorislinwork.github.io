@@ -134,12 +134,20 @@
     "image": null
   },
 
+  "header": {
+    "_說明": "導覽列行為。舊站的 #tag_menu 是 absolute，會隨頁面捲走消失。",
+    "hideOnScroll": true,
+    "_hideOnScroll註": "true = 往下捲收起、往上捲出現（參考 Bito 的做法）。false = 單純 sticky，一直留在上面。離開頂部後都會加上白底，避免壓在圖片上看不清楚。"
+  },
+
   "grid": {
-    "_說明": "首頁縮圖網格。原站是 10 欄（Cargo 的 grid-col=\"x10\"），窄螢幕自動遞減。",
+    "_說明": "首頁縮圖網格。原站是 10 欄（Cargo 的 grid-col=\"x10\"）、每格一樣大，窄螢幕自動遞減。",
     "columns": 10,
     "columnsTablet": 5,
     "columnsMobile": 2,
     "gutter": "1.5rem",
-    "showTitles": true
+    "showTitles": true,
+    "_span說明": "想讓某件作品在首頁佔更大版面，就在 projects.json 那一筆加 \"span\": 2（要佔幾欄）。沒加就是 1 欄，跟原本一樣。平板與手機的欄數會依比例自動換算，不會爆版。",
+    "_ratio說明": "同一筆還可以加 \"ratio\": \"16/9\" 改變縮圖的長寬比。預設 \"1\"（正方形）。常用：\"1\" 正方、\"3/4\" 直立、\"4/3\" 橫式、\"16/9\" 寬幅。"
   }
 }

@@ -23,6 +23,8 @@
      --text "一段說明"          可重複，會依順序排在最前面
      --vimeo 1079279831        可重複，排在文字之後、圖片之前
      --thumb 02.png            指定首頁縮圖（預設用排序後第一個檔案）
+     --span 2                  首頁網格佔幾欄（預設 1，放大代表作用）
+     --ratio 16/9              縮圖長寬比（預設 1 正方形）
      --tags "3D,Animation"
      --width 1600              圖片輸出寬度上限
      --hide-from-grid          有頁面但不出現在首頁網格
@@ -217,6 +219,10 @@ const entry = {
 };
 if (flags.draft) entry.draft = true;
 if (flags['hide-from-grid']) entry.hideFromGrid = true;
+
+// 首頁網格：佔幾欄、縮圖長寬比
+if (flags.span && Number(flags.span) > 1) entry.span = Number(flags.span);
+if (flags.ratio) entry.ratio = flags.ratio;
 
 /* ----------------------------------------------------- 寫 projects.json ---- */
 
