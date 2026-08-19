@@ -99,16 +99,26 @@ function themeVars() {
   const f = site.fonts || {};
   const c = site.cursors || {};
 
+  const ty = site.type || {};
+
   const lines = [
     `--bg: ${t.bg || '#fff'};`,
-    `--ink: ${t.ink || '#000'};`,
+    `--ink: ${t.ink || 'rgba(0,0,0,.75)'};`,
+    `--ink-strong: ${t.inkStrong || '#000'};`,
     `--accent: ${t.accent || '#f02'};`,
-    `--accent-hover: ${t.accentHover || '#ff8787'};`,
+    `--accent-hover: ${t.accentHover || '#ff5b90'};`,
     `--accent-active: ${t.accentActive || '#252525'};`,
     `--caption-color: ${t.caption || 'rgba(0,0,0,.3)'};`,
     `--caption-size: ${t.captionSize || '1.4rem'};`,
-    `--font-display: ${f.display || 'serif'};`,
+    `--font-display: ${f.display || 'sans-serif'};`,
     `--font-body: ${f.body || 'sans-serif'};`,
+    `--font-caption: ${f.caption || f.body || 'sans-serif'};`,
+    // 字級：舊站是固定值，首頁大標拉出來可調
+    `--hero-size: ${ty.heroSize || 'clamp(2.6rem, 4.5vw, 5.2rem)'};`,
+    `--title-size: ${ty.titleSize || '2.2rem'};`,
+    `--body-size: ${ty.bodySize || '1.4rem'};`,
+    `--body-lh: ${ty.bodyLineHeight || '1.2'};`,
+    `--heading-weight: ${ty.headingWeight || '700'};`,
     `--grid-cols: ${g.columns ?? 10};`,
     `--grid-cols-tablet: ${g.columnsTablet ?? 5};`,
     `--grid-cols-mobile: ${g.columnsMobile ?? 2};`,

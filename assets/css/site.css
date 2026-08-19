@@ -20,10 +20,11 @@ html {
 
 body {
   background: var(--bg, #fff);
-  color: var(--ink, #000);
+  color: var(--ink, rgba(0, 0, 0, .75));
   font-family: var(--font-body, sans-serif);
-  font-size: 1.6rem;
-  line-height: 1.45;
+  /* 舊站 bodycopy 是 1.4rem / 行高 1.2，這裡沿用。想放大改 site.json 的 type.bodySize */
+  font-size: var(--body-size, 1.4rem);
+  line-height: var(--body-lh, 1.2);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
@@ -67,23 +68,25 @@ hr {
 /* --------------------------------------------------------------------------
    2. 排版
    -------------------------------------------------------------------------- */
+/* 舊站 h1 是 DM Sans 700、行高 1.1，顏色 75% 黑 */
 h1, h2, h3 {
-  font-family: var(--font-display, serif);
-  font-weight: 400;
+  font-family: var(--font-display, sans-serif);
+  font-weight: var(--heading-weight, 700);
   line-height: 1.1;
-  letter-spacing: 0.01em;
+  letter-spacing: 0;
   text-transform: none;
 }
 
-.display-xl { font-size: clamp(3.2rem, 6vw, 7.2rem); }
-.display-l  { font-size: clamp(2.6rem, 4vw, 4.4rem); }
-.display-m  { font-size: clamp(2.0rem, 2.6vw, 2.8rem); }
+.display-xl { font-size: var(--hero-size, clamp(2.6rem, 4.5vw, 5.2rem)); }
+.display-l  { font-size: var(--title-size, 2.2rem); }
+.display-m  { font-size: 1.8rem; }
 
 .body-text { max-width: 62ch; }
 .body-text p + p { margin-top: 1.2em; }
 
+/* 舊站 .gallery_image_caption：mundial 400、1.4rem、30% 黑、行高 1.2 */
 .caption {
-  font-family: var(--font-body, sans-serif);
+  font-family: var(--font-caption, sans-serif);
   font-size: var(--caption-size, 1.4rem);
   font-weight: 400;
   font-style: normal;
@@ -94,7 +97,9 @@ h1, h2, h3 {
 .accent { color: var(--accent, #f02); }
 
 .link-accent { color: var(--accent, #f02); }
-.link-accent:hover { color: var(--accent-hover, #ff8787); }
+/* 舊站 bodycopy a 是純黑、比周圍文字重一點 */
+.prose a, .body-text a { color: var(--ink-strong, #000); }
+.link-accent:hover { color: var(--accent-hover, #ff5b90); }
 .link-accent:active { color: var(--accent-active, #252525); }
 
 /* --------------------------------------------------------------------------
@@ -143,7 +148,7 @@ h1, h2, h3 {
 }
 
 .nav-brand {
-  font-family: var(--font-display, serif);
+  font-family: var(--font-display, sans-serif);
   font-size: 1.8rem;
   letter-spacing: 0.02em;
 }
@@ -154,7 +159,7 @@ h1, h2, h3 {
   font-size: 1.5rem;
 }
 .nav-links a { color: var(--accent, #f02); }
-.nav-links a:hover { color: var(--accent-hover, #ff8787); }
+.nav-links a:hover { color: var(--accent-hover, #ff5b90); }
 .nav-links a:active { color: var(--accent-active, #252525); }
 .nav-links a[aria-current="page"] { color: var(--accent-active, #252525); }
 
@@ -237,14 +242,14 @@ figure { margin: 0; }
 /* 段落：文字不要跟圖一樣滿版，限制在好讀的寬度 */
 .case-body > p {
   max-width: 62ch;
-  font-size: 1.7rem;
-  line-height: 1.55;
+  font-size: var(--body-size, 1.4rem);
+  line-height: 1.5;
 }
 .case-body > p + p { margin-top: -0.8rem; }
 
 /* 內頁小標題（Styleframe / Storyboard / Credit 這類） */
 .case-section {
-  font-family: var(--font-display, serif);
+  font-family: var(--font-display, sans-serif);
   font-size: clamp(1.8rem, 2.4vw, 2.6rem);
   margin-top: clamp(3rem, 6vh, 5rem);
 }
@@ -274,7 +279,7 @@ figure { margin: 0; }
   font-size: 1.5rem;
 }
 .case-nav a { color: var(--accent, #f02); }
-.case-nav a:hover { color: var(--accent-hover, #ff8787); }
+.case-nav a:hover { color: var(--accent-hover, #ff5b90); }
 
 /* --------------------------------------------------------------------------
    8. Information 頁
@@ -283,20 +288,20 @@ figure { margin: 0; }
   padding: clamp(2rem, 5vh, 5rem) var(--pad, 3.5rem) clamp(6rem, 12vh, 12rem);
   max-width: 90rem;
 }
-.info-body { margin-top: clamp(2rem, 4vh, 4rem); font-size: 1.8rem; }
+.info-body { margin-top: clamp(2rem, 4vh, 4rem); font-size: var(--body-size, 1.4rem); line-height: 1.5; }
 .info-block { margin-top: clamp(3rem, 6vh, 6rem); }
 .info-block h2 { font-size: 1.4rem; letter-spacing: 0.12em; text-transform: uppercase; }
-.info-list { margin-top: 1.2rem; font-size: 1.6rem; }
+.info-list { margin-top: 1.2rem; font-size: var(--body-size, 1.4rem); }
 .info-list li + li { margin-top: 0.4rem; }
 
 .contact-mail {
   display: inline-block;
-  font-family: var(--font-display, serif);
+  font-family: var(--font-display, sans-serif);
   font-size: clamp(2rem, 5vw, 4rem);
   color: var(--accent, #f02);
   word-break: break-word;
 }
-.contact-mail:hover { color: var(--accent-hover, #ff8787); }
+.contact-mail:hover { color: var(--accent-hover, #ff5b90); }
 
 /* --------------------------------------------------------------------------
    9. 頁尾
@@ -311,7 +316,7 @@ figure { margin: 0; }
   color: var(--caption-color, rgba(0, 0, 0, 0.3));
 }
 .footer a { color: var(--accent, #f02); }
-.footer a:hover { color: var(--accent-hover, #ff8787); }
+.footer a:hover { color: var(--accent-hover, #ff5b90); }
 
 /* --------------------------------------------------------------------------
    10. 列印
