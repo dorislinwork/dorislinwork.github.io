@@ -94,10 +94,10 @@ h1, h2, h3 {
   color: var(--caption-color, rgba(0, 0, 0, 0.3));
 }
 
-.accent { color: var(--accent, #f02); }
-
-.link-accent { color: var(--accent, #f02); }
-/* 舊站 bodycopy a 是純黑、比周圍文字重一點 */
+/* ---- 文字顏色只有兩種：深灰與黑。粉紅只出現在 hover。 ----
+   .link-accent 是次要連結（社群、聯絡、上下篇），用深灰。
+   內文行間的連結用黑，比周圍的 75% 灰重一點，看得出是連結。 */
+.link-accent { color: var(--link, #252525); }
 .prose a, .body-text a, .case-body a, .info a { color: var(--ink-strong, #000); }
 
 /* 舊站 bodycopy a:hover 是 rgba(255, 91, 144, 1)。
@@ -216,8 +216,12 @@ h1, h2, h3 {
 .nav-links a { color: var(--ink-strong, #000); }
 .nav-links a:hover { color: var(--accent-hover, #ff5b90); }
 .nav-links a:active { color: var(--accent-active, #252525); }
-/* 目前所在頁用深灰，不用強調紅 —— 紅色會跟 hover 的粉紅搶注意力 */
-.nav-links a[aria-current="page"] { color: var(--nav-current, #252525); }
+/* 目前所在頁：深灰加粗體。用字重標示比換顏色更明顯，
+   而且不必再多一個顏色進來（整站文字只有深灰與黑）。 */
+.nav-links a[aria-current="page"] {
+  color: var(--nav-current, #252525);
+  font-weight: var(--nav-current-weight, 700);
+}
 /* 目前頁滑過時仍然變粉紅，維持「連結都會變粉紅」的一致性 */
 .nav-links a[aria-current="page"]:hover { color: var(--accent-hover, #ff5b90); }
 
@@ -348,7 +352,7 @@ figure { margin: 0; }
   border-top: 1px solid rgba(127, 127, 127, 0.2);
   font-size: 1.5rem;
 }
-.case-nav a { color: var(--accent, #f02); }
+.case-nav a { color: var(--link, #252525); }
 .case-nav a:hover { color: var(--accent-hover, #ff5b90); }
 
 /* --------------------------------------------------------------------------
@@ -368,7 +372,7 @@ figure { margin: 0; }
   display: inline-block;
   font-family: var(--font-display, sans-serif);
   font-size: clamp(2rem, 5vw, 4rem);
-  color: var(--accent, #f02);
+  color: var(--link, #252525);
   word-break: break-word;
 }
 .contact-mail:hover { color: var(--accent-hover, #ff5b90); }
@@ -385,7 +389,7 @@ figure { margin: 0; }
   justify-content: space-between;
   color: var(--caption-color, rgba(0, 0, 0, 0.3));
 }
-.footer a { color: var(--accent, #f02); }
+.footer a { color: var(--link, #252525); }
 .footer a:hover { color: var(--accent-hover, #ff5b90); }
 
 /* --------------------------------------------------------------------------
