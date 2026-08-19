@@ -115,6 +115,8 @@
     "accentHover": "#ff5b90",
     "_accentHover註": "舊站 bodycopy a:hover 是 rgba(255,91,144,1)，粉紅不是淺紅。",
     "accentActive": "#252525",
+    "navCurrent": "#252525",
+    "_navCurrent註": "導覽列上「目前所在頁」的顏色。用深灰而不是強調紅，因為紅色會跟 hover 的粉紅搶注意力。想更深就改成 #1a1a1a，想淺一點改 #4a4a4a。",
     "caption": "rgba(0, 0, 0, 0.30)",
     "captionSize": "1.4rem",
     "darkMode": false

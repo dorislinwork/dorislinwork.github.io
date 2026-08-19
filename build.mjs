@@ -108,6 +108,7 @@ function themeVars() {
     `--accent: ${t.accent || '#f02'};`,
     `--accent-hover: ${t.accentHover || '#ff5b90'};`,
     `--accent-active: ${t.accentActive || '#252525'};`,
+    `--nav-current: ${t.navCurrent || '#252525'};`,
     `--caption-color: ${t.caption || 'rgba(0,0,0,.3)'};`,
     `--caption-size: ${t.captionSize || '1.4rem'};`,
     `--font-display: ${f.display || 'sans-serif'};`,

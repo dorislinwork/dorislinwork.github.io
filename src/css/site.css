@@ -216,7 +216,10 @@ h1, h2, h3 {
 .nav-links a { color: var(--ink-strong, #000); }
 .nav-links a:hover { color: var(--accent-hover, #ff5b90); }
 .nav-links a:active { color: var(--accent-active, #252525); }
-.nav-links a[aria-current="page"] { color: var(--accent, #f02); }
+/* 目前所在頁用深灰，不用強調紅 —— 紅色會跟 hover 的粉紅搶注意力 */
+.nav-links a[aria-current="page"] { color: var(--nav-current, #252525); }
+/* 目前頁滑過時仍然變粉紅，維持「連結都會變粉紅」的一致性 */
+.nav-links a[aria-current="page"]:hover { color: var(--accent-hover, #ff5b90); }
 
 /* --------------------------------------------------------------------------
    5. 首頁 hero
