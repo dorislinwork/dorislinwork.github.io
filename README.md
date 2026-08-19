@@ -6,18 +6,32 @@
 
 ---
 
-## 日常最常做的三件事
+## 新增一個作品：三步
 
 ```bash
-# 1. 改完內容後重新產生網站
-node build.mjs
+# 1. 把圖丟進 incoming\My-New-Work\
+#    檔名決定頁面順序，建議 01.png、02.png、03.gif…
 
-# 2. 本機預覽（然後開 http://localhost:8080）
-node tools/serve.mjs . 8080
+# 2. 建立作品（自動轉檔、讀尺寸、寫進 projects.json）
+node tools/add-project.mjs My-New-Work --title "My New Work" --year 2026
 
-# 3. 推上線
-git add -A && git commit -m "更新內容" && git push
+# 3. 上線
+publish.cmd "新增作品 My New Work"
 ```
+
+**你不需要手寫 JSON。** 詳細參數見下面〈新增一個作品〉。
+
+## 其他常用指令
+
+```bash
+node tools/serve.mjs . 8080        本機預覽（開 http://localhost:8080）
+node build.mjs                    只重新產生網站，不上線
+node tools/check.mjs .            檢查連結與標記
+node tools/remove-project.mjs X   移除作品 X
+publish.cmd "訊息"                產生 + 檢查 + commit + push
+```
+
+`publish.cmd` 任何一步失敗就會停下來，不會把壞掉的版本推上線。
 
 ---
 
@@ -42,7 +56,12 @@ git add -A && git commit -m "更新內容" && git push
 │
 ├── assets/media/          圖片與動畫（14 MB）
 │
+├── incoming/              新作品的原始檔放這裡（不進 repo）
+├── publish.cmd            產生 + 檢查 + commit + push
+│
 ├── tools/
+│   ├── add-project.mjs              新增／更新作品（自動轉檔）
+│   ├── remove-project.mjs           移除作品
 │   ├── check.mjs                    檢查連結、圖片屬性、標題結構
 │   ├── serve.mjs                    本機預覽伺服器
 │   ├── convert-gifs.mjs             動畫 GIF → MP4（需要 ffmpeg）
@@ -61,28 +80,77 @@ git add -A && git commit -m "更新內容" && git push
 
 ## 新增一個作品
 
-打開 `content/projects.json`，在 `projects` 陣列加一筆：
+### 1. 把原始檔放進 incoming
 
-```json
-{
-  "slug": "My-New-Project",
-  "title": "My New Project",
-  "year": "2026",
-  "role": "Personal work",
-  "tags": [],
-  "summary": "一句話，只用於搜尋結果的描述，不會顯示在頁面上",
-  "thumb": { "file": "cover.png", "w": 1000, "h": 800 },
-  "blocks": [
-    { "type": "text", "text": "第一段說明文字。" },
-    { "type": "embed", "provider": "vimeo", "id": "1079279831", "autoplay": true, "loop": true },
-    { "type": "media", "file": "01.png", "w": 1600, "h": 2000, "caption": "圖說" },
-    { "type": "heading", "level": "h2", "text": "Credit" },
-    { "type": "text", "text": "Design & Animation : Doris Lin" }
-  ]
-}
+```
+incoming\
+└── My-New-Work\
+    ├── 01.png       ← 順序照檔名排（自然排序，2 會排在 10 前面）
+    ├── 02.png
+    └── 03.gif
 ```
 
-圖片放到 `assets/media/My-New-Project/`，`file` 只寫檔名。然後 `node build.mjs`。網址會是 `work/My-New-Project.html`，首頁縮圖自動出現。
+直接放**未壓縮的輸出檔**就好，腳本會壓。`incoming\` 不會進 repo，原始檔留在你電腦上當備份。
+
+支援 png / jpg / webp / tif / bmp / gif / mp4 / webm / mov。
+
+### 2. 執行 add-project
+
+```bash
+node tools/add-project.mjs My-New-Work --title "My New Work" --year 2026
+```
+
+它會自動：
+
+- 用 ffprobe 讀出每個檔案的實際像素尺寸
+- PNG／JPG → **WebP**；GIF／影片 → **MP4** 加一張 WebP 第一幀當 poster
+- 照檔名排序組出 blocks
+- 寫進 `content/projects.json` 並驗證 JSON 沒壞
+
+常用參數：
+
+| 參數 | 說明 |
+| --- | --- |
+| `--title "標題"` | 顯示標題（預設由 slug 推導） |
+| `--year 2026` | |
+| `--role "Personal work"` | 預設就是 Personal work |
+| `--client "客戶名"` | |
+| `--text "說明"` | 可重複，依順序排在最前面 |
+| `--vimeo 1079279831` | 可重複，排在文字之後、圖片之前 |
+| `--thumb 03.gif` | 指定首頁縮圖（預設用第一個檔案） |
+| `--tags "3D,Animation"` | |
+| `--width 2400` | 圖片輸出寬度上限，預設 1600 |
+| `--hide-from-grid` | 有頁面但不在首頁網格 |
+| `--draft` | 先不產生頁面 |
+| `--end` | 放到列表最後（預設插在最前面） |
+| `--dry` | 只顯示會做什麼，不寫入 |
+
+**先加 `--dry` 跑一次看看對不對**，確認了再拿掉。
+
+同一個 slug 再跑一次是「更新」，會保留你手動編輯過的欄位（例如圖說）。
+
+### 3. 上線
+
+```bash
+publish.cmd "新增作品 My New Work"
+```
+
+網址會是 `work/My-New-Work.html`，首頁縮圖自動出現在最前面。
+
+### 想微調的話
+
+`add-project.mjs` 只是幫你把 JSON 寫好，寫完之後 `content/projects.json` 就是普通的資料檔，想加圖說、換順序、插小標題都直接改它，然後 `publish.cmd`。格式看下面。
+
+### 移除作品
+
+```bash
+node tools/remove-project.mjs My-New-Work --dry   # 先看會刪什麼
+node tools/remove-project.mjs My-New-Work
+```
+
+會從 `projects.json` 移除、刪掉 `assets/media/<slug>/` 與產生的頁面。`incoming\` 裡的原始檔不會動。
+
+**只是想暫時下架**就不要用這個 —— 在那一筆加 `"draft": true` 即可，資料會留著。
 
 ### blocks 的四種型別
 

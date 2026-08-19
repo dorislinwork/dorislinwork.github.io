@@ -17,3 +17,8 @@ desktop.ini
 # 第一版（方向錯誤的佔位內容）。留在本機當紀錄，但不要進 repo ——
 # GitHub Pages 會把 repo 內所有檔案公開，推上去會變成可瀏覽的頁面。
 _archive-v1/
+
+# 待處理的原始檔。add-project.mjs 會讀這裡、輸出到 assets/media，
+# 原始檔留著不刪但不進 repo（通常是幾十 MB 的未壓縮輸出）。
+incoming/*
+!incoming/README.md

@@ -16,11 +16,12 @@
    需要 ffmpeg。winget 裝的話不用改 PATH，這支腳本會自己找。
    ========================================================================== */
 
-import { readFileSync, writeFileSync, mkdirSync, existsSync, statSync, readdirSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdirSync, existsSync, statSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { execFileSync } from 'node:child_process';
 import { tmpdir } from 'node:os';
+import { requireFfmpeg } from './lib-ffmpeg.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const site = JSON.parse(readFileSync(join(ROOT, 'content/site.json'), 'utf8'));
@@ -34,35 +35,7 @@ const WIDTH = wIdx > -1 ? Number(args[wIdx + 1]) : 800;
 const CRF = 26;          // 越小畫質越好、檔案越大。26 對縮圖來說夠了
 const HOST = 'https://freight.cargo.site';
 
-/* ---- 找 ffmpeg：PATH 找不到就翻 winget 的安裝位置 ---- */
-function findFfmpeg() {
-  try {
-    execFileSync('ffmpeg', ['-version'], { stdio: 'ignore' });
-    return 'ffmpeg';
-  } catch (e) { /* 繼續找 */ }
-
-  const base = join(process.env.LOCALAPPDATA || '', 'Microsoft/WinGet/Packages');
-  if (!existsSync(base)) return null;
-
-  const stack = [base];
-  while (stack.length) {
-    const dir = stack.pop();
-    let entries;
-    try { entries = readdirSync(dir, { withFileTypes: true }); } catch (e) { continue; }
-    for (const e of entries) {
-      const p = join(dir, e.name);
-      if (e.isDirectory()) stack.push(p);
-      else if (e.name.toLowerCase() === 'ffmpeg.exe') return p;
-    }
-  }
-  return null;
-}
-
-const FFMPEG = findFfmpeg();
-if (!FFMPEG) {
-  console.error('找不到 ffmpeg。請先執行：winget install Gyan.FFmpeg');
-  process.exit(1);
-}
+const { ffmpeg: FFMPEG } = requireFfmpeg();
 console.log(`ffmpeg: ${FFMPEG}\n`);
 
 /* ---- 收集所有動畫 GIF ---- */
