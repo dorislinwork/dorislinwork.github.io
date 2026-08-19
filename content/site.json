@@ -83,7 +83,7 @@
 
   "media": {
     "_說明": "圖片從哪裡來。Cargo 的網址是參數化的（/w/<寬度>/q/<品質>/i/<hash>/<檔名>），所以只要有 hash 就能要任何尺寸。",
-    "source": "cargo",
+    "source": "local",
     "_source選項": "\"cargo\" = 直接連 Cargo CDN，馬上可用但依賴 Cargo 帳號還在；\"local\" = 用 assets/media/<slug>/<檔名>，要先跑 download-media.mjs 把圖抓下來。長期一定要換成 local，否則哪天停掉 Cargo 圖就全掛。",
     "fullWidth": 1600,
     "thumbWidth": 800,

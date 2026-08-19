@@ -16,4 +16,28 @@
       a.textContent = addr;
     }
   }
+
+  /* ------------------------------------------------------------------------
+     只播放畫面內的影片
+     首頁網格有 20 支自動循環的影片，全部同時解碼會讓瀏覽器（尤其手機）
+     很吃力。捲出畫面就暫停，捲回來再播。暫停時 poster 不會重新出現，
+     所以視覺上看不出被停過。
+     ---------------------------------------------------------------------- */
+  var videos = document.querySelectorAll('video[autoplay]');
+  if (videos.length && 'IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        var v = entry.target;
+        if (entry.isIntersecting) {
+          // play() 回傳 Promise，被瀏覽器政策拒絕時要吞掉避免 console 噴錯
+          var p = v.play();
+          if (p && p.catch) p.catch(function () {});
+        } else if (!v.paused) {
+          v.pause();
+        }
+      });
+    }, { rootMargin: '200px 0px' });
+
+    for (var j = 0; j < videos.length; j++) io.observe(videos[j]);
+  }
 })();

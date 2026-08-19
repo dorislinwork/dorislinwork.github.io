@@ -38,11 +38,14 @@ git add -A && git commit -m "更新內容" && git push
 │   ├── css/site.css       版面
 │   ├── css/effects.css    逐字浮現、stagger、wiggle
 │   ├── js/effects.js      上面那些效果的邏輯
-│   └── js/site.js         信箱組裝
+│   └── js/site.js         信箱組裝、影片只播畫面內的
+│
+├── assets/media/          圖片與動畫（14 MB）
 │
 ├── tools/
 │   ├── check.mjs                    檢查連結、圖片屬性、標題結構
 │   ├── serve.mjs                    本機預覽伺服器
+│   ├── convert-gifs.mjs             動畫 GIF → MP4（需要 ffmpeg）
 │   ├── import-cargo-export.mjs      匯出資料 → projects.json
 │   └── export-cargo-v4.browser.js   貼進瀏覽器 Console 用的匯出腳本
 │
@@ -68,7 +71,7 @@ git add -A && git commit -m "更新內容" && git push
   "role": "Personal work",
   "tags": [],
   "summary": "一句話，只用於搜尋結果的描述，不會顯示在頁面上",
-  "thumb": { "hash": "...", "file": "cover.png", "w": 1000, "h": 800 },
+  "thumb": { "file": "cover.png", "w": 1000, "h": 800 },
   "blocks": [
     { "type": "text", "text": "第一段說明文字。" },
     { "type": "embed", "provider": "vimeo", "id": "1079279831", "autoplay": true, "loop": true },
@@ -79,7 +82,7 @@ git add -A && git commit -m "更新內容" && git push
 }
 ```
 
-然後 `node build.mjs`。網址會是 `work/My-New-Project.html`，首頁縮圖自動出現。
+圖片放到 `assets/media/My-New-Project/`，`file` 只寫檔名。然後 `node build.mjs`。網址會是 `work/My-New-Project.html`，首頁縮圖自動出現。
 
 ### blocks 的四種型別
 
@@ -133,21 +136,41 @@ git add -A && git commit -m "更新內容" && git push
 
 ---
 
-## ⚠️ 圖片還依賴 Cargo，這件事要處理
+## 媒體：已完全脫離 Cargo
 
-目前 `site.json` 的 `media.source` 是 `"cargo"`，圖片直接連 Cargo 的 CDN。網站能跑，但**一旦停掉 Cargo 訂閱，所有圖片會全部失效**。
+`media.source` 已經設為 `"local"`，所有圖片與動畫都在 `assets/media/` 裡。**網站不再依賴 Cargo，停用訂閱不會影響這個站。**
 
-要真正獨立：
+容量 **14 MB**：94 個 WebP + 20 個 MP4。
+
+### 搬移過程發現的 Cargo CDN 行為
+
+重新抓圖時會用到，也解釋了為什麼舊站那麼重：
+
+| 網址形式 | 結果 |
+| --- | --- |
+| `/w/1200/q/82/i/HASH/x.png` | 回原始 PNG，**`w` 與 `q` 完全無效**（3010 KB） |
+| `/w/1200/q/82/f/webp/i/HASH/x.png` | 真的縮放並轉檔（125 KB，少 96%） |
+
+動畫 GIF 是例外 —— Cargo 完全不處理，加 `f/webp` 也是回原檔，`f/mp4` 不支援（回 400）。所以 20 個 GIF 是用 ffmpeg 在本機轉的：**96.2 MB → 4.4 MB，省 95.4%**。
+
+### 重新抓圖或調整品質
 
 ```bash
-node download-media.mjs        # 抓 94 個檔案到 assets/media/
+node download-media.mjs                # 靜態圖，自動轉 WebP
+node download-media.mjs --width 2400   # 想要更大的圖
+node download-media.mjs --dry          # 只列出要抓什麼
+node tools/convert-gifs.mjs            # 動畫 GIF → MP4 + WebP poster
 ```
 
-然後把 `site.json` 的 `media.source` 改成 `"local"`，再 `node build.mjs`。
+已存在的檔案會跳過，所以可以安全重跑。
 
-> Cargo 的圖片網址是參數化的：`freight.cargo.site/w/<寬度>/q/<品質>/i/<hash>/<檔名>`。
-> 所以 `projects.json` 只存 hash 與檔名，要什麼尺寸都能組出來，不必抓原始大檔。
-> 想抓更大的圖：`node download-media.mjs --width 2400`。
+檔名規則：靜態圖 `x.png` → `x.webp`；動畫 `x.gif` → `x.mp4` 外加 `x.webp` 當 poster。`projects.json` 裡仍然存原始檔名，build 會自己換。
+
+`convert-gifs.mjs` 需要 ffmpeg。用 winget 裝的話不必改 PATH，腳本會自己去 `%LOCALAPPDATA%\Microsoft\WinGet\Packages` 找：
+
+```powershell
+winget install Gyan.FFmpeg
+```
 
 影片不受影響 —— 34 支動畫都是 Vimeo 嵌入，本來就不在 Cargo 上。
 
@@ -155,19 +178,21 @@ node download-media.mjs        # 抓 94 個檔案到 assets/media/
 
 ## 部署
 
-repo 與 remote 已經設定好了（`origin` 指向 `dorislinwork/dorislinwork.github.io`），第一次上線只剩：
+repo 與 remote 都設好了（`origin` → `dorislinwork/dorislinwork.github.io`），已經推上去過。之後每次更新：
 
-1. 到 <https://github.com/new> 建 repo，名稱填 **`dorislinwork.github.io`**，設為 **Public**（免費帳號的 Pages 需要 public），**不要**勾任何初始化選項
-2. `git push -u origin main`
-3. Settings → Pages → Source 選 `Deploy from a branch`、branch `main` / `(root)` → Save
+```bash
+git add -A && git commit -m "更新內容" && git push
+```
 
-之後每次更新就是 `git add -A && git commit -m "..." && git push`，約一分鐘生效。
+約一分鐘生效。
 
-`.nojekyll` 已經放好，GitHub 不會對檔案做 Jekyll 處理。
+Pages 設定在 repo 的 Settings → Pages：Source `Deploy from a branch`、branch `main` / `(root)`。`.nojekyll` 已放好，GitHub 不會對檔案做 Jekyll 處理。
+
+> **`_archive-v1/` 刻意排除在 repo 外**（寫在 `.gitignore`）。Pages 會把 repo 裡所有檔案公開，那是最初方向錯誤的版本，推上去會變成可瀏覽的頁面。本機還留著。
 
 ### 想改用 doris-lin.com 這個網域
 
-這個網域目前是**透過 Cargo 購買**的（DNS TXT 有 `cargo-domain=purchased`），NS 指向 `ns1/ns2.cargo.site`。要搬到 GitHub Pages 得先把網域轉出或改 DNS 代管，這件事牽涉 Cargo 帳號，**取消訂閱前務必先確認網域不會一起失去**。
+這個網域目前是**透過 Cargo 購買**的（DNS TXT 有 `cargo-domain=purchased`），NS 指向 `ns1/ns2.cargo.site`。要搬到 GitHub Pages 得先把網域轉出或改 DNS 代管，這件事牽涉 Cargo 帳號 —— **取消訂閱前務必先確認網域不會一起失去。**
 
 搬好之後：根目錄放一個 `CNAME` 檔案（內容只寫網域），DNS 加四筆 A 記錄指向 `185.199.108.153`、`185.199.109.153`、`185.199.110.153`、`185.199.111.153`，`www` 加 CNAME 指向 `dorislinwork.github.io`。
 
@@ -181,6 +206,7 @@ repo 與 remote 已經設定好了（`origin` 指向 `dorislinwork/dorislinwork.
 - **emoji 安全**：用 `Intl.Segmenter` 拆字，標題裡的 🥨 不會裂掉
 - **JS 壞掉也看得到文字**：隱藏樣式只有在 JS 確認要播時才加上
 - **響應式圖片**：每張圖給兩種寬度的 `srcset`，手機不載大圖
+- **影片只播畫面內的**：首頁 20 支循環影片捲出畫面就暫停，避免同時解碼
 - **無障礙**：跳過導覽、鍵盤焦點外框、`aria-label` 保留完整句子（螢幕閱讀器不會逐字念）、尊重「減少動態效果」
 - **SEO**：`sitemap.xml`、`robots.txt`、Open Graph 分享卡片
 

@@ -23,12 +23,32 @@ const projects = data.projects || data;
 
 const args = process.argv.slice(2);
 const DRY = args.includes('--dry');
+const SKIP_GIF = args.includes('--skip-gif');
+const ONLY_GIF = args.includes('--only-gif');
 const wIdx = args.indexOf('--width');
 const WIDTH = wIdx > -1 ? Number(args[wIdx + 1]) : (site.media?.fullWidth || 1600);
+const THUMB_WIDTH = site.media?.thumbWidth || 800;
 const QUALITY = site.media?.quality || 82;
 const HOST = 'https://freight.cargo.site';
 
-/* 收集所有要抓的檔案：內頁圖 + 首頁縮圖（縮圖若跟內頁圖同一張就不重複抓） */
+const isGif = (file) => /\.gif$/i.test(file);
+
+/* Cargo 的 CDN 路徑規則（實測結果）：
+     /w/<寬度>/q/<品質>/i/<hash>/<檔名>            靜態圖不會縮放，直接回原檔
+     /w/<寬度>/q/<品質>/f/webp/i/<hash>/<檔名>     加 f/webp 才真的會縮放與轉檔
+   同一張 PNG：原樣 3010 KB，轉 WebP 只有 125 KB。
+   動畫 GIF 例外 —— Cargo 不處理，加了 f/webp 也是回原檔，也不支援 f/mp4。 */
+const cargoUrl = (hash, file, width) => {
+  const enc = encodeURIComponent(file);
+  return isGif(file)
+    ? `${HOST}/w/${width}/q/${QUALITY}/i/${hash}/${enc}`
+    : `${HOST}/w/${width}/q/${QUALITY}/f/webp/i/${hash}/${enc}`;
+};
+
+/** 靜態圖存成 .webp，GIF 保留原副檔名 */
+const localName = (file) => (isGif(file) ? file : file.replace(/\.[^.]+$/, '') + '.webp');
+
+/* 收集要抓的檔案：內頁圖 + 首頁縮圖（同一張不重複抓） */
 const jobs = [];
 const seen = new Set();
 
@@ -37,20 +57,26 @@ const add = (m, slug, width) => {
   const key = `${slug}/${m.file}`;
   if (seen.has(key)) return;
   seen.add(key);
+  const gif = isGif(m.file);
+  if (gif && SKIP_GIF) return;
+  if (!gif && ONLY_GIF) return;
   jobs.push({
     slug,
     file: m.file,
-    url: `${HOST}/w/${width}/q/${QUALITY}/i/${m.hash}/${encodeURIComponent(m.file)}`,
-    dest: join(ROOT, 'assets/media', slug, m.file),
+    gif,
+    url: cargoUrl(m.hash, m.file, width),
+    dest: join(ROOT, 'assets/media', slug, localName(m.file)),
   });
 };
 
 for (const p of projects) {
   for (const b of p.blocks || []) if (b.type === 'media') add(b, p.slug, WIDTH);
-  add(p.thumb, p.slug, WIDTH);
+  add(p.thumb, p.slug, THUMB_WIDTH);
 }
 
-console.log(`共 ${jobs.length} 個檔案，寬度 ${WIDTH}px、品質 ${QUALITY}`);
+const gifCount = jobs.filter((j) => j.gif).length;
+console.log(`共 ${jobs.length} 個檔案（其中 ${gifCount} 個動畫 GIF）`);
+console.log(`內頁圖 ${WIDTH}px、縮圖 ${THUMB_WIDTH}px、品質 ${QUALITY}，靜態圖轉 WebP`);
 
 const already = jobs.filter((j) => existsSync(j.dest));
 const todo = jobs.filter((j) => !existsSync(j.dest));

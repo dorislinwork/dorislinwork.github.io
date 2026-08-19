@@ -42,7 +42,7 @@ const esc = (s) => String(s ?? '')
 const isNote = (k) => k.startsWith('_');
 
 const VIDEO_EXT = /\.(mp4|webm|mov|m4v)$/i;
-const isVideo = (m) => m.tag === 'video' || VIDEO_EXT.test(m.file || m.src || '');
+const isGifFile = (f) => /\.gif$/i.test(f || '');
 
 /* ------------------------------------------------------- 媒體網址組裝 ----
    Cargo 的圖片網址是參數化的：
@@ -57,17 +57,38 @@ const MEDIA = site.media || {};
 const MEDIA_SOURCE = MEDIA.source || 'cargo';
 const CARGO_HOST = 'https://freight.cargo.site';
 
+/* 本機檔名規則，對應 download-media.mjs 與 tools/convert-gifs.mjs 的產出：
+     靜態圖  x.png  → x.webp
+     動畫    x.gif  → x.mp4（另有 x.webp 當 poster） */
+const localName = (file) => file.replace(/\.[^.]+$/, '') + (isGifFile(file) ? '.mp4' : '.webp');
+const posterName = (file) => file.replace(/\.[^.]+$/, '') + '.webp';
+
+/** 本機的 GIF 已轉成 MP4，所以在 local 模式下 GIF 也算影片 */
+const isVideo = (m) => m.tag === 'video'
+  || VIDEO_EXT.test(m.file || m.src || '')
+  || (MEDIA_SOURCE === 'local' && isGifFile(m.file));
+
 function mediaUrl(m, slug, width, base) {
   if (!m) return '';
   if (MEDIA_SOURCE === 'local') {
     if (!m.file) return base + (m.url || '');
-    return `${base}assets/media/${slug}/${encodeURIComponent(m.file)}`;
+    return `${base}assets/media/${slug}/${encodeURIComponent(localName(m.file))}`;
   }
   if (m.hash && m.file) {
     const q = MEDIA.quality || 82;
-    return `${CARGO_HOST}/w/${width}/q/${q}/i/${m.hash}/${encodeURIComponent(m.file)}`;
+    // 靜態圖一定要加 f/webp，不然 Cargo 直接回原檔、w 與 q 都無效
+    // （實測同一張 PNG：原樣 3010 KB、轉 WebP 125 KB）。
+    // 動畫 GIF 例外，Cargo 完全不處理。
+    const fmt = isGifFile(m.file) ? '' : 'f/webp/';
+    return `${CARGO_HOST}/w/${width}/q/${q}/${fmt}i/${m.hash}/${encodeURIComponent(m.file)}`;
   }
   return m.url || '';
+}
+
+/** <video> 的 poster（第一幀）。只有 local 模式才有 */
+function posterUrl(m, slug, base) {
+  if (MEDIA_SOURCE !== 'local' || !m || !m.file) return '';
+  return `${base}assets/media/${slug}/${encodeURIComponent(posterName(m.file))}`;
 }
 
 /* ------------------------------------------------------- 主題變數注入 ---- */
@@ -240,7 +261,9 @@ function renderBlock(b, i, slug, base) {
 
   let el;
   if (isVideo(b)) {
-    el = `<video src="${esc(src)}"${dim}${eye} autoplay muted loop playsinline preload="none"></video>`;
+    const poster = posterUrl(b, slug, base);
+    el = `<video src="${esc(src)}"${dim}${eye} autoplay muted loop playsinline`
+      + `${poster ? ` poster="${esc(poster)}"` : ''} preload="metadata"></video>`;
   } else {
     // 同時給兩種寬度讓瀏覽器挑，手機不用載大圖
     const srcset = (MEDIA_SOURCE === 'cargo' && b.hash && b.file)
@@ -273,7 +296,10 @@ function renderIndex() {
       const src = mediaUrl(t, p.slug, tw, '');
       const dim = `${t.w ? ` width="${esc(t.w)}"` : ''}${t.h ? ` height="${esc(t.h)}"` : ''}`;
       if (isVideo(t)) {
-        inner = `<video src="${esc(src)}"${dim} autoplay muted loop playsinline preload="none"></video>`;
+        // poster 讓影片還沒載入時先顯示第一幀，網格不會出現空格
+        const poster = posterUrl(t, p.slug, '');
+        inner = `<video src="${esc(src)}"${dim} autoplay muted loop playsinline`
+          + `${poster ? ` poster="${esc(poster)}"` : ''} preload="${i < 10 ? 'auto' : 'none'}"></video>`;
       } else {
         // 縮圖只要一半寬度就夠，10 欄網格單格很小
         const half = mediaUrl(t, p.slug, Math.round(tw / 2), '');
