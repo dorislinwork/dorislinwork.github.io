@@ -57,20 +57,34 @@ if (run('git', ['add', '-A'], { capture: true }).code !== 0) fail('git add');
 
 // 有沒有東西要 commit
 const staged = run('git', ['diff', '--cached', '--quiet'], { capture: true });
-if (staged.code === 0) {
-  console.log('      沒有任何變更，不需要上線。');
-  process.exit(0);
+
+if (staged.code !== 0) {
+  const changed = run('git', ['diff', '--cached', '--name-only'], { capture: true });
+  const files = changed.out.split('\n').filter(Boolean);
+  console.log(`      ${files.length} 個檔案有變動`);
+  files.slice(0, 8).forEach((f) => console.log(`        ${f}`));
+  if (files.length > 8) console.log(`        …還有 ${files.length - 8} 個`);
+
+  const commit = run('git', ['commit', '-m', MESSAGE], { capture: true });
+  if (commit.code !== 0) fail('git commit', (commit.err || commit.out).trim().split('\n')[0]);
+  console.log(`      已記錄：${MESSAGE}`);
+} else {
+  /* 沒有新變更，但可能有之前用 git commit 存好、還沒推上去的 commit。
+     這裡如果直接結束，那些 commit 會永遠留在本機，而畫面上寫的是
+     「不需要上線」—— 看起來像已經上線了，其實線上還是舊的。踩過這個坑。 */
+  const rev = run('git', ['rev-list', '--count', '@{u}..HEAD'], { capture: true });
+  const ahead = rev.code === 0 ? (Number(rev.out.trim()) || 0) : null;
+
+  if (ahead === 0) {
+    console.log('      沒有任何變更，也沒有待上線的 commit。');
+    process.exit(0);
+  }
+  if (ahead === null) {
+    console.log('      沒有新變更。查不到遠端狀態，還是試著推一次。');
+  } else {
+    console.log(`      沒有新變更，但有 ${ahead} 個已存好、還沒上線的 commit。`);
+  }
 }
-
-const changed = run('git', ['diff', '--cached', '--name-only'], { capture: true });
-const files = changed.out.split('\n').filter(Boolean);
-console.log(`      ${files.length} 個檔案有變動`);
-files.slice(0, 8).forEach((f) => console.log(`        ${f}`));
-if (files.length > 8) console.log(`        …還有 ${files.length - 8} 個`);
-
-const commit = run('git', ['commit', '-m', MESSAGE], { capture: true });
-if (commit.code !== 0) fail('git commit', (commit.err || commit.out).trim().split('\n')[0]);
-console.log(`      已記錄：${MESSAGE}`);
 
 /* ---- 4. push ---- */
 console.log('\n[4/4] 推上 GitHub');
