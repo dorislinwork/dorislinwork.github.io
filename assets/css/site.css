@@ -360,23 +360,13 @@ h1, h2, h3 {
 .nav-links a:active { color: var(--accent-active, #252525); }
 /* 目前所在頁：深灰加粗體。用字重標示比換顏色更明顯，
    而且不必再多一個顏色進來（整站文字只有深灰與黑）。 */
+/* 當頁指示：只把顏色調淡。
+   2026-08-21 試過用 ::before 畫一圈粉紅，使用者看過之後決定不要圈，改成淺灰。
+   淡色的邏輯是「這一頁你已經在看了」，所以退到背景去，不搶其他項。
+   字重刻意不動 —— navCurrentWeight 跟 navWeight 現在都是 600，差別純粹靠顏色。 */
 .nav-links a[aria-current="page"] {
   color: var(--nav-current, #252525);
   font-weight: var(--nav-current-weight, 700);
-  position: relative;
-}
-
-/* 當頁指示：外面套一圈粉紅。
-   用 ::before 畫而不是加 padding 與 border —— 加 padding 的話那一項會比其他項
-   寬高，.nav-links 是 flex + align-items: baseline，整排就會被推歪。
-   顏色用全站唯一的那個粉紅（跟游標同一色）。 */
-.nav-links a[aria-current="page"]::before {
-  content: "";
-  position: absolute;
-  inset: -0.55em -0.9em;
-  border: 1.5px solid var(--accent-hover, #ff5b90);
-  border-radius: 100px;
-  pointer-events: none;
 }
 /* 目前頁滑過時仍然變粉紅，維持「連結都會變粉紅」的一致性 */
 .nav-links a[aria-current="page"]:hover { color: var(--accent-hover, #ff5b90); }
