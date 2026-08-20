@@ -41,6 +41,18 @@ const esc = (s) => String(s ?? '')
 /** site.json 裡以 _ 開頭的鍵是給人看的說明，輸出時要忽略 */
 const isNote = (k) => k.startsWith('_');
 
+/**
+ * 一段文字 → 一個 <p>，區塊內的換行轉成 <br>。
+ *
+ * HTML 會把原始碼裡的換行折成空格，所以在後台按 Enter 分行的話，不轉的話
+ * 畫面上會全部黏成一大段 —— 使用者 2026-08-21 就是這樣分行的，然後發現沒生效。
+ * 想要獨立段落（段距更大）就用兩個 text 區塊。
+ *
+ * 抽成函式是因為內頁文字有兩條路徑：內文區塊走 renderBlock()，資訊列的敘述
+ * 走 renderProject()。第一次只改了前者，資訊列還是黏成一段。
+ */
+const paragraph = (text) => `<p>${esc(text).replace(/\r?\n/g, '<br>')}</p>`;
+
 const VIDEO_EXT = /\.(mp4|webm|mov|m4v)$/i;
 const isGifFile = (f) => /\.gif$/i.test(f || '');
 
@@ -341,7 +353,7 @@ function renderBlock(b, i, slug, base) {
   }
 
   if (b.type === 'text') {
-    return `      <p>${esc(b.text)}</p>`;
+    return `      ${paragraph(b.text)}`;
   }
 
   if (b.type === 'embed') {
@@ -729,7 +741,7 @@ function renderProject(p, prev, next) {
   out.push(`        <h1 class="case-title">${esc(p.title)}</h1>`);
   if (blurb.length) {
     out.push(`        <div class="case-blurb"${clamp ? ' data-clamp' : ''}>`);
-    blurb.forEach((t) => out.push(`          <p>${esc(t)}</p>`));
+    blurb.forEach((t) => out.push(`          ${paragraph(t)}`));
     out.push('        </div>');
     if (clamp) {
       out.push('        <button class="case-more" type="button" hidden'
