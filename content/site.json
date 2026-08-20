@@ -7,9 +7,11 @@
   "lang": "en",
 
   "hero": {
-    "_說明": "首頁大標，取自原站。兩行都會套用逐字浮現效果。",
+    "_說明": "首頁大標，取自原站。",
     "headline": "Hi there! I'm Doris Lin",
-    "sub": "a 3D artist, motion designer, animator and a toast maker! 🥨"
+    "sub": "a 3D artist, motion designer, animator and a toast maker! 🥨",
+    "reveal": "line",
+    "_reveal說明": "首頁這兩行怎麼出現。line = 一次一整行，大標先整行浮現、副標接著整行浮現（2026-08-20 改成這個）。letter = 逐字浮現，舊站的效果。none = 完全不做動畫，直接就在那裡。這個設定只管首頁：作品內頁的標題還是逐字浮現，要改那邊再說。"
   },
 
   "logo": {

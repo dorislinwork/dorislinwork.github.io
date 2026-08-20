@@ -549,9 +549,22 @@ ${meta ? `        <span class="thumbnail-meta">${esc(meta)}</span>\n` : ''}     
   }
   INDEX_STATS = { count: shown.length, tall: tall.size, rows, holes, perRowCols };
 
+  /* 首頁大標怎麼出現，由 site.json 的 hero.reveal 決定：
+       letter  逐字浮現（舊站的效果）
+       line    整行一起出現，副標接著整行出現
+       none    不做動畫
+
+     副標在三種模式下用不同的做法：逐字模式它自己也逐字浮現（data-split）；
+     整行模式改成 .stagger-item，這樣它會在大標那一行之後接上；不做動畫
+     時就是一段普通文字，什麼 class 都不加。 */
+  const heroMode = ['line', 'none'].includes(h.reveal) ? h.reveal : 'letter';
+  const heroAttr = heroMode === 'letter' ? '' : ` data-reveal="${heroMode}"`;
+  const subClass = heroMode === 'line' ? 'display-l stagger-item' : 'display-l';
+  const subAttr = heroMode === 'letter' ? ' data-split' : '';
+
   const body = `  <section class="hero" data-stagger-scope>
-    <h1 class="display-xl">${esc(h.headline || site.name)}</h1>
-${h.sub ? `    <p class="display-l" data-split>${esc(h.sub)}</p>\n` : ''}  </section>
+    <h1 class="display-xl"${heroAttr}>${esc(h.headline || site.name)}</h1>
+${h.sub ? `    <p class="${subClass}"${subAttr}>${esc(h.sub)}</p>\n` : ''}  </section>
 
   <section class="thumbnails" aria-label="Selected work">
 ${thumbs}

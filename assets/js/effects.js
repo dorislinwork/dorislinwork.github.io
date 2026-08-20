@@ -80,10 +80,40 @@
      ---------------------------------------------------------------------- */
   var TOTAL_MS = 900;   // 整段最多播多久
   var STEP_MS = 28;     // 每個字間隔，字太多時會自動縮短
+  var LINE_MS = 600;    // 整行浮現的時間，要跟 effects.css 的 transition 一致
+
+  /* 三種模式，寫在元素的 data-reveal 上（沒寫就是 letter）：
+       letter  逐字浮現（舊站的效果，作品頁標題還是用這個）
+       line    整行一起出現，不拆字
+       none    不做動畫，直接就在那裡
+     首頁 hero 用哪一種由 site.json 的 hero.reveal 決定。 */
+  function modeOf(el) {
+    var m = el.dataset.reveal;
+    return (m === 'line' || m === 'none') ? m : 'letter';
+  }
+
+  /* 標題出現後，讓同一區塊裡的 .stagger-item 依序接上 */
+  function showFollowers(el, base) {
+    var scope = el.closest('[data-stagger-scope]') || el.parentElement;
+    if (!scope) return;
+    var followers = scope.querySelectorAll('.stagger-item');
+    Array.prototype.forEach.call(followers, function (item, i) {
+      item.style.transitionDelay = Math.round(base + i * 90) + 'ms';
+      item.classList.add('is-revealed');
+    });
+  }
 
   function reveal(el) {
     if (el.dataset.revealed === 'true') return;
     el.dataset.revealed = 'true';
+
+    // 整行模式：整個元素當一個單位，沒有 letters 可以算延遲。
+    // base 只等半個動畫時間就讓下一行接上 —— 等它完全停住才動會顯得拖。
+    if (modeOf(el) === 'line') {
+      el.classList.add('reveal-in');
+      showFollowers(el, LINE_MS * 0.5);
+      return;
+    }
 
     var letters = el._letters || [];
     var step = letters.length ? Math.min(STEP_MS, TOTAL_MS / letters.length) : 0;
@@ -93,22 +123,26 @@
       letter.classList.add('reveal-in');
     });
 
-    // 標題播完後，接著讓同一區塊裡的 .stagger-item 依序淡入
-    var scope = el.closest('[data-stagger-scope]') || el.parentElement;
-    if (!scope) return;
-    var base = letters.length * step;
-    var followers = scope.querySelectorAll('.stagger-item');
-    Array.prototype.forEach.call(followers, function (item, i) {
-      item.style.transitionDelay = Math.round(base + i * 90) + 'ms';
-      item.classList.add('is-revealed');
-    });
+    showFollowers(el, letters.length * step);
   }
 
   function initReveal() {
-    var targets = document.querySelectorAll('h1, [data-split]');
+    var targets = Array.prototype.slice.call(
+      document.querySelectorAll('h1, [data-split], [data-reveal]')
+    );
     if (!targets.length) return;
 
-    Array.prototype.forEach.call(targets, splitText);
+    // none 的完全不參與，但它底下的 .stagger-item 還是得看得到
+    targets = targets.filter(function (el) {
+      if (modeOf(el) !== 'none') return true;
+      showFollowers(el, 0);
+      return false;
+    });
+
+    // 整行模式不拆字（順便對讀屏軟體更友善，文字保持原樣）
+    targets.forEach(function (el) {
+      if (modeOf(el) === 'letter') splitText(el);
+    });
 
     if (reduceMotion) {
       // 不播動畫，但 .stagger-item 仍要看得到
@@ -121,7 +155,7 @@
     // 先武裝（把字藏起來）。已經在畫面內的（例如 hero）下一格就開始播，
     // 其餘等捲到再播。順序很重要：先加 .text-armed 才不會閃一下完整文字。
     var pending = [];
-    Array.prototype.forEach.call(targets, function (el) {
+    targets.forEach(function (el) {
       el.classList.add('text-armed');
       var rect = el.getBoundingClientRect();
       if (rect.top < window.innerHeight * 0.9 && rect.bottom > 0) {
@@ -136,7 +170,7 @@
     });
 
     if (!('IntersectionObserver' in window)) {
-      Array.prototype.forEach.call(targets, reveal);
+      targets.forEach(reveal);
       return;
     }
 
@@ -148,7 +182,7 @@
       });
     }, { rootMargin: '0px 0px -10% 0px', threshold: 0.1 });
 
-    Array.prototype.forEach.call(targets, function (el) {
+    targets.forEach(function (el) {
       if (el.dataset.revealed !== 'true') io.observe(el);
     });
   }
