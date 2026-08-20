@@ -59,6 +59,81 @@ html { cursor: var(--cursor-default, auto); }
 a, button, summary, [role="button"], .thumbnail { cursor: var(--cursor-link, pointer); }
 /* 輸入框保留 I 型游標，不然看不出可以打字（目前站上沒有表單，先擋著） */
 input, textarea { cursor: text; }
+
+/* ---- 跟隨式游標（參考 therocketpanda.com）----
+   平滑跟隨的粉紅圓點，滑到可點擊的東西時放大，有 data-cursor 屬性的還會顯示字。
+
+   隱藏系統游標的規則**只在 JS 成功接手後才生效**（html.has-cursor 是 JS 加的）。
+   寫死在靜態 CSS 裡的話，JS 一出錯就變成整站完全沒有游標 —— 那比沒做這個效果
+   糟得多。JS 沒跑就沿用上面那組 PNG 圖檔游標，剛好是自然的降級。
+
+   只在真的有滑鼠的裝置啟用（hover: hover 且 pointer: fine），
+   觸控裝置根本沒有游標可跟。 */
+@media (hover: hover) and (pointer: fine) {
+  html.has-cursor,
+  html.has-cursor * { cursor: none !important; }
+}
+
+.cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 9999;
+  pointer-events: none;
+  /* JS 每一格都覆寫 transform，所以這一層不能有 transition，否則會跟計算打架 */
+  will-change: transform;
+  mix-blend-mode: var(--cursor-blend, normal);
+}
+
+/* 真正看得到的圓在內層。放大縮小做在這一層，transition 才不會影響外層的跟隨。
+
+   居中用 translate(-50%, -50%) 而不是負 margin：顯示標籤時膠囊會變寬，
+   負 margin 就不再等於一半、長標籤會偏掉。translate 的百分比是相對自己的尺寸，
+   而 scale 以中心為原點，所以兩個疊在一起仍然是精準居中。 */
+.cursor-ring {
+  display: grid;
+  place-items: center;
+  width: var(--cursor-follow-size, 16px);
+  height: var(--cursor-follow-size, 16px);
+  border-radius: 100px;
+  background: var(--cursor-follow-color, #ff5b90);
+  transform: translate(-50%, -50%) scale(1);
+  transition: transform .3s cubic-bezier(0.16, 1, 0.3, 1),
+    background-color .3s ease;
+}
+
+/* 滑到可點擊的東西：放大。倍率是「放大後的直徑 ÷ 原直徑」，由 build.mjs 算好。 */
+.cursor.is-hover .cursor-ring { transform: translate(-50%, -50%) scale(var(--cursor-grow, 4)); }
+
+/* 有 data-cursor="文字" 的元素：圓變成一個裝得下字的膠囊。
+   這時候不放大（膠囊本身就是大的），所以 scale 回到 1。 */
+.cursor.has-label .cursor-ring {
+  width: auto;
+  height: auto;
+  min-width: var(--cursor-label-size, 76px);
+  min-height: var(--cursor-label-size, 76px);
+  padding: 0 1.2rem;
+  transform: translate(-50%, -50%) scale(1);
+}
+.cursor-label {
+  font-family: var(--font-display, sans-serif);
+  font-size: 1.2rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--cursor-label-color, #fff);
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity .2s ease;
+}
+.cursor.has-label .cursor-label { opacity: 1; }
+
+/* 開了「減少動態」就不要放大縮小，但游標還是要跟著（不然沒有游標可用）。
+   跟隨本身在 JS 端改成瞬間對位，沒有拖曳感。 */
+@media (prefers-reduced-motion: reduce) {
+  .cursor-ring,
+  .cursor-label { transition: none; }
+}
 ul, ol { list-style: none; padding: 0; }
 a { color: inherit; text-decoration: none; }
 a:active { opacity: 0.7; }
@@ -288,6 +363,20 @@ h1, h2, h3 {
 .nav-links a[aria-current="page"] {
   color: var(--nav-current, #252525);
   font-weight: var(--nav-current-weight, 700);
+  position: relative;
+}
+
+/* 當頁指示：外面套一圈粉紅。
+   用 ::before 畫而不是加 padding 與 border —— 加 padding 的話那一項會比其他項
+   寬高，.nav-links 是 flex + align-items: baseline，整排就會被推歪。
+   顏色用全站唯一的那個粉紅（跟游標同一色）。 */
+.nav-links a[aria-current="page"]::before {
+  content: "";
+  position: absolute;
+  inset: -0.55em -0.9em;
+  border: 1.5px solid var(--accent-hover, #ff5b90);
+  border-radius: 100px;
+  pointer-events: none;
 }
 /* 目前頁滑過時仍然變粉紅，維持「連結都會變粉紅」的一致性 */
 .nav-links a[aria-current="page"]:hover { color: var(--accent-hover, #ff5b90); }

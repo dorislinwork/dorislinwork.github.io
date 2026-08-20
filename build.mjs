@@ -191,6 +191,23 @@ function themeVars(base) {
      var() fallback 會接手（auto / pointer），不會留下指向不存在檔案的宣告。
      熱點放在圖的正中央，所以實際指到的位置就是圓點中心。
      變數值本身也帶 auto / pointer 當第二層 fallback，圖載不到時行為跟一般網站一樣。 */
+  /* 跟隨式游標。--cursor-follow-size 存在與否就是 site.js 判斷「有沒有開」的依據，
+     所以關掉時整組都不要輸出。放大倍率在這裡算好（放大後直徑 ÷ 原直徑），
+     CSS 才能用單純的 transform: scale() 做動畫 —— 動 width/height 會很卡。 */
+  const fl = c.follow || {};
+  if (c.enabled !== false && fl.enabled !== false) {
+    const px = (v, d) => (parseFloat(v) || d);
+    const base = px(fl.size, 16);
+    const grow = px(fl.growTo, 72);
+    lines.push(`--cursor-follow-size: ${base}px;`);
+    lines.push(`--cursor-follow-color: ${fl.color || t.accentHover || '#ff5b90'};`);
+    lines.push(`--cursor-grow: ${+(grow / base).toFixed(3)};`);
+    lines.push(`--cursor-label-size: ${grow}px;`);
+    lines.push(`--cursor-label-color: ${fl.labelColor || '#fff'};`);
+    lines.push(`--cursor-ease: ${Number(fl.ease) > 0 ? Number(fl.ease) : 0.26};`);
+    lines.push(`--cursor-blend: ${fl.blendMode || 'normal'};`);
+  }
+
   if (c.enabled !== false) {
     const size = Number(c.size) || 32;
     const hot = `${size / 2} ${size / 2}`;

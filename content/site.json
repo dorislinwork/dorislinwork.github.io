@@ -164,7 +164,22 @@
       "default": "#ff5b90",
       "link": "#8a8a8a"
     },
-    "_colors說明": "default 是一般狀態，用的是全站唯一的那個粉紅（theme.accentHover）。link 是滑到可點擊元素時的灰。想改成深灰就填 #252525。"
+    "_colors說明": "default 是一般狀態，用的是全站唯一的那個粉紅（theme.accentHover）。link 是滑到可點擊元素時的灰。想改成深灰就填 #252525。這兩個只影響 PNG 圖檔那一組（也就是 JS 沒跑時的降級版本）。",
+
+    "follow": {
+      "_說明": "跟隨式游標，2026-08-21 參考 therocketpanda.com 做的。一顆粉紅圓點平滑跟著滑鼠，滑到可點擊的東西會放大。enabled 設 false 就回到上面那組 PNG 圖檔游標。",
+      "enabled": true,
+      "size": "16px",
+      "growTo": "72px",
+      "ease": 0.26,
+      "color": "#ff5b90",
+      "labelColor": "#ffffff",
+      "blendMode": "normal",
+      "_size說明": "size 是平常的直徑、growTo 是滑到可點擊元素時放大到的直徑（實際是用 transform: scale 做的，倍率由 build 算好，所以放大縮小很順）。ease 是每一格往滑鼠移動的比例，0.26 跟參考站相同 —— 越小越黏越有拖曳感，1 就是完全跟手沒有延遲。",
+      "_labelColor說明": "元素加上 data-cursor=\"文字\" 的話，游標會變成一個帶字的膠囊（參考站滑到作品上會顯示 VIEW）。labelColor 是那段字的顏色。目前站上沒有任何元素設定它，想要就在 build.mjs 產生縮圖的地方加 data-cursor。",
+      "_blendMode說明": "參考站用了 mix-blend-mode 讓游標壓在內容上時會混色。normal = 不混色（純粉紅）。想試的話填 difference 或 multiply —— 但妳的縮圖很彩，混色結果不一定好看。",
+      "_降級說明": "隱藏系統游標的 CSS 規則是 JS 成功接手後才加上的，所以這段程式壞掉不會變成整站沒有游標，而是退回 PNG 圖檔那一組。也只在真的有滑鼠的裝置啟用，觸控裝置不受影響。開了「減少動態」的話改成瞬間對位、不放大縮小。"
+    }
   },
 
   "header": {
@@ -175,7 +190,7 @@
     "_navAlign說明": "右邊那組連結（Playground / Works / Reel / Info）要對齊 logo 的哪一邊。bottom = 跟 logo 底部對齊（2026-08-21 改成這個）。top = 跟頂部對齊（原本的）。center = 垂直居中。logo 有 148px 高，所以差別看得很明顯。",
     "navSize": "1.9rem",
     "navWeight": "600",
-    "navLift": "1.2rem",
+    "navLift": "2.4rem",
     "_navSize說明": "那組連結的字級、字重、以及往上抬多少（2026-08-21 從 1.5rem／400／0 改成現在這組）。navLift 是靠底部留白把整組往上推，所以只有在 navAlign 是 bottom 時有效。字重只能填 fonts.googleFonts 有載的值 —— 現在載的是 400 與 600，填 700 瀏覽器會自己合成一個假的粗體、看起來會糊，build 會警告。",
     "solidOnScroll": "index-only",
     "_solidOnScroll說明": "捲離頂部後哪些頁面的導覽列要加白底。index-only = 只有首頁加，其他頁一律透明底（2026-08-21 改成這個）。always = 每一頁都加。never = 都不加。注意：作品內頁的封面現在頂到視窗最上緣、導覽列浮在封面上，所以透明底看起來最好；但捲到下面的圖片區時導覽列還是透明的，深灰連結壓在深色圖上會看不清楚 —— 覺得有問題就改成 always。"

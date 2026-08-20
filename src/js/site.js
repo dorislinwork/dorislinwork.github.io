@@ -1,11 +1,17 @@
 /* ==========================================================================
    站台腳本
-   目前只做一件事：在瀏覽器端組出信箱連結。
-   HTML 裡寫 <a class="mailto" data-user="…" data-domain="…">，
-   完整地址不出現在靜態原始碼裡，爬垃圾信的機器人抓不到。
+   ・信箱連結在瀏覽器端組出來（HTML 裡只有 data-user / data-domain，
+     完整地址不出現在靜態原始碼裡，爬垃圾信的機器人抓不到）
+   ・導覽列的捲動行為
+   ・作品內頁的封面高度、敘述收合
+   ・跟隨式游標
+   ・只播放畫面內的影片
    ========================================================================== */
 (function () {
   'use strict';
+
+  var reduceMotion = window.matchMedia
+    && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   var links = document.querySelectorAll('a.mailto[data-user][data-domain]');
   for (var i = 0; i < links.length; i++) {
@@ -142,6 +148,108 @@
     });
     more.setAttribute('aria-expanded', 'false');
   }
+
+  /* ------------------------------------------------------------------------
+     跟隨式游標（參考 therocketpanda.com 的做法）
+
+     系統游標藏起來，改用一顆粉紅圓點平滑跟著滑鼠；滑到可點擊的東西會放大，
+     元素有 data-cursor="文字" 的話會變成一個帶字的膠囊。
+
+     四個關鍵決定：
+
+     1. **只在確定接手成功後才隱藏系統游標。** cursor: none 是靠 JS 加在
+        <html> 上的 .has-cursor 觸發的，寫死在 CSS 裡的話這段程式一出錯
+        就變成整站沒有游標。JS 沒跑就沿用原本的 PNG 圖檔游標。
+     2. **只在有滑鼠的裝置啟用**（hover: hover 且 pointer: fine）。
+     3. **lerp 平滑跟隨**：每一格往目標移動固定比例（預設 0.26，跟參考站相同）。
+        比例越小越黏、越有拖曳感。
+     4. 減少動態時改成瞬間對位（比例 1），而不是關掉整個游標。
+     ---------------------------------------------------------------------- */
+  (function () {
+    var canHover = window.matchMedia
+      && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+    if (!canHover) return;
+
+    var css = getComputedStyle(document.documentElement);
+    if (css.getPropertyValue('--cursor-follow-size').trim() === '') return;  // 設定關掉了
+
+    var ease = parseFloat(css.getPropertyValue('--cursor-ease')) || 0.26;
+    if (reduceMotion) ease = 1;
+
+    var root = document.createElement('div');
+    root.className = 'cursor';
+    var ring = document.createElement('span');
+    ring.className = 'cursor-ring';
+    var label = document.createElement('span');
+    label.className = 'cursor-label';
+    ring.appendChild(label);
+    root.appendChild(ring);
+    document.body.appendChild(root);
+    document.documentElement.classList.add('has-cursor');
+
+    // 從畫面中央開始，第一次移動才不會從角落飛過來
+    var x = window.innerWidth / 2;
+    var y = window.innerHeight / 2;
+    var tx = x;
+    var ty = y;
+    var seen = false;
+
+    window.addEventListener('mousemove', function (e) {
+      tx = e.clientX;
+      ty = e.clientY;
+      if (!seen) {
+        // 第一次知道滑鼠在哪：直接對位，不要從中央滑過去
+        seen = true;
+        x = tx;
+        y = ty;
+        root.style.opacity = '1';
+      }
+    }, { passive: true });
+
+    root.style.opacity = '0';
+
+    var tick = function () {
+      x += (tx - x) * ease;
+      y += (ty - y) * ease;
+      root.style.transform = 'translate3d(' + x + 'px, ' + y + 'px, 0)';
+      requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+
+    /* 放大與標籤。用事件委派而不是逐一綁 —— 內頁的圖片、上下篇、頁尾連結
+       都算，逐一綁會漏掉之後才進 DOM 的東西。 */
+    var HOT = 'a, button, summary, [role="button"], .thumbnail, [data-cursor]';
+
+    var enter = function (el) {
+      var text = el.getAttribute('data-cursor');
+      root.classList.add('is-hover');
+      if (text) {
+        label.textContent = text;
+        root.classList.add('has-label');
+      }
+    };
+    var leave = function () {
+      root.classList.remove('is-hover', 'has-label');
+    };
+
+    document.addEventListener('mouseover', function (e) {
+      var el = e.target.closest && e.target.closest(HOT);
+      if (el) enter(el);
+    }, { passive: true });
+
+    document.addEventListener('mouseout', function (e) {
+      var el = e.target.closest && e.target.closest(HOT);
+      if (!el) return;
+      // 移到同一個熱區裡的子元素不算離開
+      var to = e.relatedTarget;
+      if (to && to.closest && to.closest(HOT) === el) return;
+      leave();
+    }, { passive: true });
+
+    // 滑出視窗就把游標藏起來，不然會卡在邊緣
+    document.addEventListener('mouseleave', function () { root.style.opacity = '0'; });
+    document.addEventListener('mouseenter', function () { root.style.opacity = '1'; });
+  })();
 
   /* ------------------------------------------------------------------------
      只播放畫面內的影片
