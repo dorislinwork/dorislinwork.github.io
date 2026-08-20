@@ -48,7 +48,8 @@
           "w": 1440,
           "h": 1170,
           "alt": "",
-          "caption": ""
+          "caption": "",
+          "width": "full"
         }
       ],
       "draft": true,
@@ -73,7 +74,7 @@
       "blocks": [
         {
           "type": "text",
-          "text": "Back to Taiwanese grandma’s kitchen 🧑‍🍳 以前專案的槍稿，把它好好撿起來改製(´･･`) 當時做得很開心！參考各種阿媽家的用具🫯 私心一定要做秋海棠玻璃更像阿媽家😆 阿媽家必備： 大同電鍋、金蘭醬油、台灣米酒、逼逼叫煮水壺、茄芷袋！ I had so much fun making this! I drew inspiration from all the vintage items you’d find at Grandma's house."
+          "text": "Back to Taiwanese grandma’s kitchen 🧑‍🍳 \n以前專案的槍稿，把它好好撿起來改製(´･･`) \n當時做得很開心！參考各種阿媽家的用具🫯 \n私心一定要做秋海棠玻璃更像阿媽家😆 \n阿媽家必備： 大同電鍋、金蘭醬油、台灣米酒、逼逼叫煮水壺、茄芷袋！ \nI had so much fun making this! I drew inspiration from all the vintage items you’d find at Grandma's house."
         },
         {
           "type": "media",
@@ -83,7 +84,8 @@
           "w": 1440,
           "h": 1170,
           "alt": "",
-          "caption": ""
+          "caption": "",
+          "width": "full"
         }
       ],
       "cardColor": "#c6713a"

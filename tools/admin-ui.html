@@ -442,6 +442,17 @@ const posterName = (f) => String(f).replace(/\.[^.]+$/, '') + '.webp';
 const mediaSrc = (slug, file) =>
   '/assets/media/' + encodeURIComponent(slug) + '/' + encodeURIComponent(posterName(file));
 
+/* 內頁圖片預設會佔多寬。跟 build.mjs 的 mediaMaxWidth() 是同一個算法：
+   讓每張圖的高度都等於一張 16:9 滿寬時的高度，所以越直的圖越窄。
+   這裡只是把結果顯示在下拉選單裡，讓人知道「自動」會得到什麼。 */
+function autoPct(b) {
+  const wide = 16 / 9;
+  const raw = (S && S.site.case && S.site.case.wideRatio) || '16 / 9';
+  const parts = String(raw).split('/').map((x) => Number(x.trim()));
+  const ref = (parts[0] && parts[1]) ? parts[0] / parts[1] : wide;
+  return Math.min(100, (b.w / b.h) / ref * 100).toFixed(1) + '%';
+}
+
 function slugify(s) {
   return String(s).trim()
     .replace(/['’]/g, '-')
@@ -781,6 +792,29 @@ function blocksEditor(p, upd) {
       cap.placeholder = '圖說（留空就不顯示）';
       cap.addEventListener('input', () => upd(() => { b.caption = cap.value; }));
       body.appendChild(cap);
+
+      /* 這張圖在內頁佔多寬。預設是按比例自動收窄（讓每張圖高度一致），
+         這裡可以單獨改成滿版或指定百分比。 */
+      const wrap = el('div');
+      wrap.style.cssText = 'display:flex;gap:.8rem;align-items:center;margin-top:.6rem';
+      wrap.appendChild(el('span', 'fname', '寬度'));
+      const sel = el('select');
+      const auto = b.w && b.h
+        ? `自動（比例 ${(b.w / b.h).toFixed(2)} → ${autoPct(b)}）`
+        : '自動';
+      [['', auto], ['full', '滿版'], ['85%', '85%'], ['70%', '70%'], ['55%', '55%'], ['40%', '40%']]
+        .forEach(([v, label]) => {
+          const o = el('option', null, label);
+          o.value = v;
+          if ((b.width || '') === v) o.selected = true;
+          sel.appendChild(o);
+        });
+      sel.style.maxWidth = '24rem';
+      sel.addEventListener('change', () => upd(() => {
+        if (sel.value) b.width = sel.value; else delete b.width;
+      }));
+      wrap.appendChild(sel);
+      body.appendChild(wrap);
     } else {
       body.appendChild(el('div', 'fname', JSON.stringify(b).slice(0, 200)));
     }

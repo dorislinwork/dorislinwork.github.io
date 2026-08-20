@@ -262,8 +262,20 @@ function layout(o) {
     ? site.effects.reveal
     : 'letter';
 
+  /* data-page 讓 CSS 分辨頁面種類，不必為每種頁面各寫一次規則。
+     現在用在兩件事：作品內頁的導覽列改成 fixed（封面才能頂到最上面），
+     以及「除了首頁以外導覽列不要白底」。
+
+     data-header-solid 來自 site.json 的 header.solidOnScroll：
+       index-only  只有首頁捲動後加白底（現在的設定）
+       always      每一頁捲動後都加白底
+       never       永遠透明 */
+  const page = o.page || 'other';
+  const solidRaw = (site.header || {}).solidOnScroll;
+  const solid = ['index-only', 'always', 'never'].includes(solidRaw) ? solidRaw : 'index-only';
+
   return `<!DOCTYPE html>
-<html lang="${esc(site.lang || 'en')}" data-reveal-default="${revealDefault}">
+<html lang="${esc(site.lang || 'en')}" data-reveal-default="${revealDefault}" data-page="${esc(page)}" data-header-solid="${solid}">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -355,6 +367,29 @@ function renderBlock(b, i, slug, base) {
   const src = mediaUrl(b, slug, width, base);
   const dim = `${b.w ? ` width="${esc(b.w)}"` : ''}${b.h ? ` height="${esc(b.h)}"` : ''}`;
 
+  /* 這張圖在內頁佔多寬，算成一個百分比直接餵給 CSS 的 max-width。
+
+     預設是自動的：比 case.wideRatio（16:9）窄的圖會收窄、左右留白，
+     算法讓所有媒體的高度一致 —— 就是一張 16:9 滿寬時的高度。
+     正方形 56%、3:4 直式 42%、4:3 是 75%、16:9 及更寬 100%。
+
+     每張圖都可以在 projects.json 那個 block 加 "width" 蓋掉：
+       "width": "full"   滿版
+       "width": "70%"    自己指定
+     沒有尺寸資料的舊區塊就滿版（算不出比例）。
+
+     這裡直接算成百分比而不是在 CSS 裡 calc，是因為個別覆寫進來之後
+     CSS 那邊會變成三種情況混在一起，算好一個值最單純。 */
+  function mediaMaxWidth() {
+    const w = String(b.width || '').trim().toLowerCase();
+    if (w === 'full') return '100%';
+    if (/^\d+(\.\d+)?%$/.test(w)) return w;
+    if (!b.w || !b.h) return '100%';
+    const wide = ratioNum((site.case || {}).wideRatio || '16 / 9');
+    return `${Math.min(100, (b.w / b.h) / wide * 100).toFixed(1)}%`;
+  }
+  const ratioStyle = ` style="--media-max:${mediaMaxWidth()}"`;
+
   // #eye：跟著滑鼠轉
   let eye = '';
   if (b.eye) {
@@ -367,20 +402,23 @@ function renderBlock(b, i, slug, base) {
   let el;
   if (isVideo(b)) {
     const poster = posterUrl(b, slug, base);
-    el = `<video src="${esc(src)}"${dim}${eye} autoplay muted loop playsinline`
+    el = `<video src="${esc(src)}"${dim}${ratioStyle}${eye} autoplay muted loop playsinline`
       + `${poster ? ` poster="${esc(poster)}"` : ''} preload="metadata"></video>`;
   } else {
     // 同時給兩種寬度讓瀏覽器挑，手機不用載大圖
     const srcset = (MEDIA_SOURCE === 'cargo' && b.hash && b.file)
       ? ` srcset="${esc(mediaUrl(b, slug, Math.round(width / 2), base))} ${Math.round(width / 2)}w, ${esc(src)} ${width}w" sizes="(max-width: 700px) 100vw, ${width}px"`
       : '';
-    el = `<img src="${esc(src)}"${srcset} alt="${esc(b.alt || b.caption || '')}"${dim}${eye}`
+    el = `<img src="${esc(src)}"${srcset} alt="${esc(b.alt || b.caption || '')}"${dim}${ratioStyle}${eye}`
       + `${i === 0 ? '' : ' loading="lazy"'} decoding="async">`;
   }
 
   if (!b.caption) return `      ${el}`;
-  return `      <figure>
-        ${el}
+
+  /* 有圖說時寬度上限要掛在 figure 上，圖說才會跟收窄後的圖片左邊對齊。
+     所以 --r 從元素身上移到 figure，元素自己填滿 figure 就好，不能再收一次。 */
+  return `      <figure${ratioStyle}>
+        ${el.replace(ratioStyle, '')}
         <figcaption class="caption">${esc(b.caption)}</figcaption>
       </figure>`;
 }
@@ -609,6 +647,7 @@ ${thumbs}
     body,
     base: '',
     current: 'index.html',
+    page: 'index',
     ogImage: projects[0] && projects[0].thumb ? mediaUrl(projects[0].thumb, projects[0].slug, 1200, '') : null,
   });
 }
@@ -728,6 +767,7 @@ function renderProject(p, prev, next) {
     body,
     base,
     current: null,
+    page: 'work',
     ogImage: p.thumb ? mediaUrl(p.thumb, p.slug, 1200, '') : null,
   });
 }
@@ -783,6 +823,7 @@ ${social}
     body,
     base: '',
     current: 'information.html',
+    page: 'info',
     // 上面的聯絡區塊已經列了同一組連結，頁尾不要再來一次
     hideFooterSocial: true,
   });
@@ -800,6 +841,7 @@ function render404() {
   </section>`,
     base: '',
     current: null,
+    page: '404',
   });
 }
 

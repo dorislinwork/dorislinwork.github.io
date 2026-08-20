@@ -190,10 +190,31 @@ h1, h2, h3 {
               box-shadow .3s ease;
 }
 
-/* 捲離頂部後才給背景，否則壓在圖片上會看不清楚 */
-.nav.is-scrolled {
+/* 捲離頂部後才給背景，否則壓在圖片上會看不清楚。
+
+   哪些頁面要給背景由 site.json 的 header.solidOnScroll 決定，值會寫進
+   <html data-header-solid>：
+     index-only  只有首頁（現在的設定）——「除了首頁其他都透明底」
+     always      每一頁
+     never       都不給
+
+   ⚠ 作品內頁選 index-only 或 never 的話，導覽列捲到圖片上時是透明的，
+   深灰的連結壓在深色圖上會看不清楚。這是刻意接受的取捨。 */
+[data-header-solid="always"] .nav.is-scrolled,
+[data-header-solid="index-only"][data-page="index"] .nav.is-scrolled {
   background: var(--bg, #fff);
   box-shadow: 0 1px 0 rgba(0, 0, 0, .08);
+}
+
+/* 作品內頁：導覽列改成 fixed，封面才能頂到視窗最上緣。
+   sticky 是佔流排空間的，所以封面會被推到導覽列下面；改成 fixed 之後
+   <main> 從 y=0 開始，封面就是畫面上的第一個東西，導覽列浮在它上面。
+   不必額外補 padding —— 封面本身就很高，後面的內容自然接在它下面。 */
+[data-page="work"] .nav {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
 }
 
 /* 往下捲時收起來。往上捲會移除這個 class。 */
@@ -527,8 +548,23 @@ h1, h2, h3 {
    Bito 是每個媒體塊都 col-span-full 滿寬直排，這裡照做。
    原站 .content img 的 margin-bottom: 2rem 換成統一的區塊間距。 */
 .case-gallery > * { margin-bottom: var(--grid-gutter, 2.4rem); }
+
+/* 寬度上限。--media-max 由 build.mjs 逐張算好寫在 style 屬性上：
+   預設按比例收窄（讓所有媒體高度一致，就是一張 16:9 滿寬時的高度），
+   個別圖片可以在 projects.json 那個 block 加 "width": "full" 或 "70%" 蓋掉。
+
+   width: 100% 仍然保留，否則實際檔案比上限窄時不會撐開，寬度會忽大忽小。 */
 .case-gallery > img,
 .case-gallery > video,
+.case-gallery > figure {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-width: var(--media-max, 100%);
+  margin-inline: auto;
+}
+/* 有圖說的時候上限掛在 figure 上（--r 也寫在 figure 上），圖說才會跟圖片左邊對齊。
+   圖片本身就填滿那個已經收窄的 figure，不要再收一次。 */
 .case-gallery > figure img,
 .case-gallery > figure video {
   display: block;
@@ -600,6 +636,13 @@ figure { margin: 0; }
   /* 手機上封面不該吃掉整個第一屏，否則要捲很久才看到作品名 */
   .case-cover { height: clamp(30vh, var(--cover-h, 50vh), 60vh); }
   .case-blurb { max-width: none; }
+
+  /* 手機上一律滿寬。螢幕本來就窄，正方形再收到 56% 只剩指甲大小。
+     這裡蓋掉 max-width 這個屬性，而不是改 --media-max ——
+     那個變數寫在 style 屬性上，優先度比任何 CSS 規則都高，改不動。 */
+  .case-gallery > img,
+  .case-gallery > video,
+  .case-gallery > figure { max-width: 100%; }
 }
 
 /* --------------------------------------------------------------------------
