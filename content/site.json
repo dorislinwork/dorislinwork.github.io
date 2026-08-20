@@ -10,8 +10,8 @@
     "_說明": "首頁大標，取自原站。",
     "headline": "Hi there! I'm Doris Lin",
     "sub": "a 3D artist, motion designer, animator and a toast maker! 🥨",
-    "reveal": "line",
-    "_reveal說明": "首頁這兩行怎麼出現。line = 一次一整行，大標先整行浮現、副標接著整行浮現（2026-08-20 改成這個）。letter = 逐字浮現，舊站的效果。none = 完全不做動畫，直接就在那裡。這個設定只管首頁：作品內頁的標題還是逐字浮現，要改那邊再說。"
+    "reveal": "",
+    "_reveal說明": "只有想讓首頁大標跟其他頁不一樣時才填，填 line／letter／none。留空（現在就是）＝跟著 effects.reveal 的全站設定。副標的做法會跟著這個模式一起變：逐字模式它也逐字浮現、整行模式它在大標之後整行接上、none 就是一段普通文字。"
   },
 
   "logo": {
@@ -179,14 +179,30 @@
     "_showSocial說明": "true = 頁尾也列出上面 social 那些平台連結（Behance、Vimeo…）。要加平台就改 social 那一段，頁尾與 Information 頁的聯絡區塊讀的是同一份，不會只更新一邊。Information 頁的頁尾刻意不顯示，因為它的聯絡區塊就在正上方，同一組連結不該在幾百像素內出現兩次。"
   },
 
+  "effects": {
+    "_說明": "動畫效果。改完跑 build 就生效，不用動任何 CSS 或 JS。",
+    "reveal": "line",
+    "_reveal說明": "全站標題怎麼出現。line = 一次一整行（2026-08-20 改成這個，套用到首頁大標、作品名、Information 標題）。letter = 逐字浮現，舊站的效果。none = 完全不做動畫。這個值會寫進每一頁的 <html data-reveal-default>，所以三種產生頁面的程式碼不必各自處理一次。單一頁面想不一樣的話，首頁大標可以用 hero.reveal 蓋掉。",
+    "wiggle": {
+      "_說明": "滑過連結時的逐字跳動（導覽列、頁尾、社群連結、上下篇）。舊站原本是「跳 8px、傾斜 8deg、0.5 秒、每字間隔 35ms」。",
+      "distance": "4px",
+      "tilt": "3deg",
+      "durationMs": 320,
+      "stepMs": 18,
+      "_調整說明": "2026-08-20 改小改快：幅度砍半、傾斜再小一點、時間從 500ms 縮到 320ms、每字間隔從 35ms 縮到 18ms（長字串整串跑完的時間差最多，所以這一項對「俐落」的感受影響最大）。回彈那一段是照 distance 與 tilt 的比例算的，所以調小幅度手感會等比縮小，不會變成跳很小但回彈一樣大。",
+      "easing": "cubic-bezier(0.28, 1.18, 0.4, 1)",
+      "_easing說明": "原本是 cubic-bezier(0.34, 1.56, 0.64, 1)，那個 1.56 會讓每一段都衝過頭再彈回來，是「彈」的來源。降到 1.18 之後收得比較乾淨。想要原本那種軟彈感就把 1.56 那組填回去。"
+    }
+  },
+
   "case": {
     "_說明": "作品內頁版面。2026-08-20 從舊站的「一張圖接一張圖往下堆」改成參考 bito.tv 的內頁：封面圖 + 資訊列剛好填滿第一屏，往下才是滿寬的圖片直排。整段設定都可以關掉回到原本的樣子（fillFirstScreen 設 false）。",
     "fillFirstScreen": true,
     "_fillFirstScreen說明": "true = 封面高度由 JS 算成「視窗高 - 資訊列高」，所以捲動前剛好看到封面加上作品名與年份，metadata 正好壓在折線上（這是 Bito 內頁最值得偷的一招）。false = 封面固定用 coverHeight 的高度，不跑 JS。",
-    "coverHeight": "70vh",
-    "coverMinHeight": "45vh",
+    "coverHeight": "78vh",
+    "coverMinHeight": "68vh",
     "coverMaxHeight": "92vh",
-    "_coverHeight說明": "coverHeight 是還沒算完（或 JS 沒跑）時的預設高度，也是 fillFirstScreen 關掉後的固定高度。算出來的值會被夾在 coverMinHeight 與 coverMaxHeight 之間 —— 沒有下限的話，敘述特別長的那幾件會把封面壓成一條細線。",
+    "_coverHeight說明": "coverHeight 是還沒算完（或 JS 沒跑）時的預設高度，也是 fillFirstScreen 關掉後的固定高度。算出來的值會被夾在 coverMinHeight 與 coverMaxHeight 之間 —— 沒有下限的話，敘述特別長的那幾件會把封面壓成一條細線。\n\n想讓封面更高就調高 coverMinHeight，這是最直接的一個旋鈕。2026-08-20 從 45vh 提到 68vh：導覽列的動態 logo 就佔了 203px，所以在 1512×850 的筆電上「視窗高 - 導覽列 - 資訊列」只剩約 47vh，封面被壓得很扁。提高下限之後，矮螢幕上封面就停止縮小、資訊列改成落在折線下面一點（作品名還看得到）；高螢幕上算出來的值本來就大於下限，所以「剛好填滿第一屏」的行為完全不變。手機（620px 以下）另外有一組固定的 30–60vh，不吃這裡的值 —— 手機上封面佔滿整屏要捲很久才看到作品名。",
     "coverFromThumb": true,
     "_coverFromThumb說明": "true = 用首頁那張縮圖當封面（每件作品都有，包含 18 件只有 Vimeo 沒有圖片的），而且縮圖是 GIF 的會用轉好的 MP4 自動循環播放。想指定別的圖就在 projects.json 那一筆加 \"cover\": { \"file\": \"…\" }，格式跟 thumb 一樣。false = 不放封面，直接從資訊列開始。",
     "dedupeCover": true,

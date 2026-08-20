@@ -108,6 +108,7 @@ function themeVars(base) {
 
   const ty = site.type || {};
   const cs = site.case || {};
+  const wg = (site.effects || {}).wiggle || {};
 
   const lines = [
     `--bg: ${t.bg || '#fff'};`,
@@ -151,6 +152,13 @@ function themeVars(base) {
     `--cover-h-min: ${cs.coverMinHeight || '45vh'};`,
     `--cover-h-max: ${cs.coverMaxHeight || '92vh'};`,
     `--blurb-lines: ${cs.blurbLines ?? 4};`,
+    /* 逐字跳動（.wiggle-text）。時間刻意注入成純數字，CSS 用 calc(… * 1ms)、
+       effects.js 直接 parseFloat —— 同一個來源，兩邊不會不同步。 */
+    `--wiggle-distance: ${wg.distance || '8px'};`,
+    `--wiggle-tilt: ${wg.tilt || '8deg'};`,
+    `--wiggle-ms: ${wg.durationMs ?? 500};`,
+    `--wiggle-step: ${wg.stepMs ?? 35};`,
+    `--wiggle-ease: ${wg.easing || 'cubic-bezier(0.34, 1.56, 0.64, 1)'};`,
   ];
 
   /* 自訂游標：一般狀態粉紅圓點，可點擊的東西變灰。
@@ -233,8 +241,15 @@ function layout(o) {
       .map((s) => `    <li><a class="wiggle-text" href="${esc(s.href)}" target="_blank" rel="noopener">${esc(s.label)}</a></li>`)
       .join('\n');
 
+  /* 全站標題的出現方式。放在 <html> 上是為了不必在每一種頁面的 h1 上各加一次
+     （首頁大標、作品名、Information 標題是三段不同的產生程式碼）。
+     個別元素上的 data-reveal 會蓋掉這個值。 */
+  const revealDefault = ['line', 'none', 'letter'].includes((site.effects || {}).reveal)
+    ? site.effects.reveal
+    : 'letter';
+
   return `<!DOCTYPE html>
-<html lang="${esc(site.lang || 'en')}">
+<html lang="${esc(site.lang || 'en')}" data-reveal-default="${revealDefault}">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -549,16 +564,20 @@ ${meta ? `        <span class="thumbnail-meta">${esc(meta)}</span>\n` : ''}     
   }
   INDEX_STATS = { count: shown.length, tall: tall.size, rows, holes, perRowCols };
 
-  /* 首頁大標怎麼出現，由 site.json 的 hero.reveal 決定：
+  /* 首頁大標怎麼出現。預設跟著 effects.reveal（全站），hero.reveal 有填才蓋掉：
        letter  逐字浮現（舊站的效果）
        line    整行一起出現，副標接著整行出現
        none    不做動畫
 
      副標在三種模式下用不同的做法：逐字模式它自己也逐字浮現（data-split）；
      整行模式改成 .stagger-item，這樣它會在大標那一行之後接上；不做動畫
-     時就是一段普通文字，什麼 class 都不加。 */
-  const heroMode = ['line', 'none'].includes(h.reveal) ? h.reveal : 'letter';
-  const heroAttr = heroMode === 'letter' ? '' : ` data-reveal="${heroMode}"`;
+     時就是一段普通文字，什麼 class 都不加。所以這裡一定要知道最終是哪個模式，
+     不能只靠 <html> 上的預設值。 */
+  const revealDefault = ['line', 'none', 'letter'].includes((site.effects || {}).reveal)
+    ? site.effects.reveal
+    : 'letter';
+  const heroMode = ['line', 'none', 'letter'].includes(h.reveal) ? h.reveal : revealDefault;
+  const heroAttr = ` data-reveal="${heroMode}"`;
   const subClass = heroMode === 'line' ? 'display-l stagger-item' : 'display-l';
   const subAttr = heroMode === 'letter' ? ' data-split' : '';
 

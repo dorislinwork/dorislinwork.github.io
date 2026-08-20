@@ -82,13 +82,17 @@
   var STEP_MS = 28;     // 每個字間隔，字太多時會自動縮短
   var LINE_MS = 600;    // 整行浮現的時間，要跟 effects.css 的 transition 一致
 
-  /* 三種模式，寫在元素的 data-reveal 上（沒寫就是 letter）：
-       letter  逐字浮現（舊站的效果，作品頁標題還是用這個）
+  /* 三種模式：
+       letter  逐字浮現（舊站的效果）
        line    整行一起出現，不拆字
        none    不做動畫，直接就在那裡
-     首頁 hero 用哪一種由 site.json 的 hero.reveal 決定。 */
+
+     全站預設寫在 <html data-reveal-default>（來自 site.json 的 effects.reveal），
+     個別元素的 data-reveal 可以蓋掉它（首頁大標是 hero.reveal）。 */
+  var defaultMode = document.documentElement.dataset.revealDefault || 'letter';
+
   function modeOf(el) {
-    var m = el.dataset.reveal;
+    var m = el.dataset.reveal || defaultMode;
     return (m === 'line' || m === 'none') ? m : 'letter';
   }
 
@@ -156,6 +160,10 @@
     // 其餘等捲到再播。順序很重要：先加 .text-armed 才不會閃一下完整文字。
     var pending = [];
     targets.forEach(function (el) {
+      /* 整行模式要掛一個 class，不能讓 CSS 去對 data-reveal ——
+         靠全站預設的標題（作品名、Information）身上根本沒有那個屬性，
+         CSS 就選不到，結果是掛了 .text-armed 卻沒有任何動畫。 */
+      if (modeOf(el) === 'line') el.classList.add('reveal-line');
       el.classList.add('text-armed');
       var rect = el.getBoundingClientRect();
       if (rect.top < window.innerHeight * 0.9 && rect.bottom > 0) {
@@ -191,12 +199,23 @@
      Wiggle：hover／點擊觸發逐字跳動
      原版只吃 hover，觸控裝置碰不到；這裡改用 pointer 事件，兩者都通。
      ---------------------------------------------------------------------- */
-  var WIGGLE_MS = 500;   // 對應 CSS 的 animation duration
-  var WIGGLE_STEP = 35;  // 每個字的延遲
+  /* 時間從 CSS 變數讀，不要在這裡再寫一份 —— 兩邊寫死就會不同步：
+     動畫還在跑就把 class 移掉會讓字瞬間跳回原位。
+     變數是 build 從 site.json 的 effects.wiggle 注入的，
+     讀不到（例如舊的頁面）就退回原本的數值。 */
+  function cssNumber(name, fallback) {
+    var raw = getComputedStyle(document.documentElement).getPropertyValue(name);
+    var n = parseFloat(raw);
+    return isNaN(n) ? fallback : n;
+  }
 
   function initWiggle() {
     if (reduceMotion) return;
     var items = document.querySelectorAll('.wiggle-text');
+    if (!items.length) return;
+
+    var WIGGLE_MS = cssNumber('--wiggle-ms', 500);     // 對應 CSS 的 animation duration
+    var WIGGLE_STEP = cssNumber('--wiggle-step', 35);  // 每個字的延遲
 
     Array.prototype.forEach.call(items, function (el) {
       splitText(el);
