@@ -112,6 +112,10 @@ function ratioNum(ratio) {
   return Number.isFinite(n) && n > 0 ? +n.toFixed(4) : 1.8132;
 }
 
+/* header.navAlign 的可用值 → flex 的對齊值。
+   只認這三個，填別的就退回 bottom，不會產生壞的 CSS。 */
+const NAV_ALIGN = { top: 'flex-start', bottom: 'flex-end', center: 'center' };
+
 function themeVars(base) {
   const t = site.theme || {};
   const g = site.grid || {};
@@ -164,6 +168,8 @@ function themeVars(base) {
     `--cover-h-min: ${cs.coverMinHeight || '45vh'};`,
     `--cover-h-max: ${cs.coverMaxHeight || '92vh'};`,
     `--blurb-lines: ${cs.blurbLines ?? 4};`,
+    // 導覽列右邊那組連結對齊 logo 的哪一邊（site.json 的 header.navAlign）
+    `--nav-align: ${NAV_ALIGN[(site.header || {}).navAlign] || 'flex-end'};`,
     /* 逐字跳動（.wiggle-text）。時間刻意注入成純數字，CSS 用 calc(… * 1ms)、
        effects.js 直接 parseFloat —— 同一個來源，兩邊不會不同步。 */
     `--wiggle-distance: ${wg.distance || '8px'};`,

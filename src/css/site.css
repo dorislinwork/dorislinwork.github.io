@@ -178,8 +178,9 @@ h1, h2, h3 {
   /* 上下左右 35px 對應舊站 #tag_menu 的 top/left: 35px */
   padding: 3.5rem var(--edge) 2rem;
   display: flex;
-  /* logo 是有高度的影片，用 flex-start 讓連結與 logo 頂端對齊 */
-  align-items: flex-start;
+  /* 右邊那組連結要對齊 logo 的哪一邊。logo 是一個有高度的圖（約 148px），
+     所以這個值看得很明顯。設定在 site.json 的 header.navAlign。 */
+  align-items: var(--nav-align, flex-end);
   justify-content: space-between;
   gap: 2rem;
   flex-wrap: wrap;
