@@ -118,14 +118,15 @@ h1, h2, h3 {
    .link-accent 是次要連結（社群、聯絡、上下篇），用深灰。
    內文行間的連結用黑，比周圍的 75% 灰重一點，看得出是連結。 */
 .link-accent { color: var(--link, #252525); }
-.prose a, .body-text a, .case-body a, .info a { color: var(--ink-strong, #000); }
+.prose a, .body-text a, .case-gallery a, .case-blurb a, .info a { color: var(--ink-strong, #000); }
 
 /* 舊站 bodycopy a:hover 是 rgba(255, 91, 144, 1)。
    所有「帶連結的文字」滑過都變粉紅，包含縮圖標題。 */
 .link-accent:hover,
 .prose a:hover,
 .body-text a:hover,
-.case-body a:hover,
+.case-gallery a:hover,
+.case-blurb a:hover,
 .info a:hover,
 .case-nav a:hover,
 .footer a:hover,
@@ -409,37 +410,137 @@ h1, h2, h3 {
 
 /* --------------------------------------------------------------------------
    7. 作品內頁
-   原站的排法是「一張圖接一張圖往下堆」，圖說在圖的下方。
+   2026-08-20 從原站的「一張圖接一張圖往下堆」改成參考 bito.tv 的內頁：
+   封面 + 資訊列剛好填滿第一屏，往下才是滿寬的圖片直排。
+
+   左右邊界與寬度上限跟首頁網格共用 --pad / --max，封面的左邊緣才會對齊
+   導覽列的 logo 與首頁第一張縮圖。
    -------------------------------------------------------------------------- */
 .case {
   padding: 0 var(--pad, 3.5rem) clamp(6rem, 12vh, 12rem);
-  max-width: 120rem;
+  max-width: var(--max, 160rem);
   margin-inline: auto;
 }
 
-.case-head { padding-block: clamp(2rem, 5vh, 5rem) clamp(3rem, 6vh, 6rem); }
-.case-meta {
-  margin-top: 1.2rem;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem 1.5rem;
+/* ---- 封面 ----
+   高度由 site.js 算成「視窗高 - 資訊列高」後寫進 --cover-h，所以捲動前剛好
+   看到封面加上作品名與年份。JS 沒跑（或 data-fill="false"）時就用注入的
+   預設值，版面不會壞。圖一律裁切填滿，因為素材比例從正方到直式都有。 */
+.case-cover {
+  /* 夾制交給 CSS 而不是 JS：JS 只寫一個 px 值進 --cover-h，min/max 是什麼單位
+     都由 clamp 處理。沒有下限的話，敘述特別長的那幾件會把封面壓成一條細線。 */
+  height: clamp(var(--cover-h-min, 45vh), var(--cover-h, 70vh), var(--cover-h-max, 92vh));
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.06);
+}
+.case-cover > * {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  margin: 0;
 }
 
-/* 原站 .content img 是 margin-bottom: 2rem，這裡沿用 */
-.case-body > * { margin-bottom: 2rem; }
-.case-body figcaption {
+/* ---- 資訊列 ----
+   12 欄。左半邊是作品名與敘述，右半邊是類型與年份。
+   Bito 的 .work-info 是 padding: 1.5rem 0 3rem，本站 1rem = 10px 所以換算成
+   2.4rem 與 4.8rem。 */
+.case-info {
+  display: grid;
+  grid-template-columns: repeat(var(--grid-cols, 12), minmax(0, 1fr));
+  gap: var(--grid-gutter, 2.4rem);
+  padding: 2.4rem 0 4.8rem;
+}
+.case-name { grid-column: span 6; }
+.case-title {
+  /* Bito 是 28px / 500 / 150%。這裡跟著站上其他標題用 --heading-weight。 */
+  font-family: var(--font-display, sans-serif);
+  font-size: clamp(2.2rem, 2.6vw, 2.8rem);
+  font-weight: var(--heading-weight, 700);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.case-blurb {
+  margin-top: 1.2rem;
+  max-width: 62ch;
+  font-size: var(--body-size, 1.4rem);
+  line-height: 1.5;
+}
+.case-blurb p { margin: 0; }
+.case-blurb p + p { margin-top: 0.8rem; }
+
+/* 敘述放在資訊列會直接吃掉封面的高度，所以先收到 --blurb-lines 行。
+   超出的話 site.js 才把展開按鈕顯示出來 —— 沒溢出就不該有按鈕。
+   line-clamp 需要 -webkit- 前綴，各家瀏覽器都還是認這個寫法。 */
+.case-blurb[data-clamp]:not(.is-open) {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: var(--blurb-lines, 4);
+  overflow: hidden;
+}
+.case-more {
+  margin-top: 0.8rem;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  font-size: 1.3rem;
+  color: var(--link, #252525);
+  text-decoration: underline;
+  text-underline-offset: 0.3em;
+}
+.case-more:hover { color: var(--accent-hover, #ff5b90); }
+
+/* 右半邊兩格，各佔 3 欄 —— 對齊 Bito 的 2×2 標籤區。
+   label 一律半透明大寫，值用正常文字色。 */
+.case-facts {
+  grid-column: 7 / -1;
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: var(--grid-gutter, 2.4rem) var(--grid-gutter, 2.4rem);
+  margin: 0;
+}
+.case-fact { grid-column: span 3; }
+.case-facts dt {
+  font-size: 1.2rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.5;
+}
+.case-facts dd {
+  margin: 0.4rem 0 0;
+  font-size: var(--body-size, 1.4rem);
+  line-height: 1.4;
+  color: var(--ink-strong, #000);
+}
+
+/* ---- 圖片區 ----
+   Bito 是每個媒體塊都 col-span-full 滿寬直排，這裡照做。
+   原站 .content img 的 margin-bottom: 2rem 換成統一的區塊間距。 */
+.case-gallery > * { margin-bottom: var(--grid-gutter, 2.4rem); }
+.case-gallery > img,
+.case-gallery > video,
+.case-gallery > figure img,
+.case-gallery > figure video {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.case-gallery figcaption {
   margin-top: 1.5rem;
   margin-bottom: 0.5rem;
 }
 figure { margin: 0; }
 
-/* 段落：文字不要跟圖一樣滿版，限制在好讀的寬度 */
-.case-body > p {
+/* 圖片之間的文字不要跟圖一樣滿版，限制在好讀的寬度 */
+.case-gallery > p {
   max-width: 62ch;
   font-size: var(--body-size, 1.4rem);
   line-height: 1.5;
+  margin-block: clamp(2rem, 4vh, 4rem);
 }
-.case-body > p + p { margin-top: -0.8rem; }
+.case-gallery > p + p { margin-top: -0.8rem; }
 
 /* 內頁小標題（Styleframe / Storyboard / Credit 這類） */
 .case-section {
@@ -468,12 +569,30 @@ figure { margin: 0; }
   justify-content: space-between;
   gap: 2rem;
   flex-wrap: wrap;
+  margin-top: clamp(3rem, 6vh, 6rem);
   padding-top: clamp(3rem, 6vh, 6rem);
   border-top: 1px solid rgba(127, 127, 127, 0.2);
   font-size: 1.5rem;
 }
 .case-nav a { color: var(--link, #252525); }
 .case-nav a:hover { color: var(--accent-hover, #ff5b90); }
+
+/* 窄螢幕：資訊列的兩半疊起來，類型與年份仍然並排（字都很短，放得下）。
+   Bito 在 ≤500px 是把網格改成 8 欄再用 order 重排；這裡只有兩塊，
+   直接讓兩塊都滿寬就好，不必動欄數。 */
+@media (max-width: 1100px) {
+  .case-info { padding-bottom: 3.6rem; }
+  .case-name,
+  .case-facts { grid-column: 1 / -1; }
+  .case-facts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .case-fact { grid-column: span 1; }
+}
+
+@media (max-width: 620px) {
+  /* 手機上封面不該吃掉整個第一屏，否則要捲很久才看到作品名 */
+  .case-cover { height: clamp(30vh, var(--cover-h, 50vh), 60vh); }
+  .case-blurb { max-width: none; }
+}
 
 /* --------------------------------------------------------------------------
    8. Information 頁
@@ -517,6 +636,10 @@ figure { margin: 0; }
    10. 列印
    -------------------------------------------------------------------------- */
 @media print {
-  .nav, .footer, .case-nav { display: none !important; }
+  .nav, .footer, .case-nav, .case-more { display: none !important; }
   body { background: #fff; color: #000; }
+  /* 印出來不該裁封面，也不該把敘述收起來 */
+  .case-cover { height: auto !important; }
+  .case-cover > * { height: auto !important; object-fit: fill; }
+  .case-blurb[data-clamp] { display: block !important; overflow: visible !important; }
 }

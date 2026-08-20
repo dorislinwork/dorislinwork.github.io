@@ -19,7 +19,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,400&family=Noto+Sans+TC:wght@400;500;700&display=swap">
 <link rel="stylesheet" href="https://use.typekit.net/kln0qcj.css">
 
-<style>:root{--bg: #ffffff;--ink: rgba(0, 0, 0, 0.75);--ink-strong: rgba(0, 0, 0, 1);--accent: #f02;--accent-hover: #ff5b90;--accent-active: #252525;--link: #252525;--nav-current: #252525;--nav-current-weight: 700;--caption-color: rgba(0, 0, 0, 0.30);--caption-size: 1.4rem;--font-display: "DM Sans", "Noto Sans TC", -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft JhengHei", sans-serif;--font-body: "DM Sans", "Noto Sans TC", -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft JhengHei", sans-serif;--font-caption: mundial, "Noto Sans TC", "Microsoft JhengHei", sans-serif;--hero-size: clamp(2.6rem, 4.5vw, 5.2rem);--title-size: 2.2rem;--body-size: 1.4rem;--body-lh: 1.2;--heading-weight: 700;--grid-cols: 12;--span: 4;--span-t: 6;--span-m: 12;--grid-gutter: 2.4rem;--card-ratio: 631 / 348;--card-ratio-num: 1.8132;--max: 160rem;--logo-width: 398px;--pad: 4rem;--cursor-default: url("../assets/img/cursor-default.png") 16 16, auto;--cursor-link: url("../assets/img/cursor-link.png") 16 16, pointer;}</style>
+<style>:root{--bg: #ffffff;--ink: rgba(0, 0, 0, 0.75);--ink-strong: rgba(0, 0, 0, 1);--accent: #f02;--accent-hover: #ff5b90;--accent-active: #252525;--link: #252525;--nav-current: #252525;--nav-current-weight: 700;--caption-color: rgba(0, 0, 0, 0.30);--caption-size: 1.4rem;--font-display: "DM Sans", "Noto Sans TC", -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft JhengHei", sans-serif;--font-body: "DM Sans", "Noto Sans TC", -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft JhengHei", sans-serif;--font-caption: mundial, "Noto Sans TC", "Microsoft JhengHei", sans-serif;--hero-size: clamp(2.6rem, 4.5vw, 5.2rem);--title-size: 2.2rem;--body-size: 1.4rem;--body-lh: 1.2;--heading-weight: 700;--grid-cols: 12;--span: 4;--span-t: 6;--span-m: 12;--grid-gutter: 2.4rem;--card-ratio: 631 / 348;--card-ratio-num: 1.8132;--max: 160rem;--logo-width: 398px;--pad: 4rem;--cover-h: 70vh;--cover-h-min: 45vh;--cover-h-max: 92vh;--blurb-lines: 4;--cursor-default: url("../assets/img/cursor-default.png") 16 16, auto;--cursor-link: url("../assets/img/cursor-link.png") 16 16, pointer;}</style>
 <link rel="stylesheet" href="../assets/css/site.css">
 <link rel="stylesheet" href="../assets/css/effects.css">
 </head>
@@ -41,16 +41,26 @@
 
 <main id="main">
   <article class="case">
-    <header class="case-head" data-stagger-scope>
-      <h1 class="display-l">Tommy’s Oddly Love</h1>
-      <p class="case-meta caption">Personal work | 2025</p>
-    </header>
-
-    <div class="case-body">
-      <p>He is Tommy. Tommy is a Chihuahua and was also the first pet dog I ever had. He was a shy and quiet little boy, and he was my best companion. I had him from when I was 10 years old until last year, when I was 26.</p>
-      <p>When I was about 13, I was standing on the street when Tommy suddenly peed on my foot!</p>
-      <p>People often say that dogs pee to mark their territory. I like to think of it as his own unique way of showing love.</p>
-      <p>He passed away last year. When I think back on all the love he gave us, I want to record that funny and touching memory to thank him for growing up with me. I’m using the way I know best to preserve it  through my own creations.</p>
+    <div class="case-cover" data-fill="true">
+      <img src="../assets/media/Tommy-s-Oddly-Love/Denoised-beauty-source-3_00195.webp" width="800" height="1000" alt="" fetchpriority="high" decoding="async">
+    </div>
+    <div class="case-info" data-stagger-scope>
+      <div class="case-name">
+        <h1 class="case-title">Tommy’s Oddly Love</h1>
+        <div class="case-blurb" data-clamp>
+          <p>He is Tommy. Tommy is a Chihuahua and was also the first pet dog I ever had. He was a shy and quiet little boy, and he was my best companion. I had him from when I was 10 years old until last year, when I was 26.</p>
+          <p>When I was about 13, I was standing on the street when Tommy suddenly peed on my foot!</p>
+          <p>People often say that dogs pee to mark their territory. I like to think of it as his own unique way of showing love.</p>
+          <p>He passed away last year. When I think back on all the love he gave us, I want to record that funny and touching memory to thank him for growing up with me. I’m using the way I know best to preserve it  through my own creations.</p>
+        </div>
+        <button class="case-more" type="button" hidden data-more="More" data-less="Less">More</button>
+      </div>
+      <dl class="case-facts">
+        <div class="case-fact"><dt>Type</dt><dd>Personal work</dd></div>
+        <div class="case-fact"><dt>Year</dt><dd>2025</dd></div>
+      </dl>
+    </div>
+    <div class="case-gallery">
       <div class="embed">
         <iframe src="https://player.vimeo.com/video/1079279831?badge=0&autopause=0&player_id=0&app_id=58479&title=0&byline=0&portrait=0&dnt=1"
           title="Vimeo video" loading="lazy"
@@ -61,7 +71,6 @@
           title="Vimeo video" loading="lazy"
           allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
       </div>
-      <img src="../assets/media/Tommy-s-Oddly-Love/Denoised-beauty-source-3_00195.webp" alt="" width="900" height="1125" loading="lazy" decoding="async">
       <img src="../assets/media/Tommy-s-Oddly-Love/TOMMY_SOLO_250504_00065.webp" alt="" width="900" height="1125" loading="lazy" decoding="async">
       <h3 class="case-section">He is Tommy.</h3>
       <img src="../assets/media/Tommy-s-Oddly-Love/01_00000.webp" alt="" width="600" height="750" loading="lazy" decoding="async">
@@ -69,7 +78,6 @@
       <img src="../assets/media/Tommy-s-Oddly-Love/03_00000.webp" alt="" width="600" height="750" loading="lazy" decoding="async">
       <img src="../assets/media/Tommy-s-Oddly-Love/OddlyInLove-09_mockup.webp" alt="" width="1280" height="1920" loading="lazy" decoding="async">
     </div>
-
     <nav class="case-nav" aria-label="More work">
       <a href="../index.html">← All work</a>
       <a href="Christmas-Plan.html">Christmas Plan →</a>

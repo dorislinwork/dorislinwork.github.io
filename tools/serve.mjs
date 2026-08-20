@@ -2,31 +2,10 @@
 import { createServer } from 'node:http';
 import { readFile, stat } from 'node:fs/promises';
 import { join, extname, normalize } from 'node:path';
+import { TYPES } from './lib-mime.mjs';
 
 const ROOT = process.argv[2];
 const PORT = Number(process.argv[3] || 8080);
-
-const TYPES = {
-  '.html': 'text/html; charset=utf-8',
-  '.css': 'text/css; charset=utf-8',
-  '.js': 'text/javascript; charset=utf-8',
-  '.svg': 'image/svg+xml',
-  '.png': 'image/png',
-  '.jpg': 'image/jpeg',
-  '.jpeg': 'image/jpeg',
-  '.webp': 'image/webp',
-  '.xml': 'application/xml; charset=utf-8',
-  '.txt': 'text/plain; charset=utf-8',
-  '.md': 'text/plain; charset=utf-8',
-  '.woff2': 'font/woff2',
-  // 影片一定要給對的型別。回 application/octet-stream 的話 <video> 不會播，
-  // 本機預覽會誤以為縮圖壞了（線上沒這問題，GitHub Pages 自己認得）。
-  '.mp4': 'video/mp4',
-  '.webm': 'video/webm',
-  '.mov': 'video/quicktime',
-  '.gif': 'image/gif',
-  '.ico': 'image/x-icon',
-};
 
 createServer(async (req, res) => {
   let path = decodeURIComponent(new URL(req.url, 'http://x').pathname);

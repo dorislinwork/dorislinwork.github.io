@@ -1,0 +1,1330 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>後台 — Doris Lin</title>
+<style>
+/* ==========================================================================
+   後台介面
+   刻意不載任何外部字體或套件：後台要在沒網路的時候也能用。
+   配色沿用網站本身（白底、深灰字、那個粉紅只出現在重點動作）。
+   ========================================================================== */
+:root {
+  --bg: #fff;
+  --ink: #1a1a1a;
+  --ink-soft: #6b6b6b;
+  --line: #e4e4e4;
+  --line-strong: #cfcfcf;
+  --pink: #ff5b90;
+  --ok: #1f7a3d;
+  --warn: #b45309;
+  --err: #c02626;
+  --field: #fafafa;
+  --radius: 6px;
+  font-size: 62.5%;   /* 1rem = 10px，跟網站一致，抄數值時不用換算 */
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font: 1.4rem/1.55 -apple-system, "Segoe UI", "Microsoft JhengHei", system-ui, sans-serif;
+}
+a { color: var(--ink); }
+button {
+  font: inherit;
+  cursor: pointer;
+  border: 1px solid var(--line-strong);
+  background: #fff;
+  color: var(--ink);
+  padding: 0.7rem 1.4rem;
+  border-radius: var(--radius);
+}
+button:hover:not(:disabled) { border-color: var(--ink); }
+button:disabled { opacity: 0.45; cursor: default; }
+button.primary {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: #fff;
+}
+button.primary:hover:not(:disabled) { background: var(--pink); border-color: var(--pink); }
+button.danger { color: var(--err); border-color: #e8bcbc; }
+button.danger:hover:not(:disabled) { background: var(--err); border-color: var(--err); color: #fff; }
+button.tiny { padding: 0.3rem 0.7rem; font-size: 1.2rem; }
+
+input[type=text], input[type=number], input[type=search], textarea, select {
+  font: inherit;
+  width: 100%;
+  padding: 0.7rem 0.9rem;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius);
+  background: var(--field);
+  color: var(--ink);
+}
+textarea { resize: vertical; min-height: 7rem; line-height: 1.5; }
+input:focus, textarea:focus, select:focus { outline: 2px solid var(--pink); outline-offset: -1px; }
+label { display: block; }
+.lbl {
+  display: block;
+  font-size: 1.2rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin-bottom: 0.4rem;
+}
+.doc {
+  font-size: 1.2rem;
+  color: var(--ink-soft);
+  line-height: 1.5;
+  margin: 0.4rem 0 0;
+}
+.check { display: flex; align-items: flex-start; gap: 0.8rem; }
+.check input { margin-top: 0.35rem; flex: none; }
+
+/* ---- 版面骨架 ---- */
+header.top {
+  position: sticky; top: 0; z-index: 10;
+  display: flex; align-items: center; gap: 1.6rem; flex-wrap: wrap;
+  padding: 1.4rem 2.4rem;
+  background: #fff;
+  border-bottom: 1px solid var(--line);
+}
+.brand { font-weight: 700; font-size: 1.6rem; letter-spacing: 0.02em; }
+.top .spacer { flex: 1 1 auto; }
+.pill {
+  font-size: 1.2rem; color: var(--ink-soft);
+  border: 1px solid var(--line); border-radius: 100px;
+  padding: 0.3rem 1rem;
+}
+.pill.bad { color: var(--err); border-color: #e8bcbc; }
+
+nav.tabs {
+  display: flex; gap: 0.4rem; flex-wrap: wrap;
+  padding: 0 2.4rem;
+  border-bottom: 1px solid var(--line);
+  background: #fff;
+  position: sticky; top: 5.9rem; z-index: 9;
+}
+nav.tabs button {
+  border: 0; background: none; border-radius: 0;
+  padding: 1.1rem 1.4rem;
+  border-bottom: 2px solid transparent;
+  color: var(--ink-soft);
+}
+nav.tabs button:hover { color: var(--ink); }
+nav.tabs button[aria-selected=true] { color: var(--ink); border-bottom-color: var(--ink); font-weight: 700; }
+nav.tabs .dot { color: var(--pink); }
+
+main { padding: 2.4rem; max-width: 108rem; }
+section[hidden] { display: none; }
+h2 { font-size: 1.9rem; margin: 0 0 0.6rem; }
+.sub { color: var(--ink-soft); font-size: 1.3rem; margin: 0 0 2rem; }
+
+.row { display: flex; gap: 1.2rem; flex-wrap: wrap; align-items: flex-end; }
+.row > * { flex: 1 1 16rem; min-width: 0; }
+.row > .narrow { flex: 0 0 11rem; }
+.stack > * + * { margin-top: 1.4rem; }
+.bar {
+  display: flex; gap: 1rem; flex-wrap: wrap; align-items: center;
+  padding: 1.4rem 0;
+}
+.bar.sticky {
+  position: sticky; bottom: 0;
+  background: linear-gradient(to top, #fff 60%, rgba(255,255,255,0));
+  padding-bottom: 2rem;
+}
+
+/* ---- 作品列表 ---- */
+.plist { border-top: 1px solid var(--line); }
+.pitem { border-bottom: 1px solid var(--line); }
+.phead {
+  display: flex; align-items: center; gap: 1.4rem;
+  padding: 1rem 0;
+}
+.phead .thumb {
+  flex: none; width: 7.2rem; height: 4.4rem;
+  object-fit: cover; background: #f0f0f0; border-radius: 4px;
+}
+.phead .meta { flex: 1 1 auto; min-width: 0; }
+.phead .name {
+  font-weight: 700;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.phead .sm { font-size: 1.2rem; color: var(--ink-soft); }
+.phead .acts { display: flex; gap: 0.5rem; flex: none; }
+.tag {
+  display: inline-block; font-size: 1.1rem; padding: 0.1rem 0.6rem;
+  border-radius: 100px; border: 1px solid var(--line-strong); color: var(--ink-soft);
+  margin-left: 0.6rem;
+}
+.tag.draft { color: var(--warn); border-color: #e4c9a0; }
+.pbody { padding: 0.6rem 0 2.4rem; }
+.pbody.hidden { display: none; }
+
+/* ---- blocks ---- */
+.blocks { border: 1px solid var(--line); border-radius: var(--radius); }
+.blk {
+  display: flex; gap: 1.2rem; padding: 1rem 1.2rem;
+  border-bottom: 1px solid var(--line);
+}
+.blk:last-child { border-bottom: 0; }
+.blk .kind {
+  flex: none; width: 5.4rem; font-size: 1.1rem; text-transform: uppercase;
+  letter-spacing: 0.05em; color: var(--ink-soft); padding-top: 0.4rem;
+}
+.blk .body { flex: 1 1 auto; min-width: 0; }
+.blk .body img { width: 8rem; height: 5rem; object-fit: cover; border-radius: 4px; background: #f0f0f0; float: left; margin-right: 1.2rem; }
+.blk .fname { font-size: 1.2rem; color: var(--ink-soft); word-break: break-all; }
+.blk .ctl { flex: none; display: flex; flex-direction: column; gap: 0.3rem; }
+
+/* ---- 拖放區 ---- */
+.drop {
+  border: 2px dashed var(--line-strong); border-radius: var(--radius);
+  padding: 3rem 2rem; text-align: center; color: var(--ink-soft);
+  background: var(--field);
+}
+.drop.over { border-color: var(--pink); color: var(--ink); background: #fff5f8; }
+.files { display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 1.4rem; }
+.fcard { width: 12rem; font-size: 1.1rem; }
+.fcard img, .fcard video {
+  width: 12rem; height: 8rem; object-fit: cover;
+  border-radius: 4px; background: #f0f0f0; display: block;
+}
+.fcard .fn { word-break: break-all; color: var(--ink-soft); margin-top: 0.3rem; }
+.fcard.isthumb { outline: 2px solid var(--pink); outline-offset: 2px; border-radius: 4px; }
+
+/* ---- 設定表單 ---- */
+fieldset {
+  border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 1.6rem; margin: 0 0 1.6rem;
+}
+legend { font-weight: 700; padding: 0 0.6rem; }
+.fieldrow { padding: 1rem 0; border-top: 1px solid var(--line); }
+.fieldrow:first-of-type { border-top: 0; }
+.arritem {
+  border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 1.2rem; margin-bottom: 0.8rem; background: var(--field);
+}
+
+/* ---- 記錄 ---- */
+pre.log {
+  background: #1b1b1b; color: #e8e8e8;
+  padding: 1.4rem 1.6rem; border-radius: var(--radius);
+  font: 1.25rem/1.6 ui-monospace, Consolas, monospace;
+  white-space: pre-wrap; word-break: break-word;
+  max-height: 44rem; overflow: auto; margin: 0;
+}
+pre.log:empty { display: none; }
+.note {
+  border-left: 3px solid var(--line-strong);
+  padding: 0.8rem 0 0.8rem 1.2rem; margin: 0 0 1.6rem;
+  color: var(--ink-soft); font-size: 1.3rem;
+}
+.note.warn { border-color: var(--warn); color: var(--warn); }
+
+/* ---- 浮動提示 ---- */
+#toast {
+  position: fixed; left: 50%; bottom: 2.4rem; transform: translateX(-50%);
+  background: var(--ink); color: #fff; padding: 1rem 1.8rem;
+  border-radius: 100px; font-size: 1.3rem; z-index: 50;
+  opacity: 0; pointer-events: none; transition: opacity .2s;
+  max-width: 80vw; text-align: center;
+}
+#toast.show { opacity: 1; }
+#toast.err { background: var(--err); }
+#toast.ok { background: var(--ok); }
+
+#busy {
+  position: fixed; inset: 0; z-index: 40;
+  background: rgba(255,255,255,.72);
+  display: none; align-items: center; justify-content: center;
+  font-size: 1.5rem;
+}
+#busy.on { display: flex; }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <span class="brand">Doris Lin ／ 後台</span>
+  <span class="pill" id="gitPill">…</span>
+  <span class="pill" id="ffPill" hidden>ffmpeg 沒裝</span>
+  <span class="spacer"></span>
+  <button id="btnPreview">預覽網站</button>
+  <button id="btnBuild">重新產生</button>
+</header>
+
+<nav class="tabs" id="tabs">
+  <button data-tab="projects" aria-selected="true">作品 <span class="dot" id="dotProjects" hidden>●</span></button>
+  <button data-tab="new" aria-selected="false">新增作品</button>
+  <button data-tab="site" aria-selected="false">版面設定 <span class="dot" id="dotSite" hidden>●</span></button>
+  <button data-tab="publish" aria-selected="false">發布</button>
+</nav>
+
+<main>
+  <!-- ==================================================== 作品 ==== -->
+  <section id="tab-projects">
+    <h2>作品</h2>
+    <p class="sub">上下箭頭調順序，順序就是首頁的順序。改完按最下面的「儲存」才會寫進 content/projects.json。</p>
+    <div class="row" style="margin-bottom:1.6rem">
+      <label><span class="lbl">搜尋</span><input type="search" id="pSearch" placeholder="標題或 slug"></label>
+      <label class="narrow"><span class="lbl">顯示</span>
+        <select id="pFilter">
+          <option value="all">全部</option>
+          <option value="live">已上線</option>
+          <option value="draft">草稿</option>
+        </select>
+      </label>
+    </div>
+    <div class="plist" id="plist"></div>
+    <div class="bar sticky">
+      <button class="primary" id="btnSaveProjects" disabled>儲存</button>
+      <button id="btnRevertProjects" disabled>放棄變更</button>
+      <span class="sub" style="margin:0" id="pCount"></span>
+    </div>
+  </section>
+
+  <!-- ================================================ 新增作品 ==== -->
+  <section id="tab-new" hidden>
+    <h2>新增作品</h2>
+    <p class="sub">把圖片、GIF 或影片拖進來，填標題就好。轉檔（GIF → MP4、圖片 → WebP）與卡片顏色都會自動處理。</p>
+
+    <div class="stack">
+      <div class="row">
+        <label><span class="lbl">標題</span><input type="text" id="nTitle" placeholder="Gua Bao"></label>
+        <label class="narrow"><span class="lbl">年份</span><input type="text" id="nYear" placeholder="2026"></label>
+      </div>
+      <div class="row">
+        <label><span class="lbl">網址（slug）</span><input type="text" id="nSlug" placeholder="Gua-Bao">
+          <p class="doc">會變成 <code>/work/<span id="slugEcho">…</span>.html</code>。只能用英數字、連字號、底線。留空會自動從標題產生。</p>
+        </label>
+        <label><span class="lbl">類型</span>
+          <input type="text" id="nRole" list="roles" value="Personal work">
+          <datalist id="roles">
+            <option>Personal work</option><option>Client work</option><option>Graduation project</option>
+          </datalist>
+        </label>
+      </div>
+      <label><span class="lbl">客戶（沒有就留空）</span><input type="text" id="nClient">
+        <p class="doc">這裡只放客戶名稱。作品簡介請寫在下面的「敘述」。</p>
+      </label>
+      <label><span class="lbl">敘述</span><textarea id="nText" rows="5" placeholder="一段一行。空行會分成不同段落。"></textarea>
+        <p class="doc">會顯示在內頁的作品名下面。第一段也會拿去當搜尋引擎的摘要。</p>
+      </label>
+      <label><span class="lbl">Vimeo 影片 ID（一行一個，沒有就留空）</span><textarea id="nVimeo" rows="2" placeholder="1079279831"></textarea></label>
+
+      <div>
+        <span class="lbl">素材</span>
+        <div class="drop" id="drop">
+          把檔案拖到這裡，或 <button type="button" id="btnPick">選擇檔案</button><br>
+          <span style="font-size:1.2rem">png / jpg / webp / tif / bmp / gif / mp4 / webm / mov</span>
+          <input type="file" id="filePick" multiple hidden
+                 accept=".png,.jpg,.jpeg,.webp,.tif,.tiff,.bmp,.gif,.mp4,.webm,.mov,.m4v">
+        </div>
+        <p class="doc">順序照檔名排（01、02、03…）。點一張設成首頁縮圖，預設是第一張。</p>
+        <div class="files" id="nFiles"></div>
+      </div>
+
+      <div class="row">
+        <label class="narrow"><span class="lbl">位置</span>
+          <select id="nWhere"><option value="front">放最前面</option><option value="end">放最後面</option></select>
+        </label>
+        <label class="check" style="flex:1 1 100%"><input type="checkbox" id="nDraft">
+          <span>先存成草稿（不出現在網站上，資料留著）</span></label>
+      </div>
+    </div>
+
+    <div class="bar sticky">
+      <button class="primary" id="btnCreate">建立作品</button>
+      <button id="btnClearNew">清空</button>
+    </div>
+    <pre class="log" id="newLog"></pre>
+  </section>
+
+  <!-- ================================================ 版面設定 ==== -->
+  <section id="tab-site" hidden>
+    <h2>版面設定</h2>
+    <p class="sub">這一頁就是 content/site.json。每個欄位下面的灰字是 json 裡自己的說明，改了那邊這裡也會跟著變。</p>
+    <div class="note">數字與比例類的欄位改完要按「重新產生」才看得到效果。<strong>1rem = 10px</strong>，所以 2.4rem 是 24px。</div>
+    <div id="siteForm"></div>
+    <div class="bar sticky">
+      <button class="primary" id="btnSaveSite" disabled>儲存</button>
+      <button id="btnRevertSite" disabled>放棄變更</button>
+    </div>
+  </section>
+
+  <!-- ==================================================== 發布 ==== -->
+  <section id="tab-publish" hidden>
+    <h2>發布</h2>
+    <p class="sub">順序是：產生網站 → 檢查連結 → commit → push。任何一步失敗就停下來，線上的版本不會被動到。</p>
+
+    <div class="note" id="gitBox">…</div>
+
+    <div class="stack">
+      <label><span class="lbl">這次改了什麼</span>
+        <input type="text" id="pubMsg" placeholder="新增作品 Gua Bao">
+        <p class="doc">留空會用日期當訊息。這段字會留在 git 記錄裡，之後要找哪次改了什麼就靠它。</p>
+      </label>
+    </div>
+
+    <div class="bar">
+      <button id="btnBuild2">只產生與檢查</button>
+      <button class="primary" id="btnPublish">發布上線</button>
+      <button id="btnColors">重新取卡片顏色</button>
+    </div>
+    <pre class="log" id="pubLog"></pre>
+  </section>
+</main>
+
+<div id="toast"></div>
+<div id="busy"><span id="busyText">處理中…</span></div>
+
+<script>
+'use strict';
+
+/* ==========================================================================
+   狀態
+   S 是伺服器來的真實狀態；編輯中的副本放在 D（draft）。
+   按儲存才把 D 送回去 —— 中途不自動寫檔，改壞了可以「放棄變更」。
+   ========================================================================== */
+let S = null;
+let D = { projects: null, site: null };
+let dirty = { projects: false, site: false };
+const open = new Set();           // 展開中的作品 slug
+let newFiles = [];                // 新增作品時選的檔案
+let newThumb = null;
+
+const $ = (s) => document.querySelector(s);
+const el = (t, cls, txt) => {
+  const e = document.createElement(t);
+  if (cls) e.className = cls;
+  if (txt !== undefined) e.textContent = txt;
+  return e;
+};
+
+/* ---------------------------------------------------------------- 工具 ---- */
+
+function toast(msg, kind) {
+  const t = $('#toast');
+  t.textContent = msg;
+  t.className = 'show ' + (kind || '');
+  clearTimeout(toast._t);
+  toast._t = setTimeout(() => { t.className = ''; }, kind === 'err' ? 6000 : 2600);
+}
+
+function busy(on, text) {
+  $('#busyText').textContent = text || '處理中…';
+  $('#busy').classList.toggle('on', !!on);
+}
+
+async function api(path, body, opts) {
+  const init = { method: body === undefined ? 'GET' : 'POST', headers: { 'x-admin': '1' } };
+  if (body !== undefined) {
+    init.headers['content-type'] = 'application/json';
+    init.body = JSON.stringify(body);
+  }
+  Object.assign(init, opts || {});
+  const r = await fetch('/api/' + path, init);
+  const text = await r.text();
+  let data;
+  try { data = JSON.parse(text); } catch { data = { error: text.slice(0, 400) }; }
+  if (!r.ok) throw new Error(data.error || data.log || ('HTTP ' + r.status));
+  return data;
+}
+
+const kb = (b) => b >= 1048576 ? (b / 1048576).toFixed(1) + ' MB' : Math.round(b / 1024) + ' KB';
+
+/* build.mjs 的 localName()／posterName() 在前端的對應版本。
+   poster 一律是 .webp，靜態圖與影片都有，所以列表縮圖用它最穩。 */
+const MOVING = /\.(gif|mp4|webm|mov|m4v)$/i;
+const posterName = (f) => String(f).replace(/\.[^.]+$/, '') + '.webp';
+const mediaSrc = (slug, file) =>
+  '/assets/media/' + encodeURIComponent(slug) + '/' + encodeURIComponent(posterName(file));
+
+function slugify(s) {
+  return String(s).trim()
+    .replace(/['’]/g, '-')
+    .replace(/[^A-Za-z0-9._-]+/g, '-')
+    .replace(/-{2,}/g, '-')
+    .replace(/^-+|-+$/g, '');
+}
+
+function markDirty(which) {
+  dirty[which] = true;
+  syncDirtyUI();
+}
+function syncDirtyUI() {
+  $('#dotProjects').hidden = !dirty.projects;
+  $('#dotSite').hidden = !dirty.site;
+  $('#btnSaveProjects').disabled = !dirty.projects;
+  $('#btnRevertProjects').disabled = !dirty.projects;
+  $('#btnSaveSite').disabled = !dirty.site;
+  $('#btnRevertSite').disabled = !dirty.site;
+}
+
+window.addEventListener('beforeunload', (e) => {
+  if (dirty.projects || dirty.site) { e.preventDefault(); e.returnValue = ''; }
+});
+
+/* ---------------------------------------------------------------- 載入 ---- */
+
+async function load() {
+  S = await api('state');
+  D.projects = JSON.parse(JSON.stringify(S.projects.projects));
+  D.site = JSON.parse(JSON.stringify(S.site));
+  dirty = { projects: false, site: false };
+  $('#ffPill').hidden = S.ffmpeg;
+  $('#ffPill').className = 'pill bad';
+  renderGit();
+  renderProjects();
+  renderSite();
+  syncDirtyUI();
+}
+
+function renderGit() {
+  const g = S.git;
+  const bits = [`分支 ${g.branch}`];
+  if (g.changed) bits.push(`${g.changed} 個檔案有變更`);
+  else bits.push('沒有未發布的變更');
+  if (g.ahead) bits.push(`${g.ahead} 次 commit 還沒 push`);
+  $('#gitPill').textContent = bits.join('　·　');
+
+  const box = $('#gitBox');
+  box.textContent = '';
+  box.appendChild(el('div', null, bits.join('　·　')));
+  if (g.sample.length) {
+    const ul = el('div');
+    ul.style.cssText = 'margin-top:.6rem;font-family:ui-monospace,Consolas,monospace;font-size:1.2rem';
+    g.sample.forEach((f) => ul.appendChild(el('div', null, f)));
+    if (g.changed > g.sample.length) ul.appendChild(el('div', null, `…還有 ${g.changed - g.sample.length} 個`));
+    box.appendChild(ul);
+  }
+}
+
+/* ============================================================== 作品 ==== */
+
+function renderProjects() {
+  const list = $('#plist');
+  list.textContent = '';
+  const q = $('#pSearch').value.trim().toLowerCase();
+  const f = $('#pFilter').value;
+
+  let shown = 0;
+  D.projects.forEach((p, i) => {
+    if (q && !((p.title || '') + ' ' + p.slug).toLowerCase().includes(q)) return;
+    if (f === 'live' && p.draft) return;
+    if (f === 'draft' && !p.draft) return;
+    shown++;
+    list.appendChild(projectItem(p, i));
+  });
+
+  const total = D.projects.length;
+  const drafts = D.projects.filter((p) => p.draft).length;
+  $('#pCount').textContent = `${total} 件（草稿 ${drafts} 件）` + (shown !== total ? `，符合條件 ${shown} 件` : '');
+}
+
+function projectItem(p, i) {
+  const wrap = el('div', 'pitem');
+  const head = el('div', 'phead');
+
+  const img = el('img', 'thumb');
+  img.loading = 'lazy';
+  img.alt = '';
+  if (p.thumb && p.thumb.file) img.src = mediaSrc(p.slug, p.thumb.file);
+  head.appendChild(img);
+
+  const meta = el('div', 'meta');
+  const name = el('div', 'name');
+  name.appendChild(document.createTextNode(p.title || p.slug));
+  if (p.draft) name.appendChild(el('span', 'tag draft', '草稿'));
+  if (p.hideFromGrid) name.appendChild(el('span', 'tag', '不上首頁'));
+  meta.appendChild(name);
+  meta.appendChild(el('div', 'sm',
+    [p.year, p.role, p.slug, `${(p.blocks || []).length} 個區塊`].filter(Boolean).join('　·　')));
+  head.appendChild(meta);
+
+  const acts = el('div', 'acts');
+  const mk = (txt, title, fn, cls) => {
+    const b = el('button', 'tiny ' + (cls || ''), txt);
+    b.title = title;
+    b.onclick = fn;
+    return b;
+  };
+  acts.appendChild(mk('↑', '往前移', () => move(i, -1)));
+  acts.appendChild(mk('↓', '往後移', () => move(i, 1)));
+  const isOpen = open.has(p.slug);
+  acts.appendChild(mk(isOpen ? '收起' : '編輯', '編輯這件作品', () => {
+    if (isOpen) open.delete(p.slug); else open.add(p.slug);
+    renderProjects();
+  }));
+  const view = el('a');
+  view.href = '/work/' + encodeURIComponent(p.slug) + '.html';
+  view.target = '_blank';
+  view.rel = 'noopener';
+  view.appendChild(mk('看', '在新分頁打開這一頁', () => {}));
+  acts.appendChild(view);
+  head.appendChild(acts);
+  wrap.appendChild(head);
+
+  if (isOpen) wrap.appendChild(projectEditor(p, i));
+  return wrap;
+}
+
+function move(i, d) {
+  const j = i + d;
+  if (j < 0 || j >= D.projects.length) return;
+  const [x] = D.projects.splice(i, 1);
+  D.projects.splice(j, 0, x);
+  markDirty('projects');
+  renderProjects();
+}
+
+function field(labelText, value, onInput, opts) {
+  const o = opts || {};
+  const lab = el('label');
+  lab.appendChild(el('span', 'lbl', labelText));
+  const input = o.multiline ? el('textarea') : el('input');
+  if (!o.multiline) input.type = o.type || 'text';
+  if (o.rows) input.rows = o.rows;
+  if (o.placeholder) input.placeholder = o.placeholder;
+  input.value = value === null || value === undefined ? '' : value;
+  input.addEventListener('input', () => onInput(input.value));
+  lab.appendChild(input);
+  if (o.doc) lab.appendChild(el('p', 'doc', o.doc));
+  return lab;
+}
+
+function checkbox(labelText, value, onChange, doc) {
+  const lab = el('label', 'check');
+  const c = el('input');
+  c.type = 'checkbox';
+  c.checked = !!value;
+  c.addEventListener('change', () => onChange(c.checked));
+  lab.appendChild(c);
+  const span = el('span');
+  span.appendChild(document.createTextNode(labelText));
+  if (doc) span.appendChild(el('p', 'doc', doc));
+  lab.appendChild(span);
+  return lab;
+}
+
+function projectEditor(p, idx) {
+  const box = el('div', 'pbody stack');
+  const upd = (fn) => { fn(); markDirty('projects'); };
+
+  const r1 = el('div', 'row');
+  r1.appendChild(field('標題', p.title, (v) => upd(() => { p.title = v; })));
+  const y = field('年份', p.year, (v) => upd(() => { p.year = v; }));
+  y.className = 'narrow';
+  r1.appendChild(y);
+  r1.appendChild(field('類型', p.role, (v) => upd(() => { p.role = v; })));
+  box.appendChild(r1);
+
+  const r2 = el('div', 'row');
+  r2.appendChild(field('客戶', p.client, (v) => upd(() => { p.client = v; }),
+    { doc: '只放客戶名稱。作品簡介要寫成下面的文字區塊。' }));
+  r2.appendChild(field('標籤（逗號分隔）', (p.tags || []).join(', '),
+    (v) => upd(() => { p.tags = v.split(',').map((s) => s.trim()).filter(Boolean); })));
+  box.appendChild(r2);
+
+  box.appendChild(field('搜尋引擎摘要', p.summary, (v) => upd(() => { p.summary = v; }),
+    { doc: '只用在 <meta description>，不會顯示在頁面上。留空會用第一段敘述。' }));
+
+  const r3 = el('div', 'row');
+  const thumbLab = el('label');
+  thumbLab.appendChild(el('span', 'lbl', '首頁縮圖'));
+  const sel = el('select');
+  const mediaBlocks = (p.blocks || []).filter((b) => b.type === 'media');
+  mediaBlocks.forEach((b) => {
+    const o = el('option', null, b.file);
+    o.value = b.file;
+    if (p.thumb && p.thumb.file === b.file) o.selected = true;
+    sel.appendChild(o);
+  });
+  if (!mediaBlocks.length) {
+    const o = el('option', null, '（這件作品沒有圖片區塊）');
+    o.disabled = true;
+    sel.appendChild(o);
+  }
+  sel.addEventListener('change', () => upd(() => {
+    const b = mediaBlocks.find((x) => x.file === sel.value);
+    if (b) p.thumb = { file: b.file, w: b.w, h: b.h };
+  }));
+  thumbLab.appendChild(sel);
+  r3.appendChild(thumbLab);
+
+  const colLab = el('label');
+  colLab.appendChild(el('span', 'lbl', '卡片顏色'));
+  const colWrap = el('div');
+  colWrap.style.cssText = 'display:flex;gap:.8rem;align-items:center';
+  const col = el('input');
+  col.type = 'color';
+  col.value = /^#[0-9a-f]{6}$/i.test(p.cardColor || '') ? p.cardColor : '#cccccc';
+  col.style.cssText = 'width:4.4rem;height:3.6rem;padding:0;flex:none';
+  const colTxt = el('input');
+  colTxt.type = 'text';
+  colTxt.value = p.cardColor || '';
+  colTxt.placeholder = '#ff5b90';
+  const setCol = (v) => upd(() => {
+    p.cardColor = v;
+    if (/^#[0-9a-f]{6}$/i.test(v)) col.value = v;
+    if (colTxt.value !== v) colTxt.value = v;
+  });
+  col.addEventListener('input', () => setCol(col.value));
+  colTxt.addEventListener('input', () => setCol(colTxt.value));
+  colWrap.appendChild(col);
+  colWrap.appendChild(colTxt);
+  colLab.appendChild(colWrap);
+  colLab.appendChild(el('p', 'doc', '首頁滑過縮圖時蓋上去的顏色。留空會退回強調色。'));
+  r3.appendChild(colLab);
+  box.appendChild(r3);
+
+  const r4 = el('div', 'row');
+  const span = field('首頁佔幾欄', p.span || '', (v) => upd(() => {
+    const n = Number(v);
+    if (n > 1) p.span = n; else delete p.span;
+  }), { type: 'number', doc: '留空 = 一般大小（4 欄）。填 8 就是雙倍寬。' });
+  span.className = 'narrow';
+  r4.appendChild(span);
+  r4.appendChild(field('縮圖比例', p.ratio || '', (v) => upd(() => {
+    if (v.trim()) p.ratio = v.trim(); else delete p.ratio;
+  }), { placeholder: '631 / 348', doc: '留空 = 用版面設定裡的預設值。' }));
+  box.appendChild(r4);
+
+  const r5 = el('div', 'row');
+  r5.appendChild(checkbox('草稿（不產生頁面，資料留著）', p.draft,
+    (v) => upd(() => { if (v) p.draft = true; else delete p.draft; })));
+  r5.appendChild(checkbox('有頁面但不出現在首頁', p.hideFromGrid,
+    (v) => upd(() => { if (v) p.hideFromGrid = true; else delete p.hideFromGrid; })));
+  box.appendChild(r5);
+
+  /* ---- 區塊 ---- */
+  box.appendChild(el('span', 'lbl', '內頁區塊（順序就是頁面上的順序）'));
+  box.appendChild(blocksEditor(p, upd));
+
+  /* ---- 補圖 ---- */
+  const add = el('div');
+  add.style.cssText = 'margin-top:1.4rem';
+  const inp = el('input');
+  inp.type = 'file';
+  inp.multiple = true;
+  inp.accept = '.png,.jpg,.jpeg,.webp,.tif,.tiff,.bmp,.gif,.mp4,.webm,.mov,.m4v';
+  inp.style.display = 'none';
+  const addBtn = el('button', null, '＋ 補圖到這件作品');
+  addBtn.onclick = () => inp.click();
+  inp.addEventListener('change', () => appendMedia(p.slug, [...inp.files]));
+  add.appendChild(addBtn);
+  add.appendChild(inp);
+  add.appendChild(el('p', 'doc',
+    '會轉檔後接在區塊最後面，其他區塊與順序不動。原始檔會留在 incoming\\' + p.slug + '\\ 當備份。'));
+  box.appendChild(add);
+
+  /* ---- 移除 ---- */
+  const del = el('div');
+  del.style.cssText = 'margin-top:2rem;padding-top:1.4rem;border-top:1px solid var(--line)';
+  const delBtn = el('button', 'danger', '移除這件作品');
+  delBtn.onclick = () => removeProject(p);
+  del.appendChild(delBtn);
+  del.appendChild(el('p', 'doc',
+    '會從清單移除、刪掉 assets/media/' + p.slug + '/ 與頁面。incoming\\ 的原始檔不會動。只是想暫時下架就改用上面的「草稿」。'));
+  box.appendChild(del);
+
+  return box;
+}
+
+function blocksEditor(p, upd) {
+  const wrap = el('div', 'blocks');
+  const blocks = p.blocks || (p.blocks = []);
+
+  if (!blocks.length) {
+    wrap.appendChild(el('div', 'blk', '（沒有任何區塊）'));
+    return wrap;
+  }
+
+  blocks.forEach((b, i) => {
+    const row = el('div', 'blk');
+    row.appendChild(el('div', 'kind', b.type === 'embed' ? 'vimeo' : b.type));
+
+    const body = el('div', 'body');
+    if (b.type === 'text') {
+      const ta = el('textarea');
+      ta.rows = 3;
+      ta.value = b.text || '';
+      ta.addEventListener('input', () => upd(() => { b.text = ta.value; }));
+      body.appendChild(ta);
+    } else if (b.type === 'heading') {
+      const inp = el('input');
+      inp.type = 'text';
+      inp.value = b.text || '';
+      inp.addEventListener('input', () => upd(() => { b.text = inp.value; }));
+      body.appendChild(inp);
+      body.appendChild(el('p', 'doc', '內頁的小標題（Styleframe、Credit 這類）'));
+    } else if (b.type === 'embed') {
+      const inp = el('input');
+      inp.type = 'text';
+      inp.value = b.id || '';
+      inp.placeholder = '1079279831';
+      inp.addEventListener('input', () => upd(() => { b.id = inp.value.trim(); }));
+      body.appendChild(inp);
+      body.appendChild(el('p', 'doc', 'Vimeo 影片 ID（網址最後那串數字）'));
+    } else if (b.type === 'media') {
+      const img = el('img');
+      img.loading = 'lazy';
+      img.alt = '';
+      img.src = mediaSrc(p.slug, b.file);
+      body.appendChild(img);
+      body.appendChild(el('div', 'fname', b.file + (b.w ? `　${b.w}×${b.h}` : '')));
+      const cap = el('input');
+      cap.type = 'text';
+      cap.value = b.caption || '';
+      cap.placeholder = '圖說（留空就不顯示）';
+      cap.addEventListener('input', () => upd(() => { b.caption = cap.value; }));
+      body.appendChild(cap);
+    } else {
+      body.appendChild(el('div', 'fname', JSON.stringify(b).slice(0, 200)));
+    }
+    row.appendChild(body);
+
+    const ctl = el('div', 'ctl');
+    const mk = (t, title, fn, cls) => {
+      const btn = el('button', 'tiny ' + (cls || ''), t);
+      btn.title = title;
+      btn.onclick = fn;
+      return btn;
+    };
+    ctl.appendChild(mk('↑', '往上', () => {
+      if (i > 0) upd(() => { const [x] = blocks.splice(i, 1); blocks.splice(i - 1, 0, x); });
+      renderProjects();
+    }));
+    ctl.appendChild(mk('↓', '往下', () => {
+      if (i < blocks.length - 1) upd(() => { const [x] = blocks.splice(i, 1); blocks.splice(i + 1, 0, x); });
+      renderProjects();
+    }));
+    ctl.appendChild(mk('✕', '刪掉這個區塊', () => {
+      if (b.type === 'media' && !confirm(`從這一頁移除 ${b.file}？\n\n（只是不顯示，檔案還在 assets/media 裡）`)) return;
+      upd(() => { blocks.splice(i, 1); });
+      renderProjects();
+    }, 'danger'));
+    row.appendChild(ctl);
+
+    wrap.appendChild(row);
+  });
+
+  /* 加文字／小標／Vimeo 區塊 */
+  const tools = el('div', 'blk');
+  const t = el('div', 'body');
+  t.style.cssText = 'display:flex;gap:.6rem;flex-wrap:wrap';
+  const addBlk = (label, obj) => {
+    const b = el('button', 'tiny', label);
+    b.onclick = () => { upd(() => { blocks.push(obj()); }); renderProjects(); };
+    t.appendChild(b);
+  };
+  addBlk('＋ 文字', () => ({ type: 'text', text: '' }));
+  addBlk('＋ 小標', () => ({ type: 'heading', level: 'h2', text: '' }));
+  addBlk('＋ Vimeo', () => ({ type: 'embed', provider: 'vimeo', id: '', autoplay: true, loop: true }));
+  tools.appendChild(t);
+  wrap.appendChild(tools);
+
+  return wrap;
+}
+
+async function appendMedia(slug, files) {
+  if (!files.length) return;
+  if (!S.ffmpeg) return toast('找不到 ffmpeg，沒辦法轉檔。先跑 winget install Gyan.FFmpeg', 'err');
+  if (dirty.projects && !confirm('有還沒儲存的變更，補圖會先讀取硬碟上的版本，未存的修改會不見。要先取消、去按儲存嗎？\n\n按「確定」＝繼續補圖（放棄未存的修改）')) return;
+
+  try {
+    for (let i = 0; i < files.length; i++) {
+      busy(true, `上傳 ${i + 1}/${files.length}　${files[i].name}`);
+      await uploadOne(slug, files[i]);
+    }
+    busy(true, '轉檔中…');
+    const r = await api('append-media', { slug, files: files.map((f) => f.name) });
+    await load();
+    open.add(slug);
+    renderProjects();
+    toast('已補上 ' + files.length + ' 個檔案', 'ok');
+    if (r.log) console.log(r.log);
+    await runBuild(true);
+  } catch (e) {
+    toast(e.message, 'err');
+  } finally {
+    busy(false);
+  }
+}
+
+function uploadOne(slug, file) {
+  return fetch('/api/upload?slug=' + encodeURIComponent(slug) + '&name=' + encodeURIComponent(file.name), {
+    method: 'POST',
+    headers: { 'x-admin': '1', 'content-type': 'application/octet-stream' },
+    body: file,
+  }).then(async (r) => {
+    const d = await r.json().catch(() => ({}));
+    if (!r.ok) throw new Error(d.error || ('上傳 ' + file.name + ' 失敗'));
+    return d;
+  });
+}
+
+async function removeProject(p) {
+  if (!confirm(`確定要移除「${p.title || p.slug}」？\n\n會刪掉 assets/media/${p.slug}/ 與頁面。\nincoming\\ 裡的原始檔不會動。\n\n只是想暫時下架的話按取消，改用「草稿」。`)) return;
+  busy(true, '移除中…');
+  try {
+    const r = await api('delete', { slug: p.slug });
+    open.delete(p.slug);
+    await load();
+    toast('已移除', 'ok');
+    console.log(r.log);
+    await runBuild(true);
+  } catch (e) {
+    toast(e.message, 'err');
+  } finally {
+    busy(false);
+  }
+}
+
+$('#btnSaveProjects').onclick = async () => {
+  busy(true, '儲存中…');
+  try {
+    await api('projects', { projects: D.projects });
+    await load();
+    toast('已儲存', 'ok');
+    await runBuild(true);
+  } catch (e) {
+    toast(e.message, 'err');
+  } finally {
+    busy(false);
+  }
+};
+
+$('#btnRevertProjects').onclick = () => {
+  if (!confirm('放棄所有還沒儲存的作品變更？')) return;
+  D.projects = JSON.parse(JSON.stringify(S.projects.projects));
+  dirty.projects = false;
+  syncDirtyUI();
+  renderProjects();
+};
+
+$('#pSearch').addEventListener('input', renderProjects);
+$('#pFilter').addEventListener('change', renderProjects);
+
+/* ========================================================== 新增作品 ==== */
+
+$('#nTitle').addEventListener('input', () => {
+  const s = $('#nSlug');
+  if (!s.dataset.touched) {
+    s.value = slugify($('#nTitle').value);
+    $('#slugEcho').textContent = s.value || '…';
+  }
+});
+$('#nSlug').addEventListener('input', () => {
+  $('#nSlug').dataset.touched = '1';
+  $('#slugEcho').textContent = $('#nSlug').value || '…';
+});
+
+const drop = $('#drop');
+$('#btnPick').onclick = () => $('#filePick').click();
+$('#filePick').addEventListener('change', () => addNewFiles([...$('#filePick').files]));
+['dragenter', 'dragover'].forEach((ev) => drop.addEventListener(ev, (e) => {
+  e.preventDefault();
+  drop.classList.add('over');
+}));
+['dragleave', 'drop'].forEach((ev) => drop.addEventListener(ev, (e) => {
+  e.preventDefault();
+  drop.classList.remove('over');
+}));
+drop.addEventListener('drop', (e) => addNewFiles([...e.dataTransfer.files]));
+
+const USABLE = /\.(png|jpe?g|webp|tiff?|bmp|gif|mp4|webm|mov|m4v)$/i;
+
+function addNewFiles(files) {
+  const good = files.filter((f) => USABLE.test(f.name));
+  const bad = files.filter((f) => !USABLE.test(f.name));
+  if (bad.length) toast('略過不支援的檔案：' + bad.map((f) => f.name).join('、'), 'err');
+  for (const f of good) {
+    if (!newFiles.some((x) => x.name === f.name)) newFiles.push(f);
+  }
+  // 照檔名排序，跟 add-project.mjs 的規則一致（數字要照數值比）
+  newFiles.sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true, sensitivity: 'base' }));
+  if (!newThumb || !newFiles.some((f) => f.name === newThumb)) {
+    newThumb = newFiles.length ? newFiles[0].name : null;
+  }
+  renderNewFiles();
+}
+
+function renderNewFiles() {
+  const box = $('#nFiles');
+  box.textContent = '';
+  newFiles.forEach((f) => {
+    const card = el('div', 'fcard' + (f.name === newThumb ? ' isthumb' : ''));
+    const url = URL.createObjectURL(f);
+    const isVid = /\.(mp4|webm|mov|m4v)$/i.test(f.name);
+    const m = el(isVid ? 'video' : 'img');
+    m.src = url;
+    if (isVid) { m.muted = true; m.loop = true; m.autoplay = true; m.playsInline = true; }
+    m.title = '設成首頁縮圖';
+    m.style.cursor = 'pointer';
+    m.onclick = () => { newThumb = f.name; renderNewFiles(); };
+    card.appendChild(m);
+    card.appendChild(el('div', 'fn', f.name + '　' + kb(f.size)));
+    const rm = el('button', 'tiny', '移除');
+    rm.onclick = () => {
+      newFiles = newFiles.filter((x) => x.name !== f.name);
+      if (newThumb === f.name) newThumb = newFiles.length ? newFiles[0].name : null;
+      renderNewFiles();
+    };
+    card.appendChild(rm);
+    box.appendChild(card);
+  });
+  if (newFiles.length) {
+    box.appendChild(el('div', 'doc', `共 ${newFiles.length} 個檔案，` +
+      kb(newFiles.reduce((a, f) => a + f.size, 0)) + '。粉紅框那張是首頁縮圖。'));
+  }
+}
+
+$('#btnClearNew').onclick = () => {
+  if (newFiles.length && !confirm('清空這一頁的內容？')) return;
+  ['nTitle', 'nYear', 'nSlug', 'nClient', 'nText', 'nVimeo'].forEach((id) => { $('#' + id).value = ''; });
+  $('#nRole').value = 'Personal work';
+  $('#nDraft').checked = false;
+  delete $('#nSlug').dataset.touched;
+  $('#slugEcho').textContent = '…';
+  newFiles = [];
+  newThumb = null;
+  renderNewFiles();
+  $('#newLog').textContent = '';
+};
+
+$('#btnCreate').onclick = async () => {
+  const title = $('#nTitle').value.trim();
+  const slug = ($('#nSlug').value.trim() || slugify(title));
+  if (!slug) return toast('要有標題或 slug', 'err');
+  if (!/^[A-Za-z0-9][A-Za-z0-9._-]*$/.test(slug)) {
+    return toast('slug「' + slug + '」不合法：只能用英數字、連字號、底線，且要以英數字開頭', 'err');
+  }
+  if (!newFiles.length) return toast('至少要放一個素材檔', 'err');
+  if (!S.ffmpeg) return toast('找不到 ffmpeg，沒辦法轉檔。先跑 winget install Gyan.FFmpeg', 'err');
+  if (D.projects.some((p) => p.slug === slug)) {
+    if (!confirm(`已經有 slug 為「${slug}」的作品了。\n\n繼續會用這批檔案覆蓋它的區塊（原本手動排的順序與圖說會不見）。`)) return;
+  }
+
+  const log = $('#newLog');
+  log.textContent = '';
+  const say = (s) => { log.textContent += s + '\n'; };
+
+  try {
+    for (let i = 0; i < newFiles.length; i++) {
+      busy(true, `上傳 ${i + 1}/${newFiles.length}　${newFiles[i].name}`);
+      const r = await uploadOne(slug, newFiles[i]);
+      say(`上傳 ${r.name}　${kb(r.bytes)}`);
+    }
+
+    busy(true, '轉檔與建立中…（GIF 與影片比較久）');
+    const texts = $('#nText').value.split(/\n\s*\n/).map((s) => s.trim()).filter(Boolean);
+    const vimeos = $('#nVimeo').value.split('\n').map((s) => s.trim()).filter(Boolean);
+    const r = await api('create', {
+      slug,
+      title,
+      year: $('#nYear').value.trim(),
+      role: $('#nRole').value.trim(),
+      client: $('#nClient').value.trim(),
+      texts,
+      vimeos,
+      thumb: newThumb,
+      draft: $('#nDraft').checked,
+      atEnd: $('#nWhere').value === 'end',
+    });
+    say('');
+    say(r.log);
+    toast('已建立「' + (title || slug) + '」', 'ok');
+
+    newFiles = [];
+    newThumb = null;
+    renderNewFiles();
+    await load();
+    await runBuild(true, say);
+    open.add(slug);
+    renderProjects();
+    showTab('projects');
+  } catch (e) {
+    say('');
+    say('✗ ' + e.message);
+    toast(e.message, 'err');
+  } finally {
+    busy(false);
+  }
+};
+
+/* ========================================================== 版面設定 ==== */
+
+const isDocKey = (k) => k.startsWith('_');
+const docText = (v) => Array.isArray(v) ? v.join('\n') : String(v);
+
+function docFor(obj, key) {
+  const a = obj['_' + key + '說明'];
+  if (a !== undefined) return docText(a);
+  const b = obj['_' + key + '註'];
+  if (b !== undefined) return docText(b);
+  return '';
+}
+
+const LABELS = {
+  name: '網站名稱', url: '網址', description: '描述', lang: '語言',
+  hero: '首頁大標', logo: 'Logo', nav: '導覽列連結', email: '信箱',
+  social: '社群連結', information: 'Information 頁', media: '媒體',
+  theme: '顏色', type: '字級', fonts: '字體', cursors: '游標',
+  header: '導覽列行為', case: '作品內頁', grid: '首頁網格',
+};
+
+function renderSite() {
+  const box = $('#siteForm');
+  box.textContent = '';
+  const keys = Object.keys(D.site).filter((k) => !isDocKey(k));
+
+  // 純量欄位先集中在最上面，物件各自一個 fieldset
+  const scalars = keys.filter((k) => typeof D.site[k] !== 'object' || D.site[k] === null);
+  if (scalars.length) {
+    const fs = el('fieldset');
+    fs.appendChild(el('legend', null, '基本'));
+    scalars.forEach((k) => fs.appendChild(fieldFor(D.site, k, ['site', k])));
+    box.appendChild(fs);
+  }
+  keys.filter((k) => !scalars.includes(k)).forEach((k) => {
+    const fs = el('fieldset');
+    fs.appendChild(el('legend', null, (LABELS[k] || k) + '　' + k));
+    const doc = docFor(D.site, k) || (D.site[k] && D.site[k]._說明 ? docText(D.site[k]._說明) : '');
+    if (doc) fs.appendChild(el('p', 'doc', doc));
+    renderInto(fs, D.site[k], ['site', k]);
+    box.appendChild(fs);
+  });
+}
+
+function renderInto(parent, obj, path) {
+  if (Array.isArray(obj)) {
+    parent.appendChild(arrayEditor(obj, path));
+    return;
+  }
+  Object.keys(obj).filter((k) => !isDocKey(k)).forEach((k) => {
+    parent.appendChild(fieldFor(obj, k, path.concat(k)));
+  });
+}
+
+function fieldFor(obj, key, path) {
+  const v = obj[key];
+  const doc = docFor(obj, key);
+  const label = (LABELS[key] ? LABELS[key] + '　' : '') + key;
+  const row = el('div', 'fieldrow');
+
+  const change = () => markDirty('site');
+
+  if (typeof v === 'boolean') {
+    row.appendChild(checkbox(label, v, (nv) => { obj[key] = nv; change(); }, doc));
+    return row;
+  }
+
+  if (typeof v === 'number') {
+    row.appendChild(field(label, v, (nv) => {
+      obj[key] = nv.trim() === '' ? 0 : Number(nv);
+      change();
+    }, { type: 'number', doc }));
+    row.querySelector('input').step = 'any';
+    return row;
+  }
+
+  if (v === null || typeof v === 'string') {
+    const long = typeof v === 'string' && (v.length > 90 || v.includes('\n'));
+    row.appendChild(field(label, v, (nv) => { obj[key] = nv; change(); },
+      { doc, multiline: long, rows: 3 }));
+    return row;
+  }
+
+  if (Array.isArray(v)) {
+    row.appendChild(el('span', 'lbl', label));
+    if (doc) row.appendChild(el('p', 'doc', doc));
+    row.appendChild(arrayEditor(v, path));
+    return row;
+  }
+
+  // 巢狀物件
+  const fs = el('fieldset');
+  fs.appendChild(el('legend', null, label));
+  const own = v._說明 ? docText(v._說明) : doc;
+  if (own) fs.appendChild(el('p', 'doc', own));
+  renderInto(fs, v, path);
+  row.appendChild(fs);
+  return row;
+}
+
+function arrayEditor(arr, path) {
+  const wrap = el('div');
+  const allStrings = arr.every((x) => typeof x === 'string');
+
+  if (allStrings) {
+    const ta = el('textarea');
+    ta.rows = Math.min(10, Math.max(3, arr.length + 1));
+    ta.value = arr.join('\n');
+    ta.addEventListener('input', () => {
+      arr.length = 0;
+      ta.value.split('\n').map((s) => s.trim()).filter(Boolean).forEach((s) => arr.push(s));
+      markDirty('site');
+    });
+    wrap.appendChild(ta);
+    wrap.appendChild(el('p', 'doc', '一行一個。'));
+    return wrap;
+  }
+
+  arr.forEach((item, i) => {
+    const card = el('div', 'arritem');
+    if (item && typeof item === 'object') {
+      renderInto(card, item, path.concat(i));
+    } else {
+      card.appendChild(field('值', item, (nv) => { arr[i] = nv; markDirty('site'); }));
+    }
+    const rm = el('button', 'tiny danger', '刪掉這一項');
+    rm.onclick = () => {
+      if (!confirm('刪掉這一項？')) return;
+      arr.splice(i, 1);
+      markDirty('site');
+      renderSite();
+    };
+    card.appendChild(rm);
+    wrap.appendChild(card);
+  });
+
+  const add = el('button', 'tiny', '＋ 新增一項');
+  add.onclick = () => {
+    const sample = arr[0];
+    if (sample && typeof sample === 'object') {
+      const blank = {};
+      Object.keys(sample).forEach((k) => { blank[k] = typeof sample[k] === 'boolean' ? false : ''; });
+      arr.push(blank);
+    } else {
+      arr.push('');
+    }
+    markDirty('site');
+    renderSite();
+  };
+  wrap.appendChild(add);
+  return wrap;
+}
+
+$('#btnSaveSite').onclick = async () => {
+  busy(true, '儲存中…');
+  try {
+    await api('site', { site: D.site });
+    await load();
+    toast('已儲存', 'ok');
+    await runBuild(true);
+  } catch (e) {
+    toast(e.message, 'err');
+  } finally {
+    busy(false);
+  }
+};
+
+$('#btnRevertSite').onclick = () => {
+  if (!confirm('放棄所有還沒儲存的版面設定變更？')) return;
+  D.site = JSON.parse(JSON.stringify(S.site));
+  dirty.site = false;
+  syncDirtyUI();
+  renderSite();
+};
+
+/* ============================================================== 發布 ==== */
+
+async function runBuild(quiet, say) {
+  try {
+    if (!quiet) busy(true, '產生網站中…');
+    const r = await api('build', {});
+    if (say) { say(''); say(r.log); }
+    $('#pubLog').textContent = r.log;
+    if (!quiet) toast('已重新產生', 'ok');
+    S.git = (await api('state')).git;
+    renderGit();
+    return true;
+  } catch (e) {
+    $('#pubLog').textContent = e.message;
+    toast('產生失敗：' + e.message.split('\n')[0], 'err');
+    showTab('publish');
+    return false;
+  } finally {
+    if (!quiet) busy(false);
+  }
+}
+
+$('#btnBuild').onclick = () => runBuild(false);
+$('#btnBuild2').onclick = () => runBuild(false);
+$('#btnPreview').onclick = () => window.open('/', '_blank', 'noopener');
+
+$('#btnColors').onclick = async () => {
+  const force = confirm('要連已經設好的顏色一起重算嗎？\n\n確定＝全部重算（--force）\n取消＝只補還沒有顏色的');
+  busy(true, '取色中…');
+  try {
+    const r = await api('card-colors', { force });
+    $('#pubLog').textContent = r.log;
+    await load();
+    toast('取色完成', 'ok');
+    await runBuild(true);
+  } catch (e) {
+    toast(e.message, 'err');
+  } finally {
+    busy(false);
+  }
+};
+
+$('#btnPublish').onclick = async () => {
+  if (dirty.projects || dirty.site) {
+    return toast('還有沒儲存的變更，先按各頁的「儲存」', 'err');
+  }
+  if (!confirm('要把目前的內容發布到 https://dorislinwork.github.io 嗎？\n\n順序：產生 → 檢查 → commit → push\n任何一步失敗就會停下來，線上的版本不會被動到。')) return;
+  busy(true, '發布中…（產生 → 檢查 → commit → push）');
+  const log = $('#pubLog');
+  try {
+    const r = await api('publish', { message: $('#pubMsg').value.trim() });
+    log.textContent = r.log;
+    $('#pubMsg').value = '';
+    await load();
+    toast('已發布，約一分鐘後生效', 'ok');
+  } catch (e) {
+    log.textContent = e.message;
+    toast('發布失敗，線上版本沒有被動到', 'err');
+  } finally {
+    busy(false);
+  }
+};
+
+/* ============================================================== 分頁 ==== */
+
+function showTab(name) {
+  ['projects', 'new', 'site', 'publish'].forEach((t) => {
+    $('#tab-' + t).hidden = t !== name;
+  });
+  [...$('#tabs').children].forEach((b) => {
+    b.setAttribute('aria-selected', String(b.dataset.tab === name));
+  });
+}
+$('#tabs').addEventListener('click', (e) => {
+  const b = e.target.closest('button[data-tab]');
+  if (b) showTab(b.dataset.tab);
+});
+
+document.addEventListener('keydown', (e) => {
+  if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+    e.preventDefault();
+    if (dirty.projects) $('#btnSaveProjects').click();
+    else if (dirty.site) $('#btnSaveSite').click();
+    else toast('沒有需要儲存的變更');
+  }
+});
+
+/* ============================================================== 起動 ==== */
+
+load().catch((e) => {
+  document.body.innerHTML =
+    '<main><h2>後台載入失敗</h2><pre class="log">' +
+    String(e.message).replace(/[<&]/g, (c) => c === '<' ? '&lt;' : '&amp;') +
+    '</pre><p>後台的視窗還開著嗎？重新啟動：<code>admin.cmd</code></p></main>';
+});
+</script>
+</body>
+</html>

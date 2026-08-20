@@ -166,6 +166,31 @@
     "_hideOnScroll註": "true = 往下捲收起、往上捲出現（參考 Bito 的做法）。false = 單純 sticky，一直留在上面。離開頂部後都會加上白底，避免壓在圖片上看不清楚。"
   },
 
+  "case": {
+    "_說明": "作品內頁版面。2026-08-20 從舊站的「一張圖接一張圖往下堆」改成參考 bito.tv 的內頁：封面圖 + 資訊列剛好填滿第一屏，往下才是滿寬的圖片直排。整段設定都可以關掉回到原本的樣子（fillFirstScreen 設 false）。",
+    "fillFirstScreen": true,
+    "_fillFirstScreen說明": "true = 封面高度由 JS 算成「視窗高 - 資訊列高」，所以捲動前剛好看到封面加上作品名與年份，metadata 正好壓在折線上（這是 Bito 內頁最值得偷的一招）。false = 封面固定用 coverHeight 的高度，不跑 JS。",
+    "coverHeight": "70vh",
+    "coverMinHeight": "45vh",
+    "coverMaxHeight": "92vh",
+    "_coverHeight說明": "coverHeight 是還沒算完（或 JS 沒跑）時的預設高度，也是 fillFirstScreen 關掉後的固定高度。算出來的值會被夾在 coverMinHeight 與 coverMaxHeight 之間 —— 沒有下限的話，敘述特別長的那幾件會把封面壓成一條細線。",
+    "coverFromThumb": true,
+    "_coverFromThumb說明": "true = 用首頁那張縮圖當封面（每件作品都有，包含 18 件只有 Vimeo 沒有圖片的），而且縮圖是 GIF 的會用轉好的 MP4 自動循環播放。想指定別的圖就在 projects.json 那一筆加 \"cover\": { \"file\": \"…\" }，格式跟 thumb 一樣。false = 不放封面，直接從資訊列開始。",
+    "dedupeCover": true,
+    "_dedupeCover說明": "true = 封面用的檔案如果同時是內文第一張圖就把內文那張略過，不然同一張圖會連著出現兩次（50 件裡有 22 件是這種情況）。",
+    "blurbLines": 4,
+    "_blurbLines說明": "資訊列裡的敘述文字最多顯示幾行，超過就收起來並出現展開按鈕（對應 Bito 的 .more-slide）。敘述放在資訊列會直接影響封面高度，所以這個值不要調太大。設 0 就是不收、全部展開。",
+    "labels": {
+      "type": "Type",
+      "year": "Year",
+      "client": "Client",
+      "tags": "Tags",
+      "more": "More",
+      "less": "Less"
+    },
+    "_labels說明": "資訊列右半邊欄位的標題，還有敘述展開／收起那顆按鈕的字。Bito 是 Client／Sectors／Year／Services 四格；這裡通常只有類型（projects.json 的 role，例如 Personal work）與年份兩格，client 與 tags 那兩筆有填才會出現。想改成中文就填「類型」「年份」「展開」「收起」。"
+  },
+
   "grid": {
     "_說明": "首頁縮圖網格。2026-08-20 改成參考 bito.tv 的版型：12 欄、每件作品佔 4 欄，也就是一行三格。原站是 10 欄小方格（Cargo 的 grid-col=\"x10\"）。",
     "columns": 12,

@@ -34,11 +34,12 @@
      --dry                     只顯示會做什麼，不實際寫入
    ========================================================================== */
 
-import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync, statSync } from 'node:fs';
-import { join, dirname, extname, basename } from 'node:path';
+import { readFileSync, writeFileSync, existsSync, statSync } from 'node:fs';
+import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { execFileSync } from 'node:child_process';
 import { requireFfmpeg, probeSize } from './lib-ffmpeg.mjs';
+import { convertOne, listSources, outputNames, ffmpegError, WIDTH as DEFAULT_WIDTH } from './lib-media.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 
@@ -72,9 +73,7 @@ for (let i = 1; i < argv.length; i++) {
 }
 
 const DRY = !!flags.dry;
-const WIDTH = Number(flags.width) || 1600;
-const QUALITY = 82;
-const CRF = 26;
+const WIDTH = Number(flags.width) || DEFAULT_WIDTH;
 
 if (!/^[A-Za-z0-9][A-Za-z0-9._-]*$/.test(slug)) {
   console.error(`slug「${slug}」含有不適合放進網址的字元。`);
@@ -93,15 +92,8 @@ if (!existsSync(inbox)) {
   process.exit(1);
 }
 
-const IMAGE_EXT = /\.(png|jpe?g|webp|tiff?|bmp)$/i;
-const GIF_EXT = /\.gif$/i;
-const VIDEO_EXT = /\.(mp4|webm|mov|m4v)$/i;
-
-const files = readdirSync(inbox)
-  .filter((f) => !f.startsWith('.') && statSync(join(inbox, f)).isFile())
-  .filter((f) => IMAGE_EXT.test(f) || GIF_EXT.test(f) || VIDEO_EXT.test(f))
-  // localeCompare 加 numeric 才會把 2.png 排在 10.png 前面
-  .sort((a, b) => a.localeCompare(b, undefined, { numeric: true, sensitivity: 'base' }));
+// 依檔名排序（numeric，所以 2.png 在 10.png 前面），順序就是頁面上的順序
+const files = listSources(inbox);
 
 if (!files.length) {
   console.error(`${join('incoming', slug)} 裡沒有可用的圖片或影片。`);
@@ -121,67 +113,35 @@ let inBytes = 0, outBytes = 0;
 
 for (const file of files) {
   const src = join(inbox, file);
-  const stem = basename(file, extname(file));
-  const isGif = GIF_EXT.test(file);
-  const isVid = VIDEO_EXT.test(file);
-  const size = probeSize(ffprobe, src) || {};
-
-  // GIF 與影片 → MP4（+ WebP poster）；靜態圖 → WebP
-  const outName = (isGif || isVid) ? `${stem}.mp4` : `${stem}.webp`;
-  const dest = join(outDir, outName);
-  const poster = (isGif || isVid) ? join(outDir, `${stem}.webp`) : null;
-
-  const srcSize = statSync(src).size;
-  inBytes += srcSize;
 
   if (DRY) {
-    console.log(`  ${file}  ${size.w || '?'}x${size.h || '?'}  →  ${outName}${poster ? ' + poster' : ''}`);
+    const size = probeSize(ffprobe, src) || {};
+    const { main, poster } = outputNames(file);
+    inBytes += statSync(src).size;
+    console.log(`  ${file}  ${size.w || '?'}x${size.h || '?'}  →  ${main}${poster ? ' + poster' : ''}`);
     media.push({ file, w: size.w || null, h: size.h || null });
     continue;
   }
 
-  mkdirSync(outDir, { recursive: true });
-
+  let r;
   try {
-    if (isGif || isVid) {
-      execFileSync(ffmpeg, [
-        '-y', '-loglevel', 'error', '-i', src,
-        '-vf', `scale='min(${WIDTH},iw)':-2:flags=lanczos`,
-        '-c:v', 'libx264', '-crf', String(CRF), '-preset', 'slow',
-        '-pix_fmt', 'yuv420p', '-movflags', '+faststart', '-an',
-        dest,
-      ], { stdio: ['ignore', 'ignore', 'pipe'] });
-
-      execFileSync(ffmpeg, [
-        '-y', '-loglevel', 'error', '-i', src,
-        '-frames:v', '1',
-        '-vf', `scale='min(${WIDTH},iw)':-2:flags=lanczos`,
-        '-quality', '80', poster,
-      ], { stdio: ['ignore', 'ignore', 'pipe'] });
-    } else {
-      execFileSync(ffmpeg, [
-        '-y', '-loglevel', 'error', '-i', src,
-        '-vf', `scale='min(${WIDTH},iw)':-1:flags=lanczos`,
-        '-quality', String(QUALITY), '-compression_level', '6',
-        dest,
-      ], { stdio: ['ignore', 'ignore', 'pipe'] });
-    }
+    // 轉檔規則與編碼參數都在 lib-media.mjs，後台補圖時走同一份
+    r = convertOne({ ffmpeg, ffprobe, src, outDir, width: WIDTH });
   } catch (e) {
-    const msg = (e.stderr ? e.stderr.toString() : e.message).trim().split('\n').pop();
-    console.error(`  ✗ ${file} 轉檔失敗：${msg.slice(0, 120)}`);
+    console.error(`  ✗ ${file} 轉檔失敗：${ffmpegError(e).slice(0, 120)}`);
     process.exit(1);
   }
 
-  const written = statSync(dest).size + (poster && existsSync(poster) ? statSync(poster).size : 0);
-  outBytes += written;
+  inBytes += r.inBytes;
+  outBytes += r.outBytes;
 
   // 存進 projects.json 的是「原始檔名」，build 會自己換成 .webp / .mp4
-  media.push({ file, w: size.w || null, h: size.h || null });
+  media.push({ file: r.file, w: r.w, h: r.h });
 
-  const pct = srcSize ? ((1 - written / srcSize) * 100).toFixed(0) : '0';
+  const pct = r.inBytes ? ((1 - r.outBytes / r.inBytes) * 100).toFixed(0) : '0';
   console.log(
-    `  ✓ ${file.padEnd(34)} ${String(size.w || '?').padStart(5)}x${String(size.h || '?').padEnd(6)}` +
-    ` ${(srcSize / 1024).toFixed(0)} KB → ${(written / 1024).toFixed(0)} KB (省 ${pct}%)`
+    `  ✓ ${file.padEnd(34)} ${String(r.w || '?').padStart(5)}x${String(r.h || '?').padEnd(6)}` +
+    ` ${(r.inBytes / 1024).toFixed(0)} KB → ${(r.outBytes / 1024).toFixed(0)} KB (省 ${pct}%)`
   );
 }
 

@@ -25,7 +25,7 @@
       "title": "Grandma’s kitchen",
       "year": "2026",
       "role": "Personal work",
-      "client": "Back to Taiwanese grandma’s kitchen 🧑‍🍳 以前專案的槍稿，把它好好撿起來改製(´･･`) 當時做得很開心！參考各種阿媽家的用具🫯 私心一定要做秋海棠玻璃更像阿媽家😆 阿媽家必備： 大同電鍋、金蘭醬油、台灣米酒、逼逼叫煮水壺、茄芷袋！ I had so much fun making this! I drew inspiration from all the vintage items you’d find at Grandma's house.",
+      "client": "",
       "tags": [],
       "summary": "",
       "_summary註": "summary 只用於 <meta description>，不會顯示在頁面上",
@@ -36,6 +36,10 @@
         "h": 813
       },
       "blocks": [
+        {
+          "type": "text",
+          "text": "Back to Taiwanese grandma’s kitchen 🧑‍🍳 以前專案的槍稿，把它好好撿起來改製(´･･`) 當時做得很開心！參考各種阿媽家的用具🫯 私心一定要做秋海棠玻璃更像阿媽家😆 阿媽家必備： 大同電鍋、金蘭醬油、台灣米酒、逼逼叫煮水壺、茄芷袋！ I had so much fun making this! I drew inspiration from all the vintage items you’d find at Grandma's house."
+        },
         {
           "type": "media",
           "hash": "2ac5f256447c2c6818bdf6b64756f1aad5768b1ef16b28910004ba8219808ab9",
@@ -56,7 +60,7 @@
       "title": "Grandma’s kitchen",
       "year": "2026",
       "role": "Personal work",
-      "client": "Back to Taiwanese grandma’s kitchen 🧑‍🍳 以前專案的槍稿，把它好好撿起來改製(´･･`) 當時做得很開心！參考各種阿媽家的用具🫯 私心一定要做秋海棠玻璃更像阿媽家😆 阿媽家必備： 大同電鍋、金蘭醬油、台灣米酒、逼逼叫煮水壺、茄芷袋！ I had so much fun making this! I drew inspiration from all the vintage items you’d find at Grandma's house.",
+      "client": "",
       "tags": [],
       "summary": "",
       "_summary註": "summary 只用於 <meta description>，不會顯示在頁面上",
@@ -67,6 +71,10 @@
         "h": 813
       },
       "blocks": [
+        {
+          "type": "text",
+          "text": "Back to Taiwanese grandma’s kitchen 🧑‍🍳 以前專案的槍稿，把它好好撿起來改製(´･･`) 當時做得很開心！參考各種阿媽家的用具🫯 私心一定要做秋海棠玻璃更像阿媽家😆 阿媽家必備： 大同電鍋、金蘭醬油、台灣米酒、逼逼叫煮水壺、茄芷袋！ I had so much fun making this! I drew inspiration from all the vintage items you’d find at Grandma's house."
+        },
         {
           "type": "media",
           "hash": "2ac5f256447c2c6818bdf6b64756f1aad5768b1ef16b28910004ba8219808ab9",
@@ -1180,7 +1188,7 @@
       "title": "Toast baby | pottery",
       "year": "2023",
       "role": "Personal work",
-      "client": "My first pottery creation is complete! It‘s my Toast Baby!",
+      "client": "",
       "tags": [],
       "summary": "Although there are some uneven colors and a few details didn’t turn out perfectly, I still really love it!",
       "_summary註": "summary 只用於 <meta description>，不會顯示在頁面上",
@@ -1191,6 +1199,10 @@
         "h": 1200
       },
       "blocks": [
+        {
+          "type": "text",
+          "text": "My first pottery creation is complete! It‘s my Toast Baby!"
+        },
         {
           "type": "text",
           "text": "Although there are some uneven colors and a few details didn’t turn out perfectly, I still really love it!"
@@ -1247,7 +1259,7 @@
       "title": "Magical pumpkin soup 🥣🎃🧟‍♂️🔮🧪",
       "year": "2023",
       "role": "Personal work",
-      "client": "How about a bowl of soup on a cool autumn night? 🧙🧪🧟‍♂️",
+      "client": "",
       "tags": [],
       "summary": "",
       "_summary註": "summary 只用於 <meta description>，不會顯示在頁面上",
@@ -1258,6 +1270,10 @@
         "h": 800
       },
       "blocks": [
+        {
+          "type": "text",
+          "text": "How about a bowl of soup on a cool autumn night? 🧙🧪🧟‍♂️"
+        },
         {
           "type": "media",
           "hash": "b08420dbf7e7d7dd4fe5ede26d3f607765b1a0d34a8a52f850264d783c62c066",
@@ -1486,7 +1502,7 @@
       "title": "Toast Baby | Take a Bread series",
       "year": "2023",
       "role": "Personal work",
-      "client": "This is a series of creative works about Toastie Baby and his good friends, all created during leisure time. I hope to take a break with everyone and enjoy eating bread together! Let’s take a Bread!🥐️ @takeabread_doris",
+      "client": "",
       "tags": [],
       "summary": "",
       "_summary註": "summary 只用於 <meta description>，不會顯示在頁面上",
@@ -1497,6 +1513,10 @@
         "h": 800
       },
       "blocks": [
+        {
+          "type": "text",
+          "text": "This is a series of creative works about Toastie Baby and his good friends, all created during leisure time. I hope to take a break with everyone and enjoy eating bread together! Let’s take a Bread!🥐️ @takeabread_doris"
+        },
         {
           "type": "media",
           "hash": "e27b5d71e9fbde4f3591bb885c1438c7309a874baf5da1949dc04ca168fc9337",
@@ -1515,7 +1535,7 @@
       "title": "The year of the Rabbit",
       "year": "2023",
       "role": "Personal work",
-      "client": "In Chinese culture, oranges represent auspiciousness. This year is the Year of the Rabbit, and I want to use the most comfortable appearance of the rabbit to convey the hope that everyone can be as free as the rabbit this year.",
+      "client": "",
       "tags": [],
       "summary": "",
       "_summary註": "summary 只用於 <meta description>，不會顯示在頁面上",
@@ -1526,6 +1546,10 @@
         "h": 800
       },
       "blocks": [
+        {
+          "type": "text",
+          "text": "In Chinese culture, oranges represent auspiciousness. This year is the Year of the Rabbit, and I want to use the most comfortable appearance of the rabbit to convey the hope that everyone can be as free as the rabbit this year."
+        },
         {
           "type": "media",
           "hash": "f034bd6beb05f48a61f595c22eb338610658062076b2265d71766aedbb48613b",
@@ -1544,7 +1568,7 @@
       "title": "Little Jam | Take a Bread series",
       "year": "2023",
       "role": "Personal work",
-      "client": "Little Jam is Toast Baby's best friend! He's usually orange-flavored, but he turns into strawberry flavor when he's happy. This is a series of creative works about Toastie Baby and his good friends, all created during leisure time. I hope to take a break with everyone and enjoy eating bread together! Let’s take a Bread!🥐️ @takeabread_doris",
+      "client": "",
       "tags": [],
       "summary": "",
       "_summary註": "summary 只用於 <meta description>，不會顯示在頁面上",
@@ -1555,6 +1579,10 @@
         "h": 800
       },
       "blocks": [
+        {
+          "type": "text",
+          "text": "Little Jam is Toast Baby's best friend! He's usually orange-flavored, but he turns into strawberry flavor when he's happy. This is a series of creative works about Toastie Baby and his good friends, all created during leisure time. I hope to take a break with everyone and enjoy eating bread together! Let’s take a Bread!🥐️ @takeabread_doris"
+        },
         {
           "type": "media",
           "hash": "f46abb00f3f6def1ebd15d59f28ac9a1d119132de246f58a16a14151f5200c02",

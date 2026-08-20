@@ -6,7 +6,11 @@ const ROOT = process.argv[2];
 const problems = [];
 const seenIds = new Map();
 
-const SKIP_DIRS = new Set(['_archive-v1', 'dev', 'node_modules', '.git', 'src', 'content']);
+/* tools 與 incoming 不是網站頁面，不該套用這裡的規則。
+   （tools/admin-ui.html 是後台介面，沒有 h1 也不需要有。） */
+const SKIP_DIRS = new Set([
+  '_archive-v1', 'dev', 'node_modules', '.git', 'src', 'content', 'tools', 'incoming',
+]);
 
 function walk(dir) {
   const out = [];

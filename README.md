@@ -6,7 +6,30 @@
 
 ---
 
-## 新增一個作品：三步
+## 最簡單的用法：開後台
+
+在檔案總管裡雙擊 **`admin.cmd`**（或在這個資料夾執行 `admin.cmd`）。瀏覽器會自己打開，然後就都用滑鼠操作，不用碰命令列也不用手寫 JSON：
+
+| 分頁 | 能做什麼 |
+| --- | --- |
+| **作品** | 調順序、改標題／年份／敘述／圖說、換首頁縮圖、改卡片顏色、設成草稿、補圖、移除 |
+| **新增作品** | 把檔案拖進來、填標題就建立。轉檔（GIF → MP4、圖片 → WebP）與取卡片顏色都自動 |
+| **版面設定** | `content/site.json` 的每個欄位都變成表單，欄位下面的灰字就是 json 裡自己的 `_說明` |
+| **發布** | 產生 → 檢查 → commit → push，跟 `publish.cmd` 同一套 |
+
+要關掉後台：在那個黑色視窗按 **Ctrl+C**。
+
+三件值得知道的事：
+
+- 後台**只有這台電腦連得到**（綁在 127.0.0.1）。它可以改檔案還能 push，所以刻意不讓同一個 wifi 上的人連進來。手機上改不了。
+- 改完按「儲存」才會寫進 `content/*.json`。改壞了按「放棄變更」，已經存了就用 `git checkout content/`。
+- 後台不是另一套邏輯，它就是下面那些指令的介面 —— 兩邊改的是同一份 `content/*.json`，混著用沒問題。
+
+連接埠被占用（多半是已經開過一個沒關）就指定別的：`node tools/admin.mjs 4322`
+
+---
+
+## 用指令新增一個作品：三步
 
 ```bash
 # 1. 把圖丟進 incoming\My-New-Work\
@@ -24,6 +47,7 @@ publish.cmd "新增作品 My New Work"
 ## 其他常用指令
 
 ```bash
+admin.cmd                         開後台（推薦，什麼都能做）
 node tools/serve.mjs . 8080        本機預覽（開 http://localhost:8080）
 node build.mjs                    只重新產生網站，不上線
 node tools/check.mjs .            檢查連結與標記
@@ -58,9 +82,12 @@ publish.cmd "訊息"                產生 + 檢查 + commit + push
 ├── assets/media/          圖片與動畫（14 MB）
 │
 ├── incoming/              新作品的原始檔放這裡（不進 repo）
+├── admin.cmd              開後台
 ├── publish.cmd            產生 + 檢查 + commit + push
 │
 ├── tools/
+│   ├── admin.mjs                    後台：伺服器與 API
+│   ├── admin-ui.html                後台：介面（只有後台在跑時才有用）
 │   ├── add-project.mjs              新增／更新作品（自動轉檔）
 │   ├── remove-project.mjs           移除作品
 │   ├── check.mjs                    檢查連結、圖片屬性、標題結構
@@ -68,7 +95,12 @@ publish.cmd "訊息"                產生 + 檢查 + commit + push
 │   ├── serve.mjs                    本機預覽伺服器
 │   ├── convert-gifs.mjs             動畫 GIF → MP4（需要 ffmpeg）
 │   ├── import-cargo-export.mjs      匯出資料 → projects.json
-│   └── export-cargo-v4.browser.js   貼進瀏覽器 Console 用的匯出腳本
+│   ├── export-cargo-v4.browser.js   貼進瀏覽器 Console 用的匯出腳本
+│   │
+│   ├── lib-media.mjs                轉檔規則與編碼參數（add-project 與後台共用）
+│   ├── lib-json.mjs                 讀寫 content/*.json 而不破壞排版（見下）
+│   ├── lib-mime.mjs                 副檔名 → Content-Type（serve 與後台共用）
+│   └── lib-ffmpeg.mjs               找 ffmpeg／ffprobe
 │
 ├── dev/effects-test.html  效果測試頁（改動畫後用這頁確認）
 │
@@ -77,6 +109,22 @@ publish.cmd "訊息"                產生 + 檢查 + commit + push
     work/*.html  sitemap.xml  robots.txt
     assets/css/  assets/js/
 ```
+
+### 寫 content/*.json 一定要走 lib-json.mjs
+
+`site.json` 是**手排的** —— 區塊之間有空行、`nav` 那種短物件寫成一行，而且到處都是 `_說明`。直接用 `JSON.stringify(obj, null, 2)` 存回去會把排版整份沖成機器格式，那個檔案就再也不能靠手改，git 記錄也會被沒意義的重排洗掉。
+
+`projects.json` 相反，它一直都是機器產生的（縮排 2、沒有空行），`JSON.stringify` 剛好一字不差。
+
+所以：
+
+```js
+import { writeJson, writeSiteJson } from './lib-json.mjs';
+writeJson(PROJECTS, data);      // projects.json：機器格式
+writeSiteJson(SITE, data);      // site.json：照原本的手排風格
+```
+
+兩個都會沿用檔案原本的行尾，而且都是「先寫暫存檔 → parse 驗證 → 才換掉本尊」，寫壞了本尊還是完好的。
 
 ---
 

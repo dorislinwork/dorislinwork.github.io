@@ -107,6 +107,7 @@ function themeVars(base) {
   const c = site.cursors || {};
 
   const ty = site.type || {};
+  const cs = site.case || {};
 
   const lines = [
     `--bg: ${t.bg || '#fff'};`,
@@ -143,6 +144,12 @@ function themeVars(base) {
     `--max: ${g.maxWidth || '160rem'};`,
     `--logo-width: ${(site.logo || {}).displayWidth || '398px'};`,
     `--pad: ${g.pad || '4rem'};`,
+    // 作品內頁的封面。--cover-h 是 fallback，JS 算完會在 .case-cover 上覆寫成
+    // 「視窗高 - 資訊列高」。min/max 是那個計算值的夾制範圍。
+    `--cover-h: ${cs.coverHeight || '70vh'};`,
+    `--cover-h-min: ${cs.coverMinHeight || '45vh'};`,
+    `--cover-h-max: ${cs.coverMaxHeight || '92vh'};`,
+    `--blurb-lines: ${cs.blurbLines ?? 4};`,
   ];
 
   /* 自訂游標：一般狀態粉紅圓點，可點擊的東西變灰。
@@ -549,42 +556,112 @@ ${thumbs}
 
 /* -------------------------------------------------------- 作品內頁 ---- */
 
+/** 封面媒體。跟內文的媒體差在兩點：不 lazy load（在第一屏），而且會被裁切填滿。 */
+function renderCover(m, slug, base) {
+  const src = mediaUrl(m, slug, MEDIA.fullWidth || 1600, base);
+  const dim = `${m.w ? ` width="${esc(m.w)}"` : ''}${m.h ? ` height="${esc(m.h)}"` : ''}`;
+  if (isVideo(m)) {
+    const poster = posterUrl(m, slug, base);
+    return `<video src="${esc(src)}"${dim} autoplay muted loop playsinline`
+      + `${poster ? ` poster="${esc(poster)}"` : ''} preload="auto"></video>`;
+  }
+  return `<img src="${esc(src)}"${dim} alt="" fetchpriority="high" decoding="async">`;
+}
+
 function renderProject(p, prev, next) {
   const base = '../';
+  const cs = site.case || {};
+  const L = cs.labels || {};
 
-  // blocks 為主；舊格式的 media/text 也還支援
-  const blocks = (p.blocks && p.blocks.length)
+  // blocks 為主；舊格式的 media/text 也還支援。
+  // 下面會從頭部拿掉幾個區塊，所以複製一份再動。
+  const blocks = ((p.blocks && p.blocks.length)
     ? p.blocks
     : [
       ...(p.media || []).map((m) => ({ type: 'media', ...m })),
       ...(p.text || []).map((t) => ({ type: 'text', text: t })),
-    ];
+    ]).slice();
 
-  const rendered = blocks
+  /* 封面預設就用首頁那張縮圖 —— 每件作品都有（包含只嵌 Vimeo、沒有圖片區塊的
+     那 18 件），而且 GIF 縮圖已經轉成 MP4，會自動循環播放，跟 Bito 首頁一樣是動的。
+     想指定別的圖就在 projects.json 那一筆加 "cover"，格式跟 thumb 相同。 */
+  const cover = p.cover || (cs.coverFromThumb === false ? null : p.thumb);
+
+  /* 前導敘述搬進資訊列（Bito 的 .info 就是標題加一段敘述）。
+     只吃最前面連續的 text 區塊 —— 碰到圖片、影片或小標就停，
+     因為那些是內文的一部分，不是作品簡介。 */
+  const blurb = [];
+  while (blocks.length && blocks[0].type === 'text') blurb.push(blocks.shift().text);
+
+  /* 封面用的檔案如果同時是內文第一張圖，就把內文那張拿掉，不然同一張圖會連著
+     出現兩次（50 件裡有 22 件是這種情況）。找的是第一個 media 而不是第一個區塊，
+     因為有些頁面是小標開頭。 */
+  if (cover && cover.file && cs.dedupeCover !== false) {
+    const i = blocks.findIndex((b) => b.type === 'media');
+    if (i !== -1 && blocks[i].file === cover.file) blocks.splice(i, 1);
+  }
+
+  const gallery = blocks
     .map((b, i) => renderBlock(b, i, p.slug, base))
     .filter(Boolean)
     .join('\n');
 
-  const metaBits = [];
-  if (p.role) metaBits.push(esc(p.role));
-  if (p.year) metaBits.push(esc(p.year));
-  if (p.client) metaBits.push(esc(p.client));
-  (p.tags || []).forEach((t) => metaBits.push(esc(t)));
+  // 資訊列右半邊。Bito 是 Client／Sectors／Year／Services 四格，這裡的資料
+  // 通常只有類型與年份兩格；client 與 tags 有填才會出現。
+  const facts = [];
+  if (p.role) facts.push([L.type || 'Type', p.role]);
+  if (p.year) facts.push([L.year || 'Year', p.year]);
+  if (p.client) facts.push([L.client || 'Client', p.client]);
+  if ((p.tags || []).length) facts.push([L.tags || 'Tags', p.tags.join(', ')]);
 
-  const body = `  <article class="case">
-    <header class="case-head" data-stagger-scope>
-      <h1 class="display-l">${esc(p.title)}</h1>
-${metaBits.length ? `      <p class="case-meta caption">${metaBits.join(' | ')}</p>\n` : ''}    </header>
+  // blurbLines 設 0 就不收合，連按鈕都不產生
+  const clamp = Number(cs.blurbLines ?? 4) > 0;
 
-    <div class="case-body">
-${rendered || '      <!-- 這一頁還沒有內容 -->'}
-    </div>
+  const out = ['  <article class="case">'];
 
-    <nav class="case-nav" aria-label="More work">
-      <a href="${base}index.html">← All work</a>
-      ${next ? `<a href="${esc(next.slug)}.html">${esc(next.title)} →</a>` : ''}
-    </nav>
-  </article>`;
+  if (cover) {
+    // data-fill 給 site.js 看：要不要把高度算成「視窗高 - 資訊列高」
+    out.push(`    <div class="case-cover" data-fill="${cs.fillFirstScreen === false ? 'false' : 'true'}">`);
+    out.push('      ' + renderCover(cover, p.slug, base));
+    out.push('    </div>');
+  }
+
+  out.push('    <div class="case-info" data-stagger-scope>');
+  out.push('      <div class="case-name">');
+  out.push(`        <h1 class="case-title">${esc(p.title)}</h1>`);
+  if (blurb.length) {
+    out.push(`        <div class="case-blurb"${clamp ? ' data-clamp' : ''}>`);
+    blurb.forEach((t) => out.push(`          <p>${esc(t)}</p>`));
+    out.push('        </div>');
+    if (clamp) {
+      out.push('        <button class="case-more" type="button" hidden'
+        + ` data-more="${esc(L.more || 'More')}" data-less="${esc(L.less || 'Less')}">${esc(L.more || 'More')}</button>`);
+    }
+  }
+  out.push('      </div>');
+
+  if (facts.length) {
+    out.push('      <dl class="case-facts">');
+    facts.forEach(([k, v]) => out.push(
+      `        <div class="case-fact"><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`,
+    ));
+    out.push('      </dl>');
+  }
+  out.push('    </div>');
+
+  if (gallery) {
+    out.push('    <div class="case-gallery">');
+    out.push(gallery);
+    out.push('    </div>');
+  }
+
+  out.push('    <nav class="case-nav" aria-label="More work">');
+  out.push(`      <a href="${base}index.html">← All work</a>`);
+  if (next) out.push(`      <a href="${esc(next.slug)}.html">${esc(next.title)} →</a>`);
+  out.push('    </nav>');
+  out.push('  </article>');
+
+  const body = out.join('\n');
 
   return layout({
     title: `${p.title} — ${site.name}`,

@@ -19,7 +19,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,400&family=Noto+Sans+TC:wght@400;500;700&display=swap">
 <link rel="stylesheet" href="https://use.typekit.net/kln0qcj.css">
 
-<style>:root{--bg: #ffffff;--ink: rgba(0, 0, 0, 0.75);--ink-strong: rgba(0, 0, 0, 1);--accent: #f02;--accent-hover: #ff5b90;--accent-active: #252525;--link: #252525;--nav-current: #252525;--nav-current-weight: 700;--caption-color: rgba(0, 0, 0, 0.30);--caption-size: 1.4rem;--font-display: "DM Sans", "Noto Sans TC", -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft JhengHei", sans-serif;--font-body: "DM Sans", "Noto Sans TC", -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft JhengHei", sans-serif;--font-caption: mundial, "Noto Sans TC", "Microsoft JhengHei", sans-serif;--hero-size: clamp(2.6rem, 4.5vw, 5.2rem);--title-size: 2.2rem;--body-size: 1.4rem;--body-lh: 1.2;--heading-weight: 700;--grid-cols: 12;--span: 4;--span-t: 6;--span-m: 12;--grid-gutter: 2.4rem;--card-ratio: 631 / 348;--card-ratio-num: 1.8132;--max: 160rem;--logo-width: 398px;--pad: 4rem;--cursor-default: url("../assets/img/cursor-default.png") 16 16, auto;--cursor-link: url("../assets/img/cursor-link.png") 16 16, pointer;}</style>
+<style>:root{--bg: #ffffff;--ink: rgba(0, 0, 0, 0.75);--ink-strong: rgba(0, 0, 0, 1);--accent: #f02;--accent-hover: #ff5b90;--accent-active: #252525;--link: #252525;--nav-current: #252525;--nav-current-weight: 700;--caption-color: rgba(0, 0, 0, 0.30);--caption-size: 1.4rem;--font-display: "DM Sans", "Noto Sans TC", -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft JhengHei", sans-serif;--font-body: "DM Sans", "Noto Sans TC", -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft JhengHei", sans-serif;--font-caption: mundial, "Noto Sans TC", "Microsoft JhengHei", sans-serif;--hero-size: clamp(2.6rem, 4.5vw, 5.2rem);--title-size: 2.2rem;--body-size: 1.4rem;--body-lh: 1.2;--heading-weight: 700;--grid-cols: 12;--span: 4;--span-t: 6;--span-m: 12;--grid-gutter: 2.4rem;--card-ratio: 631 / 348;--card-ratio-num: 1.8132;--max: 160rem;--logo-width: 398px;--pad: 4rem;--cover-h: 70vh;--cover-h-min: 45vh;--cover-h-max: 92vh;--blurb-lines: 4;--cursor-default: url("../assets/img/cursor-default.png") 16 16, auto;--cursor-link: url("../assets/img/cursor-link.png") 16 16, pointer;}</style>
 <link rel="stylesheet" href="../assets/css/site.css">
 <link rel="stylesheet" href="../assets/css/effects.css">
 </head>
@@ -41,21 +41,30 @@
 
 <main id="main">
   <article class="case">
-    <header class="case-head" data-stagger-scope>
-      <h1 class="display-l">The Daruma doll at Katsuo-Ji Temple</h1>
-      <p class="case-meta caption">Personal work | 2023</p>
-    </header>
-
-    <div class="case-body">
-      <p>Last month, I traveled to Osaka and visited Katsuo-ji Temple, which was one of my favorite spots throughout the trip. The temple was filled with adorable Daruma dolls.</p>
-      <p>Later, I looked up information about Daruma and was amazed to learn that the dolls represent a legendary monk who meditated facing a wall for nine years, causing his arms and legs to atrophy, resulting in the unique shape we see today. Knowing this, I couldn‘t resist creating an animated Daruma doll secretly stretching its limbs when no one was watching.</p>
+    <div class="case-cover" data-fill="true">
+      <video src="../assets/media/The-Daruma-doll-at-Katsuo-Ji-Temple/__final_3_AdobeExpress.mp4" width="500" height="500" autoplay muted loop playsinline poster="../assets/media/The-Daruma-doll-at-Katsuo-Ji-Temple/__final_3_AdobeExpress.webp" preload="auto"></video>
+    </div>
+    <div class="case-info" data-stagger-scope>
+      <div class="case-name">
+        <h1 class="case-title">The Daruma doll at Katsuo-Ji Temple</h1>
+        <div class="case-blurb" data-clamp>
+          <p>Last month, I traveled to Osaka and visited Katsuo-ji Temple, which was one of my favorite spots throughout the trip. The temple was filled with adorable Daruma dolls.</p>
+          <p>Later, I looked up information about Daruma and was amazed to learn that the dolls represent a legendary monk who meditated facing a wall for nine years, causing his arms and legs to atrophy, resulting in the unique shape we see today. Knowing this, I couldn‘t resist creating an animated Daruma doll secretly stretching its limbs when no one was watching.</p>
+        </div>
+        <button class="case-more" type="button" hidden data-more="More" data-less="Less">More</button>
+      </div>
+      <dl class="case-facts">
+        <div class="case-fact"><dt>Type</dt><dd>Personal work</dd></div>
+        <div class="case-fact"><dt>Year</dt><dd>2023</dd></div>
+      </dl>
+    </div>
+    <div class="case-gallery">
       <div class="embed">
         <iframe src="https://player.vimeo.com/video/850017375?badge=0&autopause=0&player_id=0&app_id=58479&title=0&byline=0&portrait=0&dnt=1"
           title="Vimeo video" loading="lazy"
           allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
       </div>
     </div>
-
     <nav class="case-nav" aria-label="More work">
       <a href="../index.html">← All work</a>
       <a href="Traditional-Taiwanese-Bathroom.html">Traditional Taiwanese Bathroom →</a>

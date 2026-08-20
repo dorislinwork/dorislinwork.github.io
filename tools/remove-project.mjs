@@ -85,7 +85,8 @@ if (DRY) {
 
 /* 動手刪 */
 data.projects.splice(idx, 1);
-writeFileSync(jsonPath, JSON.stringify(data, null, 2), 'utf8');
+// 結尾換行要跟 add-project.mjs 一致，否則每次移除都多一筆假 diff
+writeFileSync(jsonPath, JSON.stringify(data, null, 2) + '\n', 'utf8');
 try {
   JSON.parse(readFileSync(jsonPath, 'utf8'));
 } catch (e) {
