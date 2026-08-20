@@ -39,9 +39,10 @@
 
   "social": [
     { "label": "Behance", "href": "https://www.behance.net/yihsuanlin3257" },
-    { "label": "Vimeo", "href": "https://vimeo.com/dorislin1226" }
+    { "label": "Vimeo", "href": "https://vimeo.com/dorislin1226" },
+    { "label": "Instagram", "href": "https://www.instagram.com/ouuch.aep/" }
   ],
-  "_social註": "原站的實際社群連結還沒抓到（在 JS 注入的區塊裡），這兩個是從搜尋結果找到的。要加 Instagram 之類的自己補一行。",
+  "_social註": "這一份同時餵兩個地方：每一頁的頁尾，以及 Information 頁的聯絡區塊。要加平台就在後台的「版面設定」按「＋ 新增一項」，或直接在這裡補一行，兩邊會一起更新。不想讓頁尾出現這一組就把 footer.showSocial 設成 false。",
 
   "information": {
     "_說明": "以下文字原樣取自你原站的 /Information 頁，沒有改動。",
@@ -118,20 +119,22 @@
     "_accentHover註": "舊站 bodycopy a:hover 是 rgba(255,91,144,1)。所有連結滑過都變這個粉紅，這是唯一的彩色。",
     "accentActive": "#252525",
     "navCurrent": "#252525",
-    "navCurrentWeight": "700",
-    "_navCurrent註": "導覽列上「目前所在頁」用深灰加粗體，比換顏色更明顯。想更深改 #1a1a1a、淺一點改 #4a4a4a。",
+    "navCurrentWeight": "600",
+    "_navCurrent註": "導覽列上「目前所在頁」用深灰加粗一級，比換顏色更明顯。想更深改 #1a1a1a、淺一點改 #4a4a4a。這個值要跟 type.headingWeight 一致（現在都是 600）—— 比標題重的話會變成全站最重的字，看起來像壞掉；跟正文一樣重就看不出哪一頁是現在這頁。",
     "caption": "rgba(0, 0, 0, 0.30)",
     "captionSize": "1.4rem",
     "darkMode": false
   },
 
   "type": {
-    "_說明": "字級。舊站是固定值（h1 2.2rem、正文 1.4rem，rem 基準 10px）。首頁大標在舊站是用 Cargo 的 local-style 個別放大的，抓不到確切數字，所以拉出來讓你自己調。",
+    "_說明": "字級與字重。舊站是固定值（h1 2.2rem、正文 1.4rem，rem 基準 10px）。首頁大標在舊站是用 Cargo 的 local-style 個別放大的，抓不到確切數字，所以拉出來讓你自己調。",
     "heroSize": "clamp(2.6rem, 4.5vw, 5.2rem)",
     "titleSize": "2.2rem",
     "bodySize": "1.4rem",
     "bodyLineHeight": "1.2",
-    "headingWeight": "700"
+    "bodyWeight": "400",
+    "headingWeight": "600",
+    "_字重註": "2026-08-20 的歷程：原本是「標題 700／正文 400」，先參考 buck.co 改成「標題 500／正文 300」，實際看過覺得太細，再各加 100 變成現在的「標題 600／正文 400」。改這兩個值之後一定要確認 fonts.googleFonts 有載對應的字重 —— 沒載到瀏覽器會自己合成一個假的粗體，看起來會糊掉。build 會幫你檢查並在漏掉時印警告。"
   },
 
   "fonts": {
@@ -139,7 +142,8 @@
     "_Diatype註": "舊站正文用 Diatype，那是 Cargo 提供的 Dinamo 付費字體，授權只限在 Cargo 平台使用，搬站不能帶走。目前用 DM Sans 代替（舊站標題本來就是 DM Sans，所以整體一致）。想換別的告訴我。",
     "_JuliusSansOne註": "舊站載入了 Julius Sans One 但 CSS 裡完全沒套用，所以移除了。",
     "typekitKit": "kln0qcj",
-    "googleFonts": "family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,400&family=Noto+Sans+TC:wght@400;500;700",
+    "googleFonts": "family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,600;1,9..40,400&family=Noto+Sans+TC:wght@400;600",
+    "_googleFonts註": "只載真的用到的兩個字重：400（正文與圖說）、600（標題、導覽目前頁、首頁縮圖標題）。Noto Sans TC 不是可變字體，每個字重都是一整組約 105 個子集檔，所以少載一個字重就少 120KB 的 render-blocking CSS（兩個字重是 210 個檔、三個是 315 個）。改 type 或 theme 裡任何字重之前，先確認這一行有載那個值 —— build 會幫你檢查。",
     "display": "\"DM Sans\", \"Noto Sans TC\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", \"Microsoft JhengHei\", sans-serif",
     "body": "\"DM Sans\", \"Noto Sans TC\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", \"Microsoft JhengHei\", sans-serif",
     "caption": "mundial, \"Noto Sans TC\", \"Microsoft JhengHei\", sans-serif",
@@ -164,6 +168,12 @@
     "_說明": "導覽列行為。舊站的 #tag_menu 是 absolute，會隨頁面捲走消失。",
     "hideOnScroll": true,
     "_hideOnScroll註": "true = 往下捲收起、往上捲出現（參考 Bito 的做法）。false = 單純 sticky，一直留在上面。離開頂部後都會加上白底，避免壓在圖片上看不清楚。"
+  },
+
+  "footer": {
+    "_說明": "頁尾。三欄：左邊版權、中間平台連結、右邊信箱。窄螢幕會自己換行。",
+    "showSocial": true,
+    "_showSocial說明": "true = 頁尾也列出上面 social 那些平台連結（Behance、Vimeo…）。要加平台就改 social 那一段，頁尾與 Information 頁的聯絡區塊讀的是同一份，不會只更新一邊。Information 頁的頁尾刻意不顯示，因為它的聯絡區塊就在正上方，同一組連結不該在幾百像素內出現兩次。"
   },
 
   "case": {

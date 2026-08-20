@@ -25,6 +25,9 @@ body {
   /* 舊站 bodycopy 是 1.4rem / 行高 1.2，這裡沿用。想放大改 site.json 的 type.bodySize */
   font-size: var(--body-size, 1.4rem);
   line-height: var(--body-lh, 1.2);
+  /* 正文字重。在 site.json 的 type.bodyWeight，標題是 type.headingWeight。
+     兩者現在差 200（400 與 600），層次夠明顯又不會太重。 */
+  font-weight: var(--body-weight, 400);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
@@ -363,7 +366,9 @@ h1, h2, h3 {
 
 .thumbnail-name {
   font-size: 1.8rem;
-  font-weight: 500;
+  /* 這是作品標題，所以跟著 --heading-weight 走。
+     寫死數字的話改字重時會漏掉這裡，還可能指到一個沒載入的字重。 */
+  font-weight: var(--heading-weight, 700);
   line-height: 1.2;
 }
 .thumbnail-meta {
@@ -631,6 +636,17 @@ figure { margin: 0; }
 }
 .footer a { color: var(--link, #252525); }
 .footer a:hover { color: var(--accent-hover, #ff5b90); }
+
+/* 平台連結。頁尾是 space-between 的三欄：版權、平台、信箱。
+   Information 頁不顯示這一組（它的聯絡區塊已經有了）。 */
+.footer-social {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.8rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
 
 /* --------------------------------------------------------------------------
    10. 列印

@@ -27,3 +27,7 @@ incoming/*
 # （改 dev/build-bito-proto.mjs 的 PER_ROW 或比例，跑一次就會重新產生）。
 # 不進 repo —— GitHub Pages 會公開 repo 內所有檔案，推上去會變成一個過期的重複首頁。
 dev/index-bito.html
+
+# 字體對照頁。從 Fontshare 的 CDN 載字只是為了在本機比對，不該上線
+# （正式要用哪支字就自己下載自架，不靠別人的 CDN）。
+dev/font-compare.html

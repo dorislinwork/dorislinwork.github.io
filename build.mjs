@@ -129,6 +129,7 @@ function themeVars(base) {
     `--title-size: ${ty.titleSize || '2.2rem'};`,
     `--body-size: ${ty.bodySize || '1.4rem'};`,
     `--body-lh: ${ty.bodyLineHeight || '1.2'};`,
+    `--body-weight: ${ty.bodyWeight || '400'};`,
     `--heading-weight: ${ty.headingWeight || '700'};`,
     // 網格：12 欄，每件作品預設佔 4 欄 = 一行三格。
     // 個別作品可以在 projects.json 用 span / spanTablet / spanMobile 蓋掉。
@@ -220,6 +221,18 @@ function layout(o) {
 
   const mail = site.email || {};
 
+  /* 頁尾的平台連結（Behance、Vimeo…）。跟 Information 頁聯絡區塊讀的是
+     site.json 同一份 social，加一個平台兩邊一起出現，不會漏掉一邊。
+
+     Information 頁自己傳 hideFooterSocial —— 它的聯絡區塊就在頁尾正上方，
+     同一組連結不該在幾百像素內出現兩次。 */
+  const footerSocial = ((site.footer || {}).showSocial === false || o.hideFooterSocial)
+    ? ''
+    : (site.social || [])
+      .filter((s) => s && s.label && s.href && !isNote(s.label))
+      .map((s) => `    <li><a class="wiggle-text" href="${esc(s.href)}" target="_blank" rel="noopener">${esc(s.label)}</a></li>`)
+      .join('\n');
+
   return `<!DOCTYPE html>
 <html lang="${esc(site.lang || 'en')}">
 <head>
@@ -260,7 +273,7 @@ ${o.body}
 
 <footer class="footer">
   <p>© <span id="year">${new Date().getFullYear()}</span> ${esc(site.name)}</p>
-  <p><a class="wiggle-text mailto" data-user="${esc(mail.user)}" data-domain="${esc(mail.domain)}" href="#">${esc(mail.user)}@${esc(mail.domain)}</a></p>
+${footerSocial ? `  <ul class="footer-social">\n${footerSocial}\n  </ul>\n` : ''}  <p><a class="wiggle-text mailto" data-user="${esc(mail.user)}" data-domain="${esc(mail.domain)}" href="#">${esc(mail.user)}@${esc(mail.domain)}</a></p>
 </footer>
 
 <script src="${base}assets/js/effects.js" defer></script>
@@ -724,6 +737,8 @@ ${social}
     body,
     base: '',
     current: 'information.html',
+    // 上面的聯絡區塊已經列了同一組連結，頁尾不要再來一次
+    hideFooterSocial: true,
   });
 }
 
@@ -807,6 +822,26 @@ if (INDEX_STATS) {
 }
 if (empty.length) {
   console.log(`\n⚠ 完全沒有內容的作品（${empty.length}）：${empty.map((p) => p.slug).join(', ')}`);
+}
+
+/* 字重有沒有真的載到。
+   site.json 改了 headingWeight 卻忘記在 googleFonts 加上那個字重的話，
+   瀏覽器會自己合成一個假的粗體（看起來糊、字寬也不對），而且不會有任何錯誤，
+   很難發現。所以在這裡對一下。 */
+{
+  const gf = (site.fonts || {}).googleFonts || '';
+  const loaded = new Set((gf.match(/\d{3}(?=[;&\s]|$)/g) || []));
+  const wanted = [
+    ['type.bodyWeight', (site.type || {}).bodyWeight || '400'],
+    ['type.headingWeight', (site.type || {}).headingWeight || '700'],
+    ['theme.navCurrentWeight', (site.theme || {}).navCurrentWeight || '700'],
+  ];
+  const missing = wanted.filter(([, w]) => /^\d{3}$/.test(w) && !loaded.has(w));
+  if (gf && missing.length) {
+    console.log(`\n⚠ 這些字重沒有在 fonts.googleFonts 裡載入，瀏覽器會合成假的字重：`);
+    missing.forEach(([k, w]) => console.log(`    ${k} = ${w}`));
+    console.log(`  已載入的是：${[...loaded].sort().join('、') || '（無）'}`);
+  }
 }
 if (MEDIA_SOURCE === 'cargo') {
   console.log(`\n⚠ 圖片目前直接連 Cargo CDN。停用 Cargo 帳號後圖會全部失效，`);
