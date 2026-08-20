@@ -121,7 +121,7 @@
     "_accentHover註": "舊站 bodycopy a:hover 是 rgba(255,91,144,1)。所有連結滑過都變這個粉紅，這是唯一的彩色。",
     "accentActive": "#252525",
     "navCurrent": "rgba(0, 0, 0, 0.3)",
-    "navCurrentWeight": "600",
+    "navCurrentWeight": "700",
     "_navCurrent註": "導覽列上「目前所在頁」的顏色。2026-08-21 改成淺灰（跟圖說同一個 30% 黑）—— 邏輯是「這一頁你已經在看了」所以退到背景，不搶其他項。之前試過深灰加粗、也試過用粉紅圈起來，都不要了。想更淡改 0.22、更明顯改 0.45。只有首頁與 Information 會出現當頁項目（作品內頁沒有任何一項是當頁），那兩頁都是白底，所以不會有淺灰壓在深色封面上看不見的問題。",
     "caption": "rgba(0, 0, 0, 0.30)",
     "captionSize": "1.4rem",
@@ -129,15 +129,15 @@
   },
 
   "type": {
-    "_說明": "字級與字重。舊站是固定值（h1 2.2rem、正文 1.4rem，rem 基準 10px）。首頁大標在舊站是用 Cargo 的 local-style 個別放大的，抓不到確切數字，所以拉出來讓你自己調。",
+    "_說明": "字級與字重。\n\n2026-08-21 更正一個先前記錯的事實：舊站的 rem 基準是**瀏覽器預設的 16px**，不是 10px —— doris-lin.com 的 html 與 :root 都沒有覆寫 font-size（Cargo 框架與站台樣式表都查過）。所以舊站那些 rem 值換算成 px 要乘 1.6，不是 1.0：\n  舊站 h1        2.2rem = 35px、DM Sans 700、行高 1.1、75% 黑\n  舊站首頁大標    2rem = 32px、行高 1.2、純黑（兩行都是 h1）\n  舊站 h2        2rem = 32px、Karla 300、行高 0.9\n  舊站正文        1.4rem = 22px、Diatype 400、行高 1.2\n  舊站圖說        1.4rem = 22px、mundial 400、30% 黑\n這個站是 10px 基準，所以要對到舊站的話數字要換算（例如舊站正文 22px = 這裡的 2.2rem）。\n\n首頁大標舊站是用 Cargo 的 local-style 個別設定的（font-size: 2rem、line-height: 1.2、純黑），已經查到確切數字。",
     "heroSize": "clamp(2.6rem, 4.5vw, 5.2rem)",
     "titleSize": "2.2rem",
     "bodySize": "1.6rem",
     "bodyLineHeight": "1.5",
     "_正文註": "2026-08-20 從舊站沿用的 1.4rem／行高 1.2 改成 1.6rem／1.5（就是 bito.tv 的數值）。舊站幾乎只有圖片、沒有成段的文字，14px 撐得住；現在內頁的敘述與 Information 頁是真的要讀的段落。真正成段的地方（.info-body、.case-blurb、內頁段落）本來就各自設了行高 1.5，所以 bodyLineHeight 這個值影響的是導覽、頁尾、資訊列那些單行的地方 —— 改成 1.5 只是讓預設值跟實際用的一致，不要再有「說 1.2 但每個段落都覆寫成 1.5」的矛盾。圖說維持 theme.captionSize 的 1.4rem，所以現在圖說比正文小一級，層次是對的。",
     "bodyWeight": "400",
-    "headingWeight": "600",
-    "_字重註": "2026-08-20 的歷程：原本是「標題 700／正文 400」，先參考 buck.co 改成「標題 500／正文 300」，實際看過覺得太細，再各加 100 變成現在的「標題 600／正文 400」。改這兩個值之後一定要確認 fonts.googleFonts 有載對應的字重 —— 沒載到瀏覽器會自己合成一個假的粗體，看起來會糊掉。build 會幫你檢查並在漏掉時印警告。"
+    "headingWeight": "700",
+    "_字重註": "歷程：原本 700，2026-08-20 參考 buck.co 改成 500、覺得太細改 600，2026-08-21 為了對回舊站又改成 **700**（舊站的 h1 就是 DM Sans 700，這是從 doris-lin.com/stylesheet 查到的）。導覽列的 navWeight 與 navCurrentWeight 也一起改成 700，所以載入的字重仍然只有兩個（400 與 700）—— 是把 600 換掉，不是多載一個。改這些值之後一定要確認 fonts.googleFonts 有載對應的字重，沒載到瀏覽器會自己合成一個假的粗體、看起來會糊掉。build 會幫你檢查並在漏掉時印警告。"
   },
 
   "fonts": {
@@ -145,8 +145,8 @@
     "_Diatype註": "舊站正文用 Diatype，那是 Cargo 提供的 Dinamo 付費字體，授權只限在 Cargo 平台使用，搬站不能帶走。目前用 DM Sans 代替（舊站標題本來就是 DM Sans，所以整體一致）。想換別的告訴我。",
     "_JuliusSansOne註": "舊站載入了 Julius Sans One 但 CSS 裡完全沒套用，所以移除了。",
     "typekitKit": "kln0qcj",
-    "googleFonts": "family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,600;1,9..40,400&family=Noto+Sans+TC:wght@400;600",
-    "_googleFonts註": "只載真的用到的兩個字重：400（正文與圖說）、600（標題、導覽目前頁、首頁縮圖標題）。Noto Sans TC 不是可變字體，每個字重都是一整組約 105 個子集檔，所以少載一個字重就少 120KB 的 render-blocking CSS（兩個字重是 210 個檔、三個是 315 個）。改 type 或 theme 裡任何字重之前，先確認這一行有載那個值 —— build 會幫你檢查。",
+    "googleFonts": "family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,700;1,9..40,400&family=Noto+Sans+TC:wght@400;700",
+    "_googleFonts註": "只載真的用到的兩個字重：400（正文與圖說）、700（標題、導覽列、首頁縮圖標題）。Noto Sans TC 不是可變字體，每個字重都是一整組約 105 個子集檔，所以少載一個字重就少 120KB 的 render-blocking CSS（兩個字重是 210 個檔、三個是 315 個）。改 type 或 theme 裡任何字重之前，先確認這一行有載那個值 —— build 會幫你檢查。注意這個檢查是比對整串文字，不分家族：DM Sans 有 700 但 Noto Sans TC 沒有的話，檢查也會過。",
     "display": "\"DM Sans\", \"Noto Sans TC\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", \"Microsoft JhengHei\", sans-serif",
     "body": "\"DM Sans\", \"Noto Sans TC\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", \"Microsoft JhengHei\", sans-serif",
     "caption": "mundial, \"Noto Sans TC\", \"Microsoft JhengHei\", sans-serif",
@@ -189,7 +189,7 @@
     "navAlign": "bottom",
     "_navAlign說明": "右邊那組連結（Playground / Works / Reel / Info）要對齊 logo 的哪一邊。bottom = 跟 logo 底部對齊（2026-08-21 改成這個）。top = 跟頂部對齊（原本的）。center = 垂直居中。logo 有 148px 高，所以差別看得很明顯。",
     "navSize": "1.9rem",
-    "navWeight": "600",
+    "navWeight": "700",
     "navLift": "2.4rem",
     "_navSize說明": "那組連結的字級、字重、以及往上抬多少（2026-08-21 從 1.5rem／400／0 改成現在這組）。navLift 是靠底部留白把整組往上推，所以只有在 navAlign 是 bottom 時有效。字重只能填 fonts.googleFonts 有載的值 —— 現在載的是 400 與 600，填 700 瀏覽器會自己合成一個假的粗體、看起來會糊，build 會警告。",
     "solidOnScroll": "index-only",
