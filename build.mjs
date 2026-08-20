@@ -318,8 +318,13 @@ function layout(o) {
      捲過封面之後下面是白底，白字會消失。 */
   const coverDark = o.coverDark ? ' data-cover-dark="true"' : '';
 
+  /* data-cover：這一頁真的有封面。導覽列只有在有封面時才改成 fixed（脫離流排），
+     封面才能頂到視窗最上緣。沒有封面的作品頁（例如 Reel 沒有縮圖）如果也脫離流排，
+     第一個元素就會從 y=0 開始、直接被導覽列疊住。 */
+  const hasCover = o.hasCover ? ' data-cover="true"' : '';
+
   return `<!DOCTYPE html>
-<html lang="${esc(site.lang || 'en')}" data-reveal-default="${revealDefault}" data-page="${esc(page)}" data-header-solid="${solid}"${coverDark}>
+<html lang="${esc(site.lang || 'en')}" data-reveal-default="${revealDefault}" data-page="${esc(page)}" data-header-solid="${solid}"${coverDark}${hasCover}>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -813,6 +818,7 @@ function renderProject(p, prev, next) {
     current: null,
     page: 'work',
     coverDark: !!(cover && p.coverTopDark),
+    hasCover: !!cover,
     ogImage: p.thumb ? mediaUrl(p.thumb, p.slug, 1200, '') : null,
   });
 }
