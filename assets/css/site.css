@@ -259,11 +259,29 @@ h1, h2, h3 {
   display: flex;
   align-items: baseline;
   gap: 1.8rem;
-  font-size: 1.5rem;
+  /* 字級、字重、往上抬多少都在 site.json 的 header（navSize / navWeight / navLift）。
+     navLift 是靠 margin-bottom 把整組往上推 —— 因為 align-items 是 flex-end，
+     底部留白就等於整組上移。行高壓成 1 是刻意的：正文行高 1.5 會在文字下方
+     留一段看不見的空白，貼齊 logo 底部時會顯得往下沉。 */
+  font-size: var(--nav-size, 1.5rem);
+  font-weight: var(--nav-weight, 400);
+  line-height: 1;
+  margin-bottom: var(--nav-lift, 0);
 }
 /* 舊站導覽是 bodycopy 連結：平常黑字、滑過變粉紅 */
-.nav-links a { color: var(--ink-strong, #000); }
+.nav-links a {
+  color: var(--ink-strong, #000);
+  /* 壓在深色封面上時會換成白字，換色要滑順一點 */
+  transition: color .3s ease;
+}
 .nav-links a:hover { color: var(--accent-hover, #ff5b90); }
+
+/* 封面在導覽列後面那塊偏暗 → 連結改白字。
+   data-cover-dark 由 build.mjs 依 projects.json 的 coverTopDark 輸出
+   （tools/set-card-colors.mjs 量的）；.is-over-cover 由 site.js 依捲動位置加，
+   兩個條件都成立才換 —— 只看前者的話，捲過封面之後白字會消失在白底上。 */
+[data-cover-dark] .nav.is-over-cover .nav-links a { color: #fff; }
+[data-cover-dark] .nav.is-over-cover .nav-links a:hover { color: var(--accent-hover, #ff5b90); }
 .nav-links a:active { color: var(--accent-active, #252525); }
 /* 目前所在頁：深灰加粗體。用字重標示比換顏色更明顯，
    而且不必再多一個顏色進來（整站文字只有深灰與黑）。 */

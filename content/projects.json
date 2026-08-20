@@ -54,7 +54,8 @@
       ],
       "draft": true,
       "_註": "網址結尾是 -copy，原站留下的重複頁，設為 draft 不產生。要保留就刪掉 draft。",
-      "cardColor": "#c6713a"
+      "cardColor": "#c6713a",
+      "coverTopDark": true
     },
     {
       "slug": "Grandma-s-kitchen",
@@ -88,7 +89,8 @@
           "width": "full"
         }
       ],
-      "cardColor": "#c6713a"
+      "cardColor": "#c6713a",
+      "coverTopDark": true
     },
     {
       "slug": "A-Journey-in-Tohoku",
@@ -244,7 +246,8 @@
           "caption": ""
         }
       ],
-      "cardColor": "#c87d41"
+      "cardColor": "#c87d41",
+      "coverTopDark": true
     },
     {
       "slug": "happiness-awaits",
@@ -303,7 +306,8 @@
           "caption": ""
         }
       ],
-      "cardColor": "#c85341"
+      "cardColor": "#c85341",
+      "coverTopDark": true
     },
     {
       "slug": "Christmas-Feast",
@@ -350,7 +354,8 @@
           "caption": ""
         }
       ],
-      "cardColor": "#a91d04"
+      "cardColor": "#a91d04",
+      "coverTopDark": true
     },
     {
       "slug": "Taiwanese-sumer-vibe",
@@ -422,7 +427,8 @@
         }
       ],
       "cardColor": "#89c841",
-      "cardColorDark": true
+      "cardColorDark": true,
+      "coverTopDark": true
     },
     {
       "slug": "Playground",
@@ -493,7 +499,8 @@
           "caption": ""
         }
       ],
-      "cardColor": "#d18b38"
+      "cardColor": "#d18b38",
+      "coverTopDark": true
     },
     {
       "slug": "Year-of-the-Dragon",
@@ -557,7 +564,8 @@
           "text": "Happy Lunar New Year!"
         }
       ],
-      "cardColor": "#2e81a5"
+      "cardColor": "#2e81a5",
+      "coverTopDark": true
     },
     {
       "slug": "goodmorningmacc-shenzaoclub",
@@ -648,7 +656,8 @@
         }
       ],
       "cardColor": "#f1c006",
-      "cardColorDark": true
+      "cardColorDark": true,
+      "coverTopDark": true
     },
     {
       "slug": "Tommy-s-Oddly-Love",
@@ -764,7 +773,8 @@
           "caption": ""
         }
       ],
-      "cardColor": "#c88241"
+      "cardColor": "#c88241",
+      "coverTopDark": true
     },
     {
       "slug": "Christmas-Plan",
@@ -808,7 +818,8 @@
           "caption": ""
         }
       ],
-      "cardColor": "#c6893a"
+      "cardColor": "#c6893a",
+      "coverTopDark": true
     },
     {
       "slug": "Halloween-Costume-Party",
@@ -835,7 +846,8 @@
           "loop": true
         }
       ],
-      "cardColor": "#56288b"
+      "cardColor": "#56288b",
+      "coverTopDark": true
     },
     {
       "slug": "Camping",
@@ -894,7 +906,8 @@
           "caption": ""
         }
       ],
-      "cardColor": "#4db327"
+      "cardColor": "#4db327",
+      "coverTopDark": true
     },
     {
       "slug": "snaaaake",
@@ -928,7 +941,8 @@
           "caption": ""
         }
       ],
-      "cardColor": "#41c877"
+      "cardColor": "#41c877",
+      "coverTopDark": true
     },
     {
       "slug": "Santa-s-After-Work-Party",
@@ -969,7 +983,8 @@
           "caption": ""
         }
       ],
-      "cardColor": "#b25b1e"
+      "cardColor": "#b25b1e",
+      "coverTopDark": true
     },
     {
       "slug": "Dancing-Christmas-Tree",
@@ -1036,7 +1051,8 @@
           "caption": ""
         }
       ],
-      "cardColor": "#a98531"
+      "cardColor": "#a98531",
+      "coverTopDark": true
     },
     {
       "slug": "Afternoon-Tea-Time",
@@ -1083,7 +1099,8 @@
           "caption": ""
         }
       ],
-      "cardColor": "#916a2a"
+      "cardColor": "#916a2a",
+      "coverTopDark": true
     },
     {
       "slug": "Summer-Vibe",
@@ -1125,7 +1142,8 @@
           "caption": ""
         }
       ],
-      "cardColor": "#41c869"
+      "cardColor": "#41c869",
+      "coverTopDark": true
     },
     {
       "slug": "3D-Ceramic-Project-NO-O1",
@@ -1254,7 +1272,8 @@
           "caption": ""
         }
       ],
-      "cardColor": "#865a27"
+      "cardColor": "#865a27",
+      "coverTopDark": true
     },
     {
       "slug": "Magical-Pumpkin-Soup",
@@ -1297,7 +1316,8 @@
           "caption": ""
         }
       ],
-      "cardColor": "#864527"
+      "cardColor": "#864527",
+      "coverTopDark": true
     },
     {
       "slug": "The-positive-Building-Papaya-milk",
@@ -1328,7 +1348,8 @@
           "loop": false
         }
       ],
-      "cardColor": "#c89141"
+      "cardColor": "#c89141",
+      "coverTopDark": true
     },
     {
       "slug": "The-Daruma-doll-at-Katsuo-Ji-Temple",
@@ -1363,7 +1384,8 @@
           "loop": false
         }
       ],
-      "cardColor": "#b56732"
+      "cardColor": "#b56732",
+      "coverTopDark": true
     },
     {
       "slug": "Traditional-Taiwanese-Bathroom",
@@ -1428,7 +1450,8 @@
           "caption": ""
         }
       ],
-      "cardColor": "#cb7e3e"
+      "cardColor": "#cb7e3e",
+      "coverTopDark": true
     },
     {
       "slug": "Nodding-Off",
@@ -1497,7 +1520,8 @@
           "caption": ""
         }
       ],
-      "cardColor": "#c89341"
+      "cardColor": "#c89341",
+      "coverTopDark": true
     },
     {
       "slug": "Toast-Baby-Take-a-Bread-series",
@@ -1563,7 +1587,8 @@
           "caption": ""
         }
       ],
-      "cardColor": "#c841b1"
+      "cardColor": "#c841b1",
+      "coverTopDark": true
     },
     {
       "slug": "Little-Jam-Take-a-Bread-series",
@@ -1679,7 +1704,8 @@
           "text": "Sound Design：陳敬恆 Quiet Chen"
         }
       ],
-      "cardColor": "#275286"
+      "cardColor": "#275286",
+      "coverTopDark": true
     },
     {
       "slug": "Mooncake",
@@ -1706,7 +1732,8 @@
           "loop": true
         }
       ],
-      "cardColor": "#863627"
+      "cardColor": "#863627",
+      "coverTopDark": true
     },
     {
       "slug": "Halloween-Dog",
@@ -1733,7 +1760,8 @@
           "loop": false
         }
       ],
-      "cardColor": "#862741"
+      "cardColor": "#862741",
+      "coverTopDark": true
     },
     {
       "slug": "Matcha-Souffle",
@@ -1790,7 +1818,8 @@
           "loop": false
         }
       ],
-      "cardColor": "#8a18eb"
+      "cardColor": "#8a18eb",
+      "coverTopDark": true
     },
     {
       "slug": "Freedom-Frames",
@@ -1827,7 +1856,8 @@
           "loop": true
         }
       ],
-      "cardColor": "#c84c41"
+      "cardColor": "#c84c41",
+      "coverTopDark": true
     },
     {
       "slug": "Chick",
@@ -1874,7 +1904,8 @@
           "loop": true
         }
       ],
-      "cardColor": "#8d6e29"
+      "cardColor": "#8d6e29",
+      "coverTopDark": true
     },
     {
       "slug": "Turn-On",
@@ -1954,7 +1985,8 @@
         }
       ],
       "cardColor": "#92c841",
-      "cardColorDark": true
+      "cardColorDark": true,
+      "coverTopDark": true
     },
     {
       "slug": "Annie-at-Work",
@@ -1991,7 +2023,8 @@
           "loop": true
         }
       ],
-      "cardColor": "#c1a138"
+      "cardColor": "#c1a138",
+      "coverTopDark": true
     },
     {
       "slug": "WAAA-MY-POPCORN",
@@ -2020,7 +2053,8 @@
           "caption": ""
         }
       ],
-      "cardColor": "#a29c2f"
+      "cardColor": "#a29c2f",
+      "coverTopDark": true
     },
     {
       "slug": "Rudolph",
@@ -2108,7 +2142,8 @@
           "loop": false
         }
       ],
-      "cardColor": "#278667"
+      "cardColor": "#278667",
+      "coverTopDark": true
     },
     {
       "slug": "Compare",
@@ -2139,7 +2174,8 @@
           "loop": true
         }
       ],
-      "cardColor": "#f91610"
+      "cardColor": "#f91610",
+      "coverTopDark": true
     },
     {
       "slug": "eyes",
@@ -2179,7 +2215,8 @@
           "loop": true
         }
       ],
-      "cardColor": "#b19633"
+      "cardColor": "#b19633",
+      "coverTopDark": true
     },
     {
       "slug": "Transform",
@@ -2206,7 +2243,8 @@
           "loop": true
         }
       ],
-      "cardColor": "#0619a8"
+      "cardColor": "#0619a8",
+      "coverTopDark": true
     },
     {
       "slug": "Hide",
@@ -2242,7 +2280,8 @@
           "loop": true
         }
       ],
-      "cardColor": "#4731a7"
+      "cardColor": "#4731a7",
+      "coverTopDark": true
     },
     {
       "slug": "REUNION",
@@ -2300,7 +2339,8 @@
           "loop": true
         }
       ],
-      "cardColor": "#0b04a9"
+      "cardColor": "#0b04a9",
+      "coverTopDark": true
     },
     {
       "slug": "Follow",
@@ -2371,7 +2411,8 @@
           "loop": true
         }
       ],
-      "cardColor": "#8e10f9"
+      "cardColor": "#8e10f9",
+      "coverTopDark": true
     },
     {
       "slug": "Reel",

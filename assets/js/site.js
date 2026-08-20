@@ -54,6 +54,16 @@
         nav.classList.remove('is-hidden');
       }
 
+      /* 導覽列還壓在封面上嗎。作品內頁的導覽列是 fixed、透明浮在封面上，
+         封面偏暗時連結要改白字（CSS 用 [data-cover-dark] .nav.is-over-cover）。
+         捲過封面之後下面是白底，白字會看不見，所以一定要判斷位置，
+         不能只看 data-cover-dark 就一路白到底。 */
+      var coverEl = document.querySelector('.case-cover');
+      if (coverEl) {
+        var coverBottom = coverEl.offsetTop + coverEl.offsetHeight;
+        nav.classList.toggle('is-over-cover', y + nav.offsetHeight < coverBottom);
+      }
+
       ticking = false;
     };
 

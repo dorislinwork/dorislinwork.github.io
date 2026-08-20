@@ -168,8 +168,11 @@ function themeVars(base) {
     `--cover-h-min: ${cs.coverMinHeight || '45vh'};`,
     `--cover-h-max: ${cs.coverMaxHeight || '92vh'};`,
     `--blurb-lines: ${cs.blurbLines ?? 4};`,
-    // 導覽列右邊那組連結對齊 logo 的哪一邊（site.json 的 header.navAlign）
+    // 導覽列右邊那組連結：對齊哪一邊、字級、字重、往上抬多少（site.json 的 header）
     `--nav-align: ${NAV_ALIGN[(site.header || {}).navAlign] || 'flex-end'};`,
+    `--nav-size: ${(site.header || {}).navSize || '1.5rem'};`,
+    `--nav-weight: ${(site.header || {}).navWeight || '400'};`,
+    `--nav-lift: ${(site.header || {}).navLift || '0'};`,
     /* 逐字跳動（.wiggle-text）。時間刻意注入成純數字，CSS 用 calc(… * 1ms)、
        effects.js 直接 parseFloat —— 同一個來源，兩邊不會不同步。 */
     `--wiggle-distance: ${wg.distance || '8px'};`,
@@ -292,8 +295,14 @@ function layout(o) {
   const solidRaw = (site.header || {}).solidOnScroll;
   const solid = ['index-only', 'always', 'never'].includes(solidRaw) ? solidRaw : 'index-only';
 
+  /* data-cover-dark：這一頁的封面在導覽列後面那塊偏暗，導覽列連結要改白字。
+     由 tools/set-card-colors.mjs 量出來寫進 projects.json 的 coverTopDark。
+     實際套用還要等 site.js 確認導覽列真的還壓在封面上（.is-over-cover）——
+     捲過封面之後下面是白底，白字會消失。 */
+  const coverDark = o.coverDark ? ' data-cover-dark="true"' : '';
+
   return `<!DOCTYPE html>
-<html lang="${esc(site.lang || 'en')}" data-reveal-default="${revealDefault}" data-page="${esc(page)}" data-header-solid="${solid}">
+<html lang="${esc(site.lang || 'en')}" data-reveal-default="${revealDefault}" data-page="${esc(page)}" data-header-solid="${solid}"${coverDark}>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -786,6 +795,7 @@ function renderProject(p, prev, next) {
     base,
     current: null,
     page: 'work',
+    coverDark: !!(cover && p.coverTopDark),
     ogImage: p.thumb ? mediaUrl(p.thumb, p.slug, 1200, '') : null,
   });
 }
@@ -941,6 +951,7 @@ if (empty.length) {
     ['type.bodyWeight', (site.type || {}).bodyWeight || '400'],
     ['type.headingWeight', (site.type || {}).headingWeight || '700'],
     ['theme.navCurrentWeight', (site.theme || {}).navCurrentWeight || '700'],
+    ['header.navWeight', (site.header || {}).navWeight || '400'],
   ];
   const missing = wanted.filter(([, w]) => /^\d{3}$/.test(w) && !loaded.has(w));
   if (gf && missing.length) {

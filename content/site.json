@@ -173,6 +173,10 @@
     "_hideOnScroll註": "true = 往下捲收起、往上捲出現（參考 Bito 的做法）。false = 單純 sticky，一直留在上面。",
     "navAlign": "bottom",
     "_navAlign說明": "右邊那組連結（Playground / Works / Reel / Info）要對齊 logo 的哪一邊。bottom = 跟 logo 底部對齊（2026-08-21 改成這個）。top = 跟頂部對齊（原本的）。center = 垂直居中。logo 有 148px 高，所以差別看得很明顯。",
+    "navSize": "1.9rem",
+    "navWeight": "600",
+    "navLift": "1.2rem",
+    "_navSize說明": "那組連結的字級、字重、以及往上抬多少（2026-08-21 從 1.5rem／400／0 改成現在這組）。navLift 是靠底部留白把整組往上推，所以只有在 navAlign 是 bottom 時有效。字重只能填 fonts.googleFonts 有載的值 —— 現在載的是 400 與 600，填 700 瀏覽器會自己合成一個假的粗體、看起來會糊，build 會警告。",
     "solidOnScroll": "index-only",
     "_solidOnScroll說明": "捲離頂部後哪些頁面的導覽列要加白底。index-only = 只有首頁加，其他頁一律透明底（2026-08-21 改成這個）。always = 每一頁都加。never = 都不加。注意：作品內頁的封面現在頂到視窗最上緣、導覽列浮在封面上，所以透明底看起來最好；但捲到下面的圖片區時導覽列還是透明的，深灰連結壓在深色圖上會看不清楚 —— 覺得有問題就改成 always。"
   },
