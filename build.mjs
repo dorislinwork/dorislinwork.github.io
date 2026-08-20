@@ -218,14 +218,28 @@ function layout(o) {
     .join('\n        ');
 
   /* 品牌區：有設定 logo 就用動態 logo，否則退回文字。
-     logo 是 <video autoplay muted loop>，等同舊站的 GIF 但小 97%。 */
+
+     logo.image 是動畫 WebP（現在的做法）—— 無損、保留透明，用一個 <img> 就好，
+     不需要另一張 poster。logo.video 是舊的 MP4 做法，還留著是為了往回相容：
+     MP4 沒有 alpha 而且 H.264 會在白色區域產生雜訊，換 logo 請用
+     tools/set-logo.mjs，它輸出的是 WebP。
+
+     img 的 alt 刻意留空 —— 外層 <a> 已經有 aria-label，兩個都填讀屏軟體會唸兩次。 */
   const logo = site.logo || {};
-  const brand = logo.video
-    ? `<a class="nav-brand nav-brand-logo" href="${esc(base + (logo.href || 'index.html'))}" aria-label="${esc(logo.alt || site.name)}">
-    <video src="${esc(base + logo.video)}"${logo.w ? ` width="${esc(logo.w)}"` : ''}${logo.h ? ` height="${esc(logo.h)}"` : ''}`
-      + `${logo.poster ? ` poster="${esc(base + logo.poster)}"` : ''} autoplay muted loop playsinline preload="auto"></video>
-  </a>`
-    : `<a class="nav-brand" href="${esc(base)}index.html">${esc(site.name)}</a>`;
+  const logoLink = (inner) => `<a class="nav-brand nav-brand-logo" href="${esc(base + (logo.href || 'index.html'))}" aria-label="${esc(logo.alt || site.name)}">
+    ${inner}
+  </a>`;
+  const dim = `${logo.w ? ` width="${esc(logo.w)}"` : ''}${logo.h ? ` height="${esc(logo.h)}"` : ''}`;
+
+  let brand;
+  if (logo.image) {
+    brand = logoLink(`<img src="${esc(base + logo.image)}"${dim} alt="" fetchpriority="high" decoding="async">`);
+  } else if (logo.video) {
+    brand = logoLink(`<video src="${esc(base + logo.video)}"${dim}`
+      + `${logo.poster ? ` poster="${esc(base + logo.poster)}"` : ''} autoplay muted loop playsinline preload="auto"></video>`);
+  } else {
+    brand = `<a class="nav-brand" href="${esc(base)}index.html">${esc(site.name)}</a>`;
+  }
 
   const mail = site.email || {};
 

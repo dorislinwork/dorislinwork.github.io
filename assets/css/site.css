@@ -224,10 +224,13 @@ h1, h2, h3 {
   line-height: 0;
   width: min(var(--logo-width, 398px), 46vw);
 }
-.nav-brand-logo video {
+/* img 是動畫 WebP（現在的做法），video 是舊的 MP4 做法，兩種都撐住 */
+.nav-brand-logo video,
+.nav-brand-logo img {
+  display: block;
   width: 100%;
   height: auto;
-  /* 影片是黑線白底，這裡不加圓角與陰影，保持跟舊站一樣的乾淨感 */
+  /* 不加圓角與陰影，保持跟舊站一樣的乾淨感 */
 }
 
 .nav-links {

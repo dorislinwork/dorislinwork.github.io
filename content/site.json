@@ -15,14 +15,14 @@
   },
 
   "logo": {
-    "_說明": "舊站左上角的動態 logo。原始是 956×356 的 GIF，顯示尺寸 398×148（Cargo 的 data-scale 53%）。已轉成 MP4（2.94MB → 63KB）加一張 WebP 第一幀當 poster。",
-    "video": "assets/img/logo.mp4",
-    "poster": "assets/img/logo.webp",
-    "w": 800,
-    "h": 298,
+    "_說明": "左上角的動態 logo。2026-08-20 換成彩色的 DORIS 字標（來源 D:\\website\\9.gif，956×356、91 幀 25fps）。格式是動畫 WebP、無損、保留透明背景，2.9MB → 2377KB。顯示尺寸 398×148，沿用舊站 Cargo data-scale 53% 的比例。",
+    "_換logo說明": "要換就跑 node tools/set-logo.mjs <來源檔>，它會轉檔、更新這裡的 image/w/h，並逐像素驗證真的是無損。不要手動轉，那支腳本的註解裡有三個踩過的坑：(1) 不能用 MP4 —— 沒有 alpha，而且 H.264 會在字母之間的白色空隙產生雜訊，S 右邊會出現一條線；(2) 不能加 libwebp 的 -preset —— 它會靜靜把 -lossless 關掉，檔案小一半但變成有損；(3) 縮小反而變大，因為抗鋸齒的中間色會打碎大片同色。檔案想更小只能降幀（--fps 20 約 1906KB、--fps 15 約 1438KB），畫質仍然完全一致。想還原舊的黑白 logo：git checkout fa23a25 -- assets/img/logo.mp4 assets/img/logo.webp，然後把這裡的 image 改回 video/poster。",
+    "w": 956,
+    "h": 356,
     "displayWidth": "398px",
     "alt": "Doris Lin",
-    "href": "index.html"
+    "href": "index.html",
+    "image": "assets/img/logo.webp"
   },
 
   "nav": [
