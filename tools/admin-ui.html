@@ -937,9 +937,16 @@ function blocksEditor(p, upd) {
   /* 列號取決於前面的區塊佔了哪些欄，所以任何一塊改動都要重算全部。
      收集每個控制項，改完一起更新顯示。 */
   const controls = [];
+  const widthControls = [];
   const refreshRows = () => {
     const rows = computeRows(blocks);
     controls.forEach((c, i) => { if (c && c._setRow) c._setRow(rows[i]); });
+    /* 設了版面的區塊，「寬度」下拉要變灰 —— 那個設定會被產生器忽略 */
+    widthControls.forEach((w, i) => {
+      if (!w || !w._syncDisabled) return;
+      const span = Number(blocks[i] && blocks[i].span);
+      w._syncDisabled(Number.isFinite(span) && span >= 1 && span <= 12);
+    });
   };
 
   if (!blocks.length) {
@@ -1008,6 +1015,21 @@ function blocksEditor(p, upd) {
         if (sel.value) b.width = sel.value; else delete b.width;
       }));
       wrap.appendChild(sel);
+
+      /* 「寬度」與下面的「版面」是兩個會打架的控制項：產生器一旦看到 col/span
+         就輸出 grid-column，width 被完全忽略。原本介面沒講，使用者 2026-08-21
+         把某一格從 70% 調到 55% 調了兩次都沒有效果，因為那一格也設了版面。
+         所以設了版面時就把這個下拉變灰並說明原因 —— 一個區塊的寬度只該有一個來源。 */
+      const clash = el('span', 'fname', '');
+      clash.style.cssText = 'color:var(--warn)';
+      wrap.appendChild(clash);
+      wrap._syncDisabled = (placed) => {
+        sel.disabled = !!placed;
+        sel.style.opacity = placed ? '.45' : '1';
+        clash.textContent = placed ? '← 版面已指定欄位，寬度不生效' : '';
+      };
+
+      widthControls[i] = wrap;
       body.appendChild(wrap);
     } else {
       body.appendChild(el('div', 'fname', JSON.stringify(b).slice(0, 200)));
