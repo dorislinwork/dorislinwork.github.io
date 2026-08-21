@@ -335,10 +335,20 @@ pre.log:empty { display: none; }
           <p class="doc">會變成 <code>/work/<span id="slugEcho">…</span>.html</code>。只能用英數字、連字號、底線。留空會自動從標題產生。</p>
         </label>
         <label><span class="lbl">類型</span>
-          <input type="text" id="nRole" list="roles" value="Personal work">
+          <input type="text" id="nType" list="roles" value="Personal work">
           <datalist id="roles">
             <option>Personal work</option><option>Client work</option><option>Graduation project</option>
           </datalist>
+        </label>
+      </div>
+      <div class="row">
+        <label><span class="lbl">職務（沒有就留空）</span>
+          <input type="text" id="nJobRole" placeholder="Motion Design, 3D">
+          <p class="doc">你在這件作品裡做什麼。會顯示在內頁右邊的 Role。</p>
+        </label>
+        <label><span class="lbl">工作室／代理商（沒有就留空）</span>
+          <input type="text" id="nAgency" placeholder="WildDesign">
+          <p class="doc">透過哪個工作室或代理商做的。會顯示在內頁右邊的 Agency。</p>
         </label>
       </div>
       <label><span class="lbl">客戶（沒有就留空）</span><input type="text" id="nClient">
@@ -750,7 +760,7 @@ function projectItem(p, i) {
   if (p.hideFromGrid) name.appendChild(el('span', 'tag', '不上首頁'));
   meta.appendChild(name);
   meta.appendChild(el('div', 'sm',
-    [p.year, p.role, p.slug, `${(p.blocks || []).length} 個區塊`].filter(Boolean).join('　·　')));
+    [p.year, p.type, p.slug, `${(p.blocks || []).length} 個區塊`].filter(Boolean).join('　·　')));
   head.appendChild(meta);
 
   const acts = el('div', 'acts');
@@ -827,8 +837,21 @@ function projectEditor(p, idx) {
   const y = field('年份', p.year, (v) => upd(() => { p.year = v; }));
   y.className = 'narrow';
   r1.appendChild(y);
-  r1.appendChild(field('類型', p.role, (v) => upd(() => { p.role = v; })));
+  r1.appendChild(field('類型', p.type, (v) => upd(() => { p.type = v; }),
+    { doc: '這件作品是什麼性質，例如 Personal work、Client work、Graduation project。' }));
   box.appendChild(r1);
+
+  /* 職務與工作室（2026-08-21 加，參考 therocketpanda.com 的 Year／Role／Agency）。
+     「類型」那格以前在 projects.json 裡叫 role，同一天改名成 type —— 不改的話
+     這兩個欄位擺在一起會分不出誰是誰。 */
+  const rRole = el('div', 'row');
+  rRole.appendChild(field('職務', p.role, (v) => upd(() => {
+    if (v.trim()) p.role = v.trim(); else delete p.role;
+  }), { placeholder: 'Motion Design, 3D', doc: '你在這件作品裡做什麼。留空就不會出現這一格。' }));
+  rRole.appendChild(field('工作室／代理商', p.agency, (v) => upd(() => {
+    if (v.trim()) p.agency = v.trim(); else delete p.agency;
+  }), { placeholder: 'WildDesign', doc: '透過哪個工作室或代理商做的。留空就不會出現這一格。' }));
+  box.appendChild(rRole);
 
   const r2 = el('div', 'row');
   r2.appendChild(field('客戶', p.client, (v) => upd(() => { p.client = v; }),
@@ -1451,7 +1474,9 @@ function renderNewFiles() {
 $('#btnClearNew').onclick = () => {
   if (newFiles.length && !confirm('清空這一頁的內容？')) return;
   ['nTitle', 'nYear', 'nSlug', 'nClient', 'nText', 'nVimeo'].forEach((id) => { $('#' + id).value = ''; });
-  $('#nRole').value = 'Personal work';
+  $('#nType').value = 'Personal work';
+  $('#nJobRole').value = '';
+  $('#nAgency').value = '';
   $('#nDraft').checked = false;
   delete $('#nSlug').dataset.touched;
   $('#slugEcho').textContent = '…';
@@ -1492,7 +1517,9 @@ $('#btnCreate').onclick = async () => {
       slug,
       title,
       year: $('#nYear').value.trim(),
-      role: $('#nRole').value.trim(),
+      type: $('#nType').value.trim(),
+      role: $('#nJobRole').value.trim(),
+      agency: $('#nAgency').value.trim(),
       client: $('#nClient').value.trim(),
       texts,
       vimeos,

@@ -257,7 +257,8 @@ function themeVars(base) {
     `--blurb-lines: ${cs.blurbLines ?? 4};`,
     /* 資訊列的版型（2026-08-21 參考 therocketpanda.com 的作品內頁）：
        左邊一段大字敘述當主角，右邊單一直排的欄位、每格左邊一條細線。 */
-    `--blurb-size: ${cs.blurbSize || 'clamp(2.2rem, 2.1vw, 3.8rem)'};`,
+    `--blurb-size: ${cs.blurbSize || '1.6rem'};`,
+    `--blurb-measure: ${cs.blurbMeasure || '75ch'};`,
     `--blurb-lh: ${cs.blurbLineHeight || '1.4'};`,
     `--info-span: ${cs.blurbSpan ?? 8};`,
     `--facts-col: ${cs.factsCol ?? 10};`,
@@ -770,7 +771,7 @@ function renderIndex() {
     if (p.cardColor) styleBits.push(`--card-color:${p.cardColor}`);
     const style = styleBits.length ? ` style="${esc(styleBits.join(';'))}"` : '';
 
-    const meta = [p.year, p.role].filter(Boolean).join(' · ');
+    const meta = [p.year, p.type].filter(Boolean).join(' · ');
     const info = !showTitles ? '' : `
       <div class="thumbnail-info${p.cardColorDark ? ' is-dark' : ''}" aria-hidden="true">
         <span class="thumbnail-name">${esc(p.title)}</span>
@@ -922,11 +923,20 @@ function renderProject(p, prev, next) {
     .filter(Boolean)
     .join('\n');
 
-  // 資訊列右半邊。Bito 是 Client／Sectors／Year／Services 四格，這裡的資料
-  // 通常只有類型與年份兩格；client 與 tags 有填才會出現。
+  /* 資訊列右半邊。空的欄位不會產生，所以順序只影響「有填的那幾格」怎麼排。
+
+     type 與 year 留在最前面，現有資料的顯示順序完全沒變。role 與 agency 是
+     2026-08-21 新增的（參考 therocketpanda.com 的 Year／Role／Agency）——
+     排在 year 後面，所以只填這三格的作品讀起來就跟參考圖一樣。
+
+     ⚠ type 這個欄位以前叫 role，同一天改名的。它存的是「作品類型」
+     （Personal work、Graduation project），顯示的標籤一直是 Type；
+     現在真正的 role 是「你在這件作品裡做什麼」（Motion Design 這種）。 */
   const facts = [];
-  if (p.role) facts.push([L.type || 'Type', p.role]);
+  if (p.type) facts.push([L.type || 'Type', p.type]);
   if (p.year) facts.push([L.year || 'Year', p.year]);
+  if (p.role) facts.push([L.role || 'Role', p.role]);
+  if (p.agency) facts.push([L.agency || 'Agency', p.agency]);
   if (p.client) facts.push([L.client || 'Client', p.client]);
   if ((p.tags || []).length) facts.push([L.tags || 'Tags', p.tags.join(', ')]);
 

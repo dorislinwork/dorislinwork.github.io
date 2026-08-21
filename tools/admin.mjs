@@ -192,7 +192,9 @@ async function api(req, res, url) {
     const push = (flag, v) => { if (v !== undefined && v !== null && v !== '') args.push(flag, String(v)); };
     push('--title', b.title);
     push('--year', b.year);
+    push('--type', b.type);
     push('--role', b.role);
+    push('--agency', b.agency);
     push('--client', b.client);
     push('--thumb', b.thumb);
     push('--ratio', b.ratio);

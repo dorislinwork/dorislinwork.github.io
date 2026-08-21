@@ -631,16 +631,22 @@ h1, h2, h3 {
   margin: 0;
 }
 
-/* 敘述。行寬交給上面的欄位數決定，不再用 max-width 限制 ——
-   62ch 在 3.8rem 的字級下換算成 2300px 以上，根本不會生效，留著只會誤導。
+/* 敘述。
+
+   行寬一定要有上限：左邊的欄位是 8 欄（1920 螢幕上約 990px），正文字級下
+   換算成一行 150 個字元，眼睛換行時會找不到下一行的開頭。--blurb-measure
+   就是這個上限（預設 75ch，約 660px），所以文字區塊會落在欄位的左半部，
+   右邊那段空白是刻意留的，不是版面沒填滿。
+
    段距用 em 而不是 rem，字級一調就跟著走。 */
 .case-blurb {
   margin-top: 3.2rem;
-  font-size: var(--blurb-size, 2.4rem);
-  line-height: var(--blurb-lh, 1.4);
+  max-width: var(--blurb-measure, 75ch);
+  font-size: var(--blurb-size, 1.6rem);
+  line-height: var(--blurb-lh, 1.6);
 }
 .case-blurb p { margin: 0; }
-.case-blurb p + p { margin-top: 0.6em; }
+.case-blurb p + p { margin-top: 1em; }
 
 /* 敘述放在資訊列會直接吃掉封面的高度，所以先收到 --blurb-lines 行。
    超出的話 site.js 才把展開按鈕顯示出來 —— 沒溢出就不該有按鈕。
