@@ -194,6 +194,41 @@ h2 { font-size: 1.9rem; margin: 0 0 0.6rem; }
 .fcard .fn { word-break: break-all; color: var(--ink-soft); margin-top: 0.3rem; }
 .fcard.isthumb { outline: 2px solid var(--pink); outline-offset: 2px; border-radius: 4px; }
 
+/* ---- 封面構圖 ---- */
+/* 預覽框套的是跟正式頁面一樣的 object-fit / object-position / transform，
+   所以看到的就是實際結果，不是另外算一套近似值。 */
+.coverstage {
+  position: relative; overflow: hidden; margin-top: 0.8rem;
+  border-radius: 6px; background: #f0f0f0;
+  cursor: grab; touch-action: none; user-select: none;
+}
+.coverstage.dragging { cursor: grabbing; }
+.coverstage img {
+  display: block; width: 100%; height: 100%;
+  object-fit: cover; pointer-events: none;
+}
+/* 三分法格線。開始拖才出現，平常不擋著看畫面。 */
+.coverstage::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  opacity: 0; transition: opacity 0.12s;
+  background:
+    linear-gradient(to right, transparent 33.33%, rgba(255,255,255,0.55) 33.33%,
+      rgba(255,255,255,0.55) calc(33.33% + 1px), transparent calc(33.33% + 1px),
+      transparent 66.66%, rgba(255,255,255,0.55) 66.66%,
+      rgba(255,255,255,0.55) calc(66.66% + 1px), transparent calc(66.66% + 1px)),
+    linear-gradient(to bottom, transparent 33.33%, rgba(255,255,255,0.55) 33.33%,
+      rgba(255,255,255,0.55) calc(33.33% + 1px), transparent calc(33.33% + 1px),
+      transparent 66.66%, rgba(255,255,255,0.55) 66.66%,
+      rgba(255,255,255,0.55) calc(66.66% + 1px), transparent calc(66.66% + 1px));
+}
+.coverstage.dragging::after { opacity: 1; }
+.coverrow { display: flex; align-items: center; gap: 1.2rem; margin-top: 0.8rem; }
+.coverrow input[type="range"] { flex: 1; min-width: 12rem; padding: 0; }
+.covernum {
+  font-variant-numeric: tabular-nums; color: var(--ink-soft);
+  font-size: 1.2rem; white-space: nowrap;
+}
+
 /* ---- 設定表單 ---- */
 fieldset {
   border: 1px solid var(--line); border-radius: var(--radius);
@@ -873,6 +908,9 @@ function projectEditor(p, idx) {
     (v) => upd(() => { if (v) p.hideFromGrid = true; else delete p.hideFromGrid; })));
   box.appendChild(r5);
 
+  /* ---- 封面 ---- */
+  box.appendChild(coverEditor(p, upd));
+
   /* ---- 區塊 ---- */
   box.appendChild(el('span', 'lbl', '內頁區塊（順序就是頁面上的順序）'));
   box.appendChild(blocksEditor(p, upd));
@@ -928,6 +966,177 @@ function projectEditor(p, idx) {
   box.appendChild(del);
 
   return box;
+}
+
+/* 封面。三件事：用哪一張、圖在框裡的位置、放多大。
+
+   位置與縮放做成用滑鼠拖的，不是填數字 —— 構圖是看出來的，不是算出來的。
+   預覽框套的 CSS 跟正式頁面一模一樣（object-fit: cover + object-position +
+   transform: scale），所以拖出來的樣子就是上線的樣子，不是另一套近似值。
+
+   框的比例照螢幕算，不是寫死的：封面寬度是整個視窗，高度是 site.json 的
+   case.coverHeight（vh），所以 1920×1080 的螢幕大約 2.28:1。用固定比例的話，
+   在這裡調好的構圖到實際頁面上會是另一個裁切結果，等於白調。
+
+   下面 readPos／readScale 的判斷規則要跟 build.mjs 的 coverPos()／coverScale()
+   一致。真正把關的是 build.mjs（值不合法就退回預設、放大上限夾在 3），
+   這裡只是不要讓畫面顯示出後端不會採用的值。 */
+function coverEditor(p, upd) {
+  const wrap = el('div');
+  wrap.style.cssText = 'margin-top:1.4rem;padding-top:1.4rem;border-top:1px solid var(--line)';
+  wrap.appendChild(el('span', 'lbl', '封面'));
+
+  const mediaBlocks = (p.blocks || []).filter((b) => b.type === 'media');
+  if (!mediaBlocks.length) {
+    wrap.appendChild(el('p', 'doc', '這件作品還沒有圖片區塊，先用下面的「補圖」加一張。'));
+    return wrap;
+  }
+
+  /* ---- 用哪一張 ---- */
+  const srcLab = el('label');
+  srcLab.appendChild(el('span', 'lbl', '封面用哪一張'));
+  const src = el('select');
+  const auto = el('option', null,
+    '跟首頁縮圖一樣' + (p.thumb && p.thumb.file ? '（' + p.thumb.file + '）' : ''));
+  auto.value = '';
+  src.appendChild(auto);
+  mediaBlocks.forEach((b) => {
+    const o = el('option', null, b.file);
+    o.value = b.file;
+    if (p.cover && p.cover.file === b.file) o.selected = true;
+    src.appendChild(o);
+  });
+  srcLab.appendChild(src);
+  srcLab.appendChild(el('p', 'doc',
+    '選到的那張如果也排在內文裡，內文那張會自動不重複出現，不會同一張看到兩次。'));
+  wrap.appendChild(srcLab);
+
+  /* ---- 位置與縮放 ---- */
+  const curFile = () => (p.cover && p.cover.file)
+    || (p.thumb && p.thumb.file)
+    || mediaBlocks[0].file;
+
+  const vh = parseFloat(String(((D.site || {}).case || {}).coverHeight || '78')) || 78;
+  const aspect = screen.width / Math.max(1, screen.height * vh / 100);
+
+  const stage = el('div', 'coverstage');
+  stage.style.aspectRatio = aspect.toFixed(3);
+  const img = el('img');
+  img.draggable = false;
+  img.alt = '';
+  stage.appendChild(img);
+  wrap.appendChild(stage);
+
+  const bar = el('div', 'coverrow');
+  const zoom = el('input');
+  zoom.type = 'range';
+  zoom.min = '100';
+  zoom.max = '300';
+  zoom.step = '5';
+  const num = el('span', 'covernum');
+  const reset = el('button', null, '回到預設');
+  reset.style.flex = 'none';
+  bar.appendChild(el('span', 'covernum', '放大'));
+  bar.appendChild(zoom);
+  bar.appendChild(num);
+  bar.appendChild(reset);
+  wrap.appendChild(bar);
+
+  wrap.appendChild(el('p', 'doc',
+    '在圖上拖曳就是移動構圖，滑桿是放大。封面是裁切填滿的，所以直式的素材預設'
+    + '只看得到中段 —— 想讓主體露出來就往那邊拖，或者放大再對位。'
+    + '縮小沒有意義（左右會露出空白），所以滑桿從 100% 開始。'
+    + '手機上的封面比較矮，裁掉的地方會比這裡多。'));
+  wrap.appendChild(el('p', 'doc',
+    '調完構圖後，右上角選單的黑白會重新判斷（下面的「預覽這一頁」已經算進去了）。'
+    + '要讓正式頁面也跟上，儲存後到「發布」頁按一次「重新取卡片顏色」。'));
+
+  const clamp = (n) => Math.min(100, Math.max(0, n));
+  const round1 = (n) => Math.round(n * 10) / 10;
+
+  const readPos = () => {
+    const m = /^(\d+(?:\.\d+)?)% (\d+(?:\.\d+)?)%$/.exec(String(p.coverPosition || '').trim());
+    return m ? [Number(m[1]), Number(m[2])] : [50, 50];
+  };
+  const readScale = () => {
+    const n = Number(p.coverScale);
+    return Number.isFinite(n) && n > 1 ? Math.min(n, 3) : 1;
+  };
+
+  const paint = () => {
+    const [x, y] = readPos();
+    const z = readScale();
+    const want = mediaSrc(p.slug, curFile());
+    // 只在真的換圖時才改 src，不然拖的每一格都會重新載入、畫面閃
+    if (img.getAttribute('src') !== want) img.setAttribute('src', want);
+    img.style.objectPosition = x + '% ' + y + '%';
+    img.style.transform = z > 1 ? 'scale(' + z + ')' : '';
+    img.style.transformOrigin = x + '% ' + y + '%';
+    num.textContent = x + '% ' + y + '%　' + Math.round(z * 100) + '%';
+    if (zoom.value !== String(Math.round(z * 100))) zoom.value = String(Math.round(z * 100));
+  };
+
+  // 預設值就把欄位刪掉，projects.json 才不會被沒有作用的值塞滿
+  const setPos = (x, y) => upd(() => {
+    const nx = round1(clamp(x));
+    const ny = round1(clamp(y));
+    if (nx === 50 && ny === 50) delete p.coverPosition;
+    else p.coverPosition = nx + '% ' + ny + '%';
+    paint();
+  });
+  const setScale = (z) => upd(() => {
+    if (z > 1) p.coverScale = Math.min(3, Math.round(z * 100) / 100);
+    else delete p.coverScale;
+    paint();
+  });
+
+  src.addEventListener('change', () => upd(() => {
+    const b = mediaBlocks.find((x) => x.file === src.value);
+    if (b) p.cover = { file: b.file, w: b.w, h: b.h };
+    else delete p.cover;
+    paint();
+  }));
+  zoom.addEventListener('input', () => setScale(Number(zoom.value) / 100));
+  reset.onclick = () => upd(() => {
+    delete p.coverPosition;
+    delete p.coverScale;
+    paint();
+  });
+
+  /* 拖曳。1:1 跟手的關鍵是知道圖比框大出多少：object-position 的 0%→100%
+     走完的距離就是那個溢出量，所以移動 dx 像素等於改變 dx / 溢出量 的百分比。
+     不換算的話，越大的圖會覺得越靈敏，直式的圖甚至一拖就到底。
+
+     位置一律從按下去的那一刻重算（drag.pos + 總位移），不是每格累加，
+     這樣夾到 0 或 100 之後往回拖會立刻跟著走，而不是先補完被吃掉的位移。 */
+  let drag = null;
+  stage.addEventListener('pointerdown', (e) => {
+    if (!img.naturalWidth) return;
+    drag = { x: e.clientX, y: e.clientY, pos: readPos() };
+    stage.classList.add('dragging');
+    stage.setPointerCapture(e.pointerId);
+  });
+  stage.addEventListener('pointermove', (e) => {
+    if (!drag) return;
+    const r = stage.getBoundingClientRect();
+    const z = readScale();
+    const fit = Math.max(r.width / img.naturalWidth, r.height / img.naturalHeight);
+    const overX = img.naturalWidth * fit * z - r.width;
+    const overY = img.naturalHeight * fit * z - r.height;
+    const [x0, y0] = drag.pos;
+    // 溢出量幾乎是 0 的那一軸沒有可移動的空間，硬除會直接彈到 0% 或 100%
+    setPos(
+      overX > 1 ? x0 - (e.clientX - drag.x) / overX * 100 : x0,
+      overY > 1 ? y0 - (e.clientY - drag.y) / overY * 100 : y0,
+    );
+  });
+  const endDrag = () => { drag = null; stage.classList.remove('dragging'); };
+  stage.addEventListener('pointerup', endDrag);
+  stage.addEventListener('pointercancel', endDrag);
+
+  img.addEventListener('load', paint);
+  paint();
+  return wrap;
 }
 
 function blocksEditor(p, upd) {

@@ -312,8 +312,19 @@ async function api(req, res, url) {
     const rel = 'content/_preview-projects.json';
     const current = readJson(PROJECTS);
     writeJson(join(ROOT, rel), { ...current, projects: b.projects });
+
+    /* 先重量這一件的封面亮度。封面構圖一調，導覽列該不該轉白字就變了 ——
+       不重量的話預覽出來的黑白是舊的，等於在騙人。只量一件約 0.1 秒。
+       量進暫存檔而不是 content/projects.json：正式檔不能被預覽動到，
+       否則後台記憶中的那份會跟磁碟上的分岔，下次儲存就把量出來的值蓋掉。 */
+    const toned = await node('tools/set-card-colors.mjs',
+      ['--projects', rel, '--only', b.slug]);
     const r = await node('build.mjs', ['--projects', rel, '--only', b.slug]);
-    return json(res, r.ok ? 200 : 500, { ...r, url: 'work/_preview.html' });
+    return json(res, r.ok ? 200 : 500, {
+      ...r,
+      log: (toned.ok ? '' : toned.log + '\n') + r.log,
+      url: 'work/_preview.html',
+    });
   }
 
   /* ---- 產生網站 ---- */

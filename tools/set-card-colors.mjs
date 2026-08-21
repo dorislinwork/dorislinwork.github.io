@@ -20,9 +20,21 @@ import { findFfmpeg, findFfprobe } from './lib-ffmpeg.mjs';
 const FORCE = process.argv.includes('--force');
 const DRY = process.argv.includes('--dry');
 
+/* --projects <repo 相對路徑> 與 --only <slug>：跟 build.mjs 同名同義，
+   給後台的「預覽這一頁」用。它把還沒儲存的草稿寫成暫存清單，先重量那一件的
+   封面亮度、再產生預覽頁，所以預覽出來的導覽列黑白是真的 —— 封面構圖一調，
+   導覽列該不該轉白字就跟著變了，不重量的話預覽會騙人。
+
+   路徑必須是 repo 相對的：join(ROOT, 絕對路徑) 在 Windows 上會接出壞路徑。 */
+const argOf = (name) => {
+  const i = process.argv.indexOf('--' + name);
+  return i === -1 ? null : process.argv[i + 1];
+};
+const ONLY = argOf('only');
+
 // 跟其他工具一樣以 repo 根目錄為基準，從任何目錄呼叫都能跑
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
-const FILE = join(ROOT, 'content/projects.json');
+const FILE = join(ROOT, argOf('projects') || 'content/projects.json');
 const data = JSON.parse(readFileSync(FILE, 'utf8'));
 
 const isGif = (f) => /\.gif$/i.test(f || '');
@@ -84,18 +96,43 @@ function averageColor(file) {
 const COVER_BOX_RATIO = 2.4;   // 封面框的寬高比
 const NAV_FRACTION = 0.34;     // 導覽列大約佔封面高度的多少
 
-function coverTopBand(imgRatio) {
-  // 圖比框更寬 → 整個高度都看得到；圖比框更高 → 只看得到中間 imgRatio/框比例
-  const visible = imgRatio >= COVER_BOX_RATIO ? 1 : imgRatio / COVER_BOX_RATIO;
-  const top = (1 - visible) / 2;
-  return { y: top, h: Math.max(0.05, visible * NAV_FRACTION) };
+/** projects.json 的 coverPosition（"50% 12%"）→ [0.5, 0.12]。規則同 build.mjs 的 coverPos()。 */
+function coverPos(p) {
+  const m = /^(\d+(?:\.\d+)?)% (\d+(?:\.\d+)?)%$/.exec(String(p.coverPosition || '').trim());
+  return m ? [Number(m[1]) / 100, Number(m[2]) / 100] : [0.5, 0.5];
+}
+
+/**
+ * 導覽列後面那一塊，換算成「圖片的哪個範圍」（0~1 的比例）。
+ *
+ * 每件作品現在可以自己調封面構圖（projects.json 的 coverPosition 與 coverScale，
+ * 在後台是拖曳與滑桿），所以不能再假設居中裁切：她把構圖往下拖，看得到的就是
+ * 圖片下半部，量中段會量到根本沒顯示出來的地方。
+ *
+ * @param pos   [x, y] 都是 0~1，對應 object-position 的百分比，預設 [0.5, 0.5]
+ * @param scale 放大倍率，1 = 剛好填滿
+ */
+function coverTopBand(imgRatio, pos = [0.5, 0.5], scale = 1) {
+  const z = Math.max(1, scale);
+  // 圖比框更寬 → 整個高度都看得到、左右被裁；更高 → 反之。放大再各縮 1/z。
+  const visW = Math.min(1, COVER_BOX_RATIO / imgRatio) / z;
+  const visH = Math.min(1, imgRatio / COVER_BOX_RATIO) / z;
+  return {
+    // 剩下的空間由 object-position 決定往哪邊靠
+    x: (1 - visW) * pos[0],
+    y: (1 - visH) * pos[1],
+    w: visW,
+    h: Math.max(0.05, visH * NAV_FRACTION),
+  };
 }
 
 /** 量一塊區域的平均相對亮度（0 = 全黑，1 = 全白） */
-function bandLuminance(file, y, h) {
+function bandLuminance(file, band) {
+  const { x, y, w, h } = band;
   try {
     const buf = execFileSync(ff, ['-v', 'quiet', '-i', file, '-frames:v', '1',
-      '-vf', `crop=iw:ih*${h.toFixed(4)}:0:ih*${y.toFixed(4)},scale=1:1`,
+      '-vf', `crop=iw*${w.toFixed(4)}:ih*${h.toFixed(4)}:iw*${x.toFixed(4)}:ih*${y.toFixed(4)}`
+        + ',scale=1:1',
       '-f', 'rawvideo', '-pix_fmt', 'rgb24', '-'], { maxBuffer: 1 << 20 });
     if (buf.length < 3) return null;
     const lin = [buf[0], buf[1], buf[2]].map((v) => v / 255)
@@ -125,6 +162,7 @@ function toCardColor(rgb) {
 let colored = 0, sized = 0, skipped = 0, failed = 0, toned = 0;
 
 for (const p of data.projects) {
+  if (ONLY && p.slug !== ONLY) continue;
   const t = p.thumb || (p.blocks || []).find((b) => b.type === 'media');
   if (!t || !t.file) { failed++; console.log(`  ✗ ${p.slug}：找不到縮圖`); continue; }
 
@@ -149,9 +187,18 @@ for (const p of data.projects) {
      的問題（它不是設計選擇，是量出來的事實），所以每次都重算。
      門檻 0.5 是中間灰；比它暗就用白字。 */
   {
-    const ratio = (p.thumb && p.thumb.w && p.thumb.h) ? p.thumb.w / p.thumb.h : 1;
-    const band = coverTopBand(ratio);
-    const lum = bandLuminance(swatch, band.y, band.h);
+    /* 量的是**封面**那張，不是首頁縮圖 —— 作品可以指定 cover 用別的圖，
+       兩者不同時量縮圖等於量錯圖。cardColor 相反，它是首頁滑過的顏色，
+       本來就該跟著縮圖，所以上下兩段各自取自己的檔案。 */
+    const cv = p.cover && p.cover.file ? p.cover : t;
+    const cvPoster = join(ROOT, `assets/media/${p.slug}/${posterName(cv.file)}`);
+    const cvMedia = join(ROOT, `assets/media/${p.slug}/${localName(cv.file)}`);
+    const cvFile = isVid(cv.file) && existsSync(cvPoster) ? cvPoster : cvMedia;
+
+    const ratio = (cv.w && cv.h) ? cv.w / cv.h : 1;
+    const pos = coverPos(p);
+    const band = coverTopBand(ratio, pos, Number(p.coverScale) || 1);
+    const lum = existsSync(cvFile) ? bandLuminance(cvFile, band) : null;
     if (lum !== null) {
       if (lum < 0.5) p.coverTopDark = true;
       else delete p.coverTopDark;

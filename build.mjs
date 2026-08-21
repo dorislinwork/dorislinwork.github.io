@@ -819,15 +819,51 @@ ${thumbs}
 /* -------------------------------------------------------- 作品內頁 ---- */
 
 /** 封面媒體。跟內文的媒體差在兩點：不 lazy load（在第一屏），而且會被裁切填滿。 */
-function renderCover(m, slug, base) {
+/* 封面圖在封面框裡的位置與縮放（projects.json 每一筆的 coverPosition / coverScale）。
+
+   封面是 object-fit: cover 裁切的，所以「看得到哪一塊」由 object-position 決定 ——
+   預設 50% 50%（居中），直式素材因此只看得到中段。coverScale 再往上放大，
+   例如 1.4 就是放大到 140%、可以把主體推滿畫面。
+
+   縮放用 transform: scale 而不是動 object-fit：scale 1 的時候剛好等於原本的
+   cover 行為，往上加只會裁更多，不會出現填不滿的空邊。小於 1 會露出空邊，
+   所以後台的滑桿下限就是 1。 */
+const COVER_POS_DEFAULT = '50% 50%';
+
+/** "50% 50%" 這種兩個百分比的字串才算有效，其他一律當沒設。 */
+function coverPos(p) {
+  const raw = String(p.coverPosition || '').trim();
+  return /^\d+(\.\d+)?% \d+(\.\d+)?%$/.test(raw) ? raw : COVER_POS_DEFAULT;
+}
+
+/** 1 ~ 3 之間才算有效放大。小於 1 會露出空邊，所以不接受。 */
+function coverScale(p) {
+  const n = Number(p.coverScale);
+  return Number.isFinite(n) && n > 1 ? Math.min(n, 3) : 1;
+}
+
+function coverMediaStyle(p) {
+  const pos = coverPos(p);
+  const scale = coverScale(p);
+  const bits = [];
+  if (pos !== COVER_POS_DEFAULT) bits.push(`object-position:${pos}`);
+  if (scale > 1) {
+    bits.push(`transform:scale(${scale})`);
+    // 縮放的基準點跟著構圖點走，理由見 site.css 的 .case-cover > * 註解
+    if (pos !== COVER_POS_DEFAULT) bits.push(`transform-origin:${pos}`);
+  }
+  return bits.length ? ` style="${bits.join(';')}"` : '';
+}
+
+function renderCover(m, slug, base, style = '') {
   const src = mediaUrl(m, slug, MEDIA.fullWidth || 1600, base);
   const dim = `${m.w ? ` width="${esc(m.w)}"` : ''}${m.h ? ` height="${esc(m.h)}"` : ''}`;
   if (isVideo(m)) {
     const poster = posterUrl(m, slug, base);
-    return `<video src="${esc(src)}"${dim} autoplay muted loop playsinline`
+    return `<video src="${esc(src)}"${dim}${style} autoplay muted loop playsinline`
       + `${poster ? ` poster="${esc(poster)}"` : ''} preload="auto"></video>`;
   }
-  return `<img src="${esc(src)}"${dim} alt="" fetchpriority="high" decoding="async">`;
+  return `<img src="${esc(src)}"${dim}${style} alt="" fetchpriority="high" decoding="async">`;
 }
 
 function renderProject(p, prev, next) {
@@ -889,7 +925,7 @@ function renderProject(p, prev, next) {
   if (cover) {
     // data-fill 給 site.js 看：要不要把高度算成「視窗高 - 資訊列高」
     out.push(`    <div class="case-cover" data-fill="${cs.fillFirstScreen === false ? 'false' : 'true'}">`);
-    out.push('      ' + renderCover(cover, p.slug, base));
+    out.push('      ' + renderCover(cover, p.slug, base, coverMediaStyle(p)));
     out.push('    </div>');
   }
 

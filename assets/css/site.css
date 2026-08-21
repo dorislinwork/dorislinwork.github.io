@@ -581,11 +581,20 @@ h1, h2, h3 {
   margin-left: calc(50% - var(--vw, 100vw) / 2 + var(--cover-inset-now, 0px));
   border-radius: var(--cover-radius-now, 0);
 }
+/* 封面素材。裁切填滿，所以「看得到哪一塊」由 object-position 決定。
+
+   每件作品可以在後台調位置與縮放，build.mjs 會把 object-position、transform: scale
+   與 transform-origin 直接寫在這個元素的 style 上（見 coverMediaStyle()）。
+   這裡只放預設值 —— 沒調過的作品就是居中、不放大，跟以前一樣。
+
+   transform-origin 會跟著 object-position 一起設成同一組百分比，兩者不同步的話
+   放大永遠從正中央長出去：使用者把構圖拖到上緣，一放大又跑回中間，等於白拖。 */
 .case-cover > * {
   display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: 50% 50%;
   margin: 0;
 }
 
@@ -869,6 +878,7 @@ figure { margin: 0; }
   body { background: #fff; color: #000; }
   /* 印出來不該裁封面，也不該把敘述收起來 */
   .case-cover { height: auto !important; }
-  .case-cover > * { height: auto !important; object-fit: fill; }
+  /* 放大是為了在固定高的框裡選構圖；印出來沒有那個框，縮放只會裁掉東西 */
+  .case-cover > * { height: auto !important; object-fit: fill; transform: none !important; }
   .case-blurb[data-clamp] { display: block !important; overflow: visible !important; }
 }
