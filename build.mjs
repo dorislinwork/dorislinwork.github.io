@@ -300,7 +300,11 @@ function themeVars(base) {
     /* Information 頁的兩欄版面（2026-08-21 參考 bb-hlw.com/info）。
        都放在 site.json 的 information 裡，因為那一組本來就是這一頁的東西。 */
     `--info-photo-span: ${inf.photoSpan ?? 5};`,
-    `--info-text-span: ${inf.textSpan ?? 7};`,
+    /* 文字從第幾欄開始。中間要空幾欄比「文字佔幾欄」好懂，也不會兩個值互相打架。
+       算在這裡而不是寫成 CSS 的 calc() —— grid-column 的線號不吃 calc()。
+       1920 螢幕上留 1 欄 = 間距 153px、文字欄剛好 748px，幾乎正好是參考站的
+       750px 上限，所以 textMax 幾乎不必生效。 */
+    `--info-text-col: ${Number(inf.photoSpan ?? 5) + Number(inf.gapCols ?? 1) + 1};`,
     `--info-photo-ratio: ${inf.photoRatio || '1 / 1'};`,
     `--info-text-max: ${inf.textMax || '75rem'};`,
     `--info-title-size: ${inf.titleSize || '2.6rem'};`,

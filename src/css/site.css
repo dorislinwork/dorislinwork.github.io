@@ -889,7 +889,7 @@ figure { margin: 0; }
 /* 沒有照片時退回單欄，文字不要被壓在右半邊 */
 .info-grid.is-single .info-main { grid-column: 1 / -1; }
 
-.info-photo { grid-column: span var(--info-photo-span, 5); }
+.info-photo { grid-column: 1 / span var(--info-photo-span, 5); }
 .info-photo img {
   display: block;
   width: 100%;
@@ -901,7 +901,7 @@ figure { margin: 0; }
 }
 
 .info-main {
-  grid-column: span var(--info-text-span, 7);
+  grid-column: var(--info-text-col, 7) / -1;
   /* 行寬上限。參考站是 750px，這裡預設 75rem = 750px（1rem = 10px）。 */
   max-width: var(--info-text-max, 75rem);
 }
