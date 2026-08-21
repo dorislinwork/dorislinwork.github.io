@@ -666,6 +666,20 @@ h1, h2, h3 {
 /* ---- 圖片區 ----
    Bito 是每個媒體塊都 col-span-full 滿寬直排，這裡照做。
    原站 .content img 的 margin-bottom: 2rem 換成統一的區塊間距。 */
+/* 圖片區是 12 欄網格，讓每個區塊可以指定放在哪幾欄 —— 滿版、並排、左右錯落
+   都靠這一個機制（projects.json 的 col / span，後台區塊編輯器有下拉可選）。
+
+   沒有指定的區塊佔滿一整列，行為跟改成網格之前完全一樣。
+   row-gap 刻意保持 0、垂直間距仍然用各自的 margin-bottom —— 這樣現有 51 頁的
+   間距一點都不會變，而且文字段落可以有自己較緊的間距（見下面的 p + p）。 */
+.case-gallery {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: var(--grid-gutter, 2.4rem);
+  row-gap: 0;
+}
+.case-gallery > * { grid-column: 1 / -1; }
+
 /* 圖片之間的垂直間距。原本沿用網格的 2.4rem 太擠了（參考站是 10em）。
    文字段落的上下距離另外設，見下面 .case-gallery > p。 */
 .case-gallery > * { margin-bottom: var(--gallery-gap, 2.4rem); }
@@ -791,6 +805,11 @@ figure { margin: 0; }
   .case-gallery > img,
   .case-gallery > video,
   .case-gallery > figure { max-width: 100%; }
+
+  /* 手機上也不要並排或錯落，全部拉成一整列。
+     grid-column 是寫在 style 屬性上的，所以要用 !important 才蓋得掉 ——
+     這是唯一一個真的需要 !important 的地方，其他都有更好的辦法。 */
+  .case-gallery > * { grid-column: 1 / -1 !important; }
 }
 
 /* --------------------------------------------------------------------------

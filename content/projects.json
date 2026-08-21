@@ -233,7 +233,9 @@
           "w": 1188,
           "h": 1584,
           "alt": "",
-          "caption": ""
+          "caption": "",
+          "col": 1,
+          "span": 6
         },
         {
           "type": "media",
@@ -243,7 +245,9 @@
           "w": 1188,
           "h": 1584,
           "alt": "",
-          "caption": ""
+          "caption": "",
+          "col": 7,
+          "span": 6
         }
       ],
       "cardColor": "#c87d41",

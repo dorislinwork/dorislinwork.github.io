@@ -51,7 +51,26 @@ const isNote = (k) => k.startsWith('_');
  * 抽成函式是因為內頁文字有兩條路徑：內文區塊走 renderBlock()，資訊列的敘述
  * 走 renderProject()。第一次只改了前者，資訊列還是黏成一段。
  */
-const paragraph = (text) => `<p>${esc(text).replace(/\r?\n/g, '<br>')}</p>`;
+const paragraph = (text, place) =>
+  `<p${place ? ` style="${place}"` : ''}>${esc(text).replace(/\r?\n/g, '<br>')}</p>`;
+
+/* 內頁圖片區是 12 欄網格。每個區塊可以在 projects.json 指定放在哪幾欄：
+     "col": 2, "span": 5     從第 2 欄開始、佔 5 欄
+   一個機制涵蓋三種需求：
+     span 12          滿版
+     span 6 + span 6  兩塊並排（連續兩個區塊會自己落在同一列）
+     col 2 span 5 / col 7 span 5   左右錯落（參考 filippomartinelli.com 的做法）
+
+   沒有指定的區塊維持原本行為（佔滿一整列，再依比例置中收窄），
+   所以這個功能是純新增，不動到現有的 51 個作品頁。
+   後台的區塊編輯器有下拉可以選，不必手寫。 */
+function blockPlacement(b) {
+  const col = Number(b.col);
+  const span = Number(b.span);
+  if (!Number.isFinite(span) || span < 1 || span > 12) return '';
+  const start = Number.isFinite(col) && col >= 1 && col <= 12 ? col : 1;
+  return `grid-column:${start} / span ${Math.min(span, 13 - start)}`;
+}
 
 const VIDEO_EXT = /\.(mp4|webm|mov|m4v)$/i;
 const isGifFile = (f) => /\.gif$/i.test(f || '');
@@ -189,7 +208,13 @@ function themeVars(base) {
        --cover-radius-now，由 site.js 依捲動進度算出來。 */
     `--media-radius: ${cs.mediaRadius || '0'};`,
     `--cover-radius: ${cs.coverRadius || '0'};`,
-    `--cover-inset: ${cs.coverInset || '0'};`,
+    /* coverInset 填 "grid" 的話，縮到跟內容欄（也就是下面的 Vimeo 影片）完全一樣寬。
+       那個寬度是 min(maxWidth, 視窗寬) - 2×pad，所以每一側要縮的量是
+       (視窗寬 - 內容欄寬) / 2 = (視窗寬 - min(maxWidth, 視窗寬)) / 2 + pad。
+       用 CSS 的 min() 算而不是 JS 算，這樣改視窗大小會自己跟上、不必等 resize 事件。 */
+    `--cover-inset: ${cs.coverInset === 'grid'
+      ? 'calc((var(--vw, 100vw) - min(var(--max, 160rem), var(--vw, 100vw))) / 2 + var(--pad, 4rem))'
+      : (cs.coverInset || '0')};`,
     `--gallery-gap: ${cs.gallerySpacing || '2.4rem'};`,
     // 導覽列右邊那組連結：對齊哪一邊、字級、字重、往上抬多少（site.json 的 header）
     `--nav-align: ${NAV_ALIGN[(site.header || {}).navAlign] || 'flex-end'};`,
@@ -418,7 +443,7 @@ function renderBlock(b, i, slug, base) {
   }
 
   if (b.type === 'text') {
-    return `      ${paragraph(b.text)}`;
+    return `      ${paragraph(b.text, blockPlacement(b))}`;
   }
 
   if (b.type === 'embed') {
@@ -465,7 +490,7 @@ function renderBlock(b, i, slug, base) {
     const wide = ratioNum((site.case || {}).wideRatio || '16 / 9');
     return `${Math.min(100, (b.w / b.h) / wide * 100).toFixed(1)}%`;
   }
-  const ratioStyle = ` style="--media-max:${mediaMaxWidth()}"`;
+  const ratioStyle = ` style="${blockPlacement(b) || `--media-max:${mediaMaxWidth()}`}"`;
 
   // #eye：跟著滑鼠轉
   let eye = '';

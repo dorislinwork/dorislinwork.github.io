@@ -453,6 +453,120 @@ function autoPct(b) {
   return Math.min(100, (b.w / b.h) / ref * 100).toFixed(1) + '%';
 }
 
+/* ---- 區塊的 12 欄版面控制 ----
+   內頁圖片區是 12 欄網格。這個控制項讓每個區塊自己決定「從第幾欄開始、佔幾欄」，
+   一個機制就涵蓋滿版、並排、左右錯落三種需求：
+     滿版      1 / 12
+     並排      1 / 6 加 7 / 6（連續兩個區塊會自己落在同一列）
+     錯落      2 / 5 與 7 / 5
+   沒設定的區塊佔滿一整列，也就是原本的行為。手機上一律拉成一整列。 */
+const PLACEMENTS = [
+  ['', '整列（預設，依比例置中）', null, null],
+  ['12,1', '滿版　12 欄', 1, 12],
+  ['6,1', '左半　1–6 欄', 1, 6],
+  ['6,7', '右半　7–12 欄', 7, 6],
+  ['5,2', '左偏移　2–6 欄', 2, 5],
+  ['5,7', '右偏移　7–11 欄', 7, 5],
+  ['8,3', '中間偏大　3–10 欄', 3, 8],
+  ['4,1', '左三分一　1–4 欄', 1, 4],
+  ['4,5', '中三分一　5–8 欄', 5, 4],
+  ['4,9', '右三分一　9–12 欄', 9, 4],
+];
+
+function placementControl(b, upd) {
+  const wrap = el('div');
+  wrap.style.cssText = 'display:flex;gap:.8rem;align-items:center;flex-wrap:wrap;margin-top:.6rem';
+  wrap.appendChild(el('span', 'fname', '版面'));
+
+  const sel = el('select');
+  sel.style.maxWidth = '22rem';
+  PLACEMENTS.forEach(([key, label]) => {
+    const o = el('option', null, label);
+    o.value = key;
+    sel.appendChild(o);
+  });
+  const custom = el('option', null, '自訂…');
+  custom.value = 'custom';
+  sel.appendChild(custom);
+
+  // 12 格預覽
+  const bar = el('div');
+  bar.style.cssText = 'display:flex;gap:1px;flex:none';
+  const cells = [];
+  for (let i = 0; i < 12; i++) {
+    const c = el('span');
+    c.style.cssText = 'width:1.1rem;height:1.1rem;background:#e4e4e4;border-radius:1px';
+    cells.push(c);
+    bar.appendChild(c);
+  }
+
+  const colIn = el('input');
+  const spanIn = el('input');
+  [colIn, spanIn].forEach((inp) => {
+    inp.type = 'number';
+    inp.min = '1';
+    inp.max = '12';
+    inp.style.cssText = 'width:5.4rem;flex:none';
+  });
+  const customWrap = el('span');
+  customWrap.style.cssText = 'display:flex;gap:.5rem;align-items:center';
+  customWrap.appendChild(el('span', 'fname', '從'));
+  customWrap.appendChild(colIn);
+  customWrap.appendChild(el('span', 'fname', '欄起，佔'));
+  customWrap.appendChild(spanIn);
+  customWrap.appendChild(el('span', 'fname', '欄'));
+
+  const paint = () => {
+    const col = Number(b.col) || 1;
+    const span = Number(b.span) || 0;
+    cells.forEach((c, i) => {
+      const on = span > 0 && i + 1 >= col && i + 1 < col + span;
+      c.style.background = on ? 'var(--pink)' : '#e4e4e4';
+    });
+    // 沒設定 span 就是整列，整條顯示淡粉紅表示「滿列但會依比例置中」
+    if (!span) cells.forEach((c) => { c.style.background = '#f6dbe4'; });
+  };
+
+  const sync = () => {
+    const span = Number(b.span) || 0;
+    const col = Number(b.col) || 1;
+    const key = span ? `${span},${col}` : '';
+    const known = PLACEMENTS.some(([k]) => k === key);
+    sel.value = span ? (known ? key : 'custom') : '';
+    customWrap.style.display = sel.value === 'custom' ? 'flex' : 'none';
+    colIn.value = col;
+    spanIn.value = span || '';
+    paint();
+  };
+
+  sel.addEventListener('change', () => upd(() => {
+    if (sel.value === '') { delete b.col; delete b.span; }
+    else if (sel.value === 'custom') { b.col = Number(b.col) || 1; b.span = Number(b.span) || 6; }
+    else {
+      const found = PLACEMENTS.find(([k]) => k === sel.value);
+      b.col = found[2];
+      b.span = found[3];
+    }
+    sync();
+  }));
+
+  const onCustom = () => upd(() => {
+    const col = Math.min(12, Math.max(1, Number(colIn.value) || 1));
+    const span = Math.min(13 - col, Math.max(1, Number(spanIn.value) || 1));
+    b.col = col;
+    b.span = span;
+    paint();
+  });
+  colIn.addEventListener('input', onCustom);
+  spanIn.addEventListener('input', onCustom);
+
+  wrap.appendChild(sel);
+  wrap.appendChild(bar);
+  wrap.appendChild(customWrap);
+  sync();
+  return wrap;
+}
+
 function slugify(s) {
   return String(s).trim()
     .replace(/['’]/g, '-')
@@ -818,6 +932,10 @@ function blocksEditor(p, upd) {
     } else {
       body.appendChild(el('div', 'fname', JSON.stringify(b).slice(0, 200)));
     }
+
+    /* 12 欄版面控制 —— 每一種區塊都能排（圖片、影片、文字、小標）。
+       兩塊都設成佔 6 欄就會並排，設成 2–6 與 7–11 就是錯落。 */
+    body.appendChild(placementControl(b, upd));
     row.appendChild(body);
 
     const ctl = el('div', 'ctl');
