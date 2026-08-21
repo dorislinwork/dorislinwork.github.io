@@ -255,6 +255,19 @@ function themeVars(base) {
     `--cover-h-min: ${cs.coverMinHeight || '45vh'};`,
     `--cover-h-max: ${cs.coverMaxHeight || '92vh'};`,
     `--blurb-lines: ${cs.blurbLines ?? 4};`,
+    /* 資訊列的版型（2026-08-21 參考 therocketpanda.com 的作品內頁）：
+       左邊一段大字敘述當主角，右邊單一直排的欄位、每格左邊一條細線。 */
+    `--blurb-size: ${cs.blurbSize || 'clamp(2.2rem, 2.1vw, 3.8rem)'};`,
+    `--blurb-lh: ${cs.blurbLineHeight || '1.4'};`,
+    `--info-span: ${cs.blurbSpan ?? 8};`,
+    `--facts-col: ${cs.factsCol ?? 10};`,
+    `--facts-gap: ${cs.factsGap || '6.4rem'};`,
+    /* 細線關掉的時候塗成透明，而不是不畫 border —— 不然左邊少了 1px，
+       整欄文字會跟著位移，開關看起來像是版面在跳。 */
+    `--facts-rule: ${cs.factsRule === false
+      ? 'transparent'
+      : (cs.factsRuleColor || 'rgba(0,0,0,.16)')};`,
+    `--info-pad: ${cs.infoSpacing || '10rem'};`,
     /* 內頁的圓角與間距（參考 filippomartinelli.com）。
        --cover-radius 是「捲到底時」的值，捲動前是 0；實際套用的是
        --cover-radius-now，由 site.js 依捲動進度算出來。 */
@@ -929,7 +942,10 @@ function renderProject(p, prev, next) {
     out.push('    </div>');
   }
 
-  out.push('    <div class="case-info" data-stagger-scope>');
+  /* 沒有敘述的作品（52 件裡有 21 件）標成 data-lean，CSS 會把整段收緊。
+     大字敘述的版型靠大量留白撐起來，但左邊只有一個標題的時候，同樣的留白
+     就只是一片空白，右邊兩個欄位還被拉開快 250px。 */
+  out.push(`    <div class="case-info" data-stagger-scope${blurb.length ? '' : ' data-lean'}>`);
   out.push('      <div class="case-name">');
   out.push(`        <h1 class="case-title">${esc(p.title)}</h1>`);
   if (blurb.length) {

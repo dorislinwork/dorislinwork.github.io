@@ -599,18 +599,31 @@ h1, h2, h3 {
 }
 
 /* ---- 資訊列 ----
-   12 欄。左半邊是作品名與敘述，右半邊是類型與年份。
-   Bito 的 .work-info 是 padding: 1.5rem 0 3rem，本站 1rem = 10px 所以換算成
-   2.4rem 與 4.8rem。 */
+   12 欄。左邊是作品名與敘述，右邊是類型、年份這些欄位。
+
+   2026-08-21 改成參考 therocketpanda.com 的作品內頁：敘述放大成整段的主角
+   （原本是 1.6rem，跟一般段落一樣大），右邊的欄位從 2×2 改成單一直排、
+   每格左邊一條細線、彼此拉開很大的間距，上下留白也拉大，所以這一段自成一屏。
+
+   欄位怎麼分、字多大、間距多少都在 site.json 的 case 裡（blurbSize、blurbSpan、
+   factsCol、factsGap、infoSpacing），後台的「版面」頁調得到。 */
 .case-info {
   display: grid;
   grid-template-columns: repeat(var(--grid-cols, 12), minmax(0, 1fr));
   gap: var(--grid-gutter, 2.4rem);
-  padding: 2.4rem 0 4.8rem;
+  padding: var(--info-pad, 10rem) 0;
 }
-.case-name { grid-column: span 6; }
+.case-name { grid-column: span var(--info-span, 8); }
+
+/* 沒有敘述的作品（52 件裡有 21 件）。大字版型靠大量留白撐起來，但左邊只有
+   一個標題時，同樣的留白只是一片空白，右邊兩個欄位還被拉開快 250px。
+   build.mjs 會在這種頁面的 .case-info 上加 data-lean。 */
+.case-info[data-lean] { padding: calc(var(--info-pad, 10rem) * 0.45) 0; }
+.case-info[data-lean] .case-facts { gap: 3.2rem; }
 .case-title {
-  /* Bito 是 28px / 500 / 150%。這裡跟著站上其他標題用 --heading-weight。 */
+  /* 敘述放大之後，標題反而比它小 —— 這是刻意的：小字粗體的作品名當標籤，
+     底下接大字的引言段落。參考站的作品名不在這一段裡（壓在封面上），
+     但這個站的封面沒有壓字，所以標題必須留在這裡。 */
   font-family: var(--font-display, sans-serif);
   font-size: clamp(2.2rem, 2.6vw, 2.8rem);
   font-weight: var(--heading-weight, 700);
@@ -618,14 +631,16 @@ h1, h2, h3 {
   margin: 0;
 }
 
+/* 敘述。行寬交給上面的欄位數決定，不再用 max-width 限制 ——
+   62ch 在 3.8rem 的字級下換算成 2300px 以上，根本不會生效，留著只會誤導。
+   段距用 em 而不是 rem，字級一調就跟著走。 */
 .case-blurb {
-  margin-top: 1.2rem;
-  max-width: 62ch;
-  font-size: var(--body-size, 1.4rem);
-  line-height: 1.5;
+  margin-top: 3.2rem;
+  font-size: var(--blurb-size, 2.4rem);
+  line-height: var(--blurb-lh, 1.4);
 }
 .case-blurb p { margin: 0; }
-.case-blurb p + p { margin-top: 0.8rem; }
+.case-blurb p + p { margin-top: 0.6em; }
 
 /* 敘述放在資訊列會直接吃掉封面的高度，所以先收到 --blurb-lines 行。
    超出的話 site.js 才把展開按鈕顯示出來 —— 沒溢出就不該有按鈕。
@@ -637,7 +652,7 @@ h1, h2, h3 {
   overflow: hidden;
 }
 .case-more {
-  margin-top: 0.8rem;
+  margin-top: 1.2rem;
   padding: 0;
   border: 0;
   background: none;
@@ -649,24 +664,28 @@ h1, h2, h3 {
 }
 .case-more:hover { color: var(--accent-hover, #ff5b90); }
 
-/* 右半邊兩格，各佔 3 欄 —— 對齊 Bito 的 2×2 標籤區。
-   label 一律半透明大寫，值用正常文字色。 */
+/* 右邊一欄。參考圖是單一直排、每格左邊一條細線、間距拉得很開。
+   細線的顏色由 --facts-rule 控制，關掉時是 transparent 而不是拿掉 border，
+   這樣文字不會左右位移。 */
 .case-facts {
-  grid-column: 7 / -1;
-  display: grid;
-  grid-template-columns: repeat(6, minmax(0, 1fr));
-  gap: var(--grid-gutter, 2.4rem) var(--grid-gutter, 2.4rem);
+  grid-column: var(--facts-col, 10) / -1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--facts-gap, 6.4rem);
   margin: 0;
 }
-.case-fact { grid-column: span 3; }
+.case-fact {
+  padding-left: 1.6rem;
+  border-left: 1px solid var(--facts-rule, rgba(0, 0, 0, 0.16));
+}
+/* 參考圖的標籤是小灰字，沒有大寫也沒有加字距（原本是 uppercase + 0.08em）。
+   比值小一號，用 body-size 算出來，改字級的時候兩個一起動。 */
 .case-facts dt {
-  font-size: 1.2rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  opacity: 0.5;
+  font-size: calc(var(--body-size, 1.4rem) * 0.94);
+  opacity: 0.45;
 }
 .case-facts dd {
-  margin: 0.4rem 0 0;
+  margin: 0.5rem 0 0;
   font-size: var(--body-size, 1.4rem);
   line-height: 1.4;
   color: var(--ink-strong, #000);
@@ -796,17 +815,16 @@ figure { margin: 0; }
    Bito 在 ≤500px 是把網格改成 8 欄再用 order 重排；這裡只有兩塊，
    直接讓兩塊都滿寬就好，不必動欄數。 */
 @media (max-width: 1100px) {
-  .case-info { padding-bottom: 3.6rem; }
+  .case-info { padding: calc(var(--info-pad, 10rem) * 0.55) 0 3.6rem; }
   .case-name,
   .case-facts { grid-column: 1 / -1; }
-  .case-facts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .case-fact { grid-column: span 1; }
+  /* 欄位改成橫排並列。窄畫面上單一直排會拉得很長，而且下面就是圖片區了 */
+  .case-facts { flex-direction: row; flex-wrap: wrap; gap: 2.4rem 4rem; }
 }
 
 @media (max-width: 620px) {
   /* 手機上封面不該吃掉整個第一屏，否則要捲很久才看到作品名 */
   .case-cover { height: clamp(30vh, var(--cover-h, 50vh), 60vh); }
-  .case-blurb { max-width: none; }
 
   /* 手機上一律滿寬。螢幕本來就窄，正方形再收到 56% 只剩指甲大小。
      這裡蓋掉 max-width 這個屬性，而不是改 --media-max ——
