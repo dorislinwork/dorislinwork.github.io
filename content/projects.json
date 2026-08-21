@@ -407,7 +407,10 @@
           "w": 600,
           "h": 450,
           "alt": "",
-          "caption": ""
+          "caption": "",
+          "col": 1,
+          "span": 4,
+          "width": "full"
         },
         {
           "type": "media",
@@ -417,7 +420,10 @@
           "w": 600,
           "h": 450,
           "alt": "",
-          "caption": ""
+          "caption": "",
+          "col": 9,
+          "span": 4,
+          "newRow": true
         },
         {
           "type": "media",
@@ -427,7 +433,9 @@
           "w": 600,
           "h": 450,
           "alt": "",
-          "caption": ""
+          "caption": "",
+          "col": 5,
+          "span": 4
         }
       ],
       "cardColor": "#89c841",

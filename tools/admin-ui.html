@@ -473,7 +473,29 @@ const PLACEMENTS = [
   ['4,9', '右三分一　9–12 欄', 9, 4],
 ];
 
-function placementControl(b, upd) {
+/* 算出每個區塊會落在第幾列 —— 跟 build.mjs 的 assignRows() 同一套規則。
+   照順序走，欄位不重疊就留在同一列，重疊才換列；newRow 強制斷開。
+   後台要自己算一次，才能把結果顯示出來（不然使用者看不出有沒有並排）。 */
+function computeRows(blocks) {
+  let row = 0;
+  let taken = new Array(13).fill(false);
+  return blocks.map((b) => {
+    const span = Number(b.span);
+    const hasBox = Number.isFinite(span) && span >= 1 && span <= 12;
+    const col = hasBox ? Math.min(12, Math.max(1, Number(b.col) || 1)) : 1;
+    const cols = hasBox
+      ? Array.from({ length: Math.min(span, 13 - col) }, (_, k) => col + k)
+      : Array.from({ length: 12 }, (_, k) => k + 1);
+    if (row === 0 || cols.some((c) => taken[c]) || b.newRow === true) {
+      row += 1;
+      taken = new Array(13).fill(false);
+    }
+    cols.forEach((c) => { taken[c] = true; });
+    return row;
+  });
+}
+
+function placementControl(b, upd, refreshRows) {
   const wrap = el('div');
   wrap.style.cssText = 'display:flex;gap:.8rem;align-items:center;flex-wrap:wrap;margin-top:.6rem';
   wrap.appendChild(el('span', 'fname', '版面'));
@@ -548,6 +570,7 @@ function placementControl(b, upd) {
       b.span = found[3];
     }
     sync();
+    if (refreshRows) refreshRows();
   }));
 
   const onCustom = () => upd(() => {
@@ -556,14 +579,40 @@ function placementControl(b, upd) {
     b.col = col;
     b.span = span;
     paint();
+    if (refreshRows) refreshRows();
   });
   colIn.addEventListener('input', onCustom);
   spanIn.addEventListener('input', onCustom);
 
+  /* 算出來會落在第幾列。兩塊顯示同一個列號就是真的並排了 —— 沒有這個數字的話
+     使用者只能靠猜，而「順序造成被推到下一列」正是最容易搞不懂的狀況。 */
+  const rowLabel = el('span', 'fname', '');
+  rowLabel.style.cssText = 'min-width:5rem;color:var(--pink)';
+
+  /* 「另起一行」：明明放得下也強制斷開。
+     例如兩張都設 6 欄但不想並排時用它。 */
+  const brk = el('label', 'check');
+  brk.style.cssText = 'gap:.4rem;font-size:1.2rem;align-items:center';
+  const brkBox = el('input');
+  brkBox.type = 'checkbox';
+  brkBox.checked = b.newRow === true;
+  brkBox.style.marginTop = '0';
+  brkBox.addEventListener('change', () => upd(() => {
+    if (brkBox.checked) b.newRow = true; else delete b.newRow;
+    if (refreshRows) refreshRows();
+  }));
+  brk.appendChild(brkBox);
+  brk.appendChild(el('span', null, '另起一行'));
+
   wrap.appendChild(sel);
   wrap.appendChild(bar);
+  wrap.appendChild(rowLabel);
+  wrap.appendChild(brk);
   wrap.appendChild(customWrap);
   sync();
+
+  // 讓外面的 refreshRows 能更新這一行的列號顯示
+  wrap._setRow = (n) => { rowLabel.textContent = '第 ' + n + ' 列'; };
   return wrap;
 }
 
@@ -862,6 +911,14 @@ function blocksEditor(p, upd) {
   const wrap = el('div', 'blocks');
   const blocks = p.blocks || (p.blocks = []);
 
+  /* 列號取決於前面的區塊佔了哪些欄，所以任何一塊改動都要重算全部。
+     收集每個控制項，改完一起更新顯示。 */
+  const controls = [];
+  const refreshRows = () => {
+    const rows = computeRows(blocks);
+    controls.forEach((c, i) => { if (c && c._setRow) c._setRow(rows[i]); });
+  };
+
   if (!blocks.length) {
     wrap.appendChild(el('div', 'blk', '（沒有任何區塊）'));
     return wrap;
@@ -935,7 +992,9 @@ function blocksEditor(p, upd) {
 
     /* 12 欄版面控制 —— 每一種區塊都能排（圖片、影片、文字、小標）。
        兩塊都設成佔 6 欄就會並排，設成 2–6 與 7–11 就是錯落。 */
-    body.appendChild(placementControl(b, upd));
+    const place = placementControl(b, upd, refreshRows);
+    controls[i] = place;
+    body.appendChild(place);
     row.appendChild(body);
 
     const ctl = el('div', 'ctl');
@@ -978,6 +1037,7 @@ function blocksEditor(p, upd) {
   tools.appendChild(t);
   wrap.appendChild(tools);
 
+  refreshRows();   // 初次顯示列號
   return wrap;
 }
 

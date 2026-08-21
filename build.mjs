@@ -65,11 +65,49 @@ const paragraph = (text, place) =>
    所以這個功能是純新增，不動到現有的 51 個作品頁。
    後台的區塊編輯器有下拉可以選，不必手寫。 */
 function blockPlacement(b) {
+  const box = blockBox(b);
+  return box ? `grid-column:${box.col} / span ${box.span}` : '';
+}
+
+/** 區塊要佔哪幾欄。沒指定或值不合法就回 null（代表佔滿一整列）。 */
+function blockBox(b) {
   const col = Number(b.col);
   const span = Number(b.span);
-  if (!Number.isFinite(span) || span < 1 || span > 12) return '';
+  if (!Number.isFinite(span) || span < 1 || span > 12) return null;
   const start = Number.isFinite(col) && col >= 1 && col <= 12 ? col : 1;
-  return `grid-column:${start} / span ${Math.min(span, 13 - start)}`;
+  return { col: start, span: Math.min(span, 13 - start) };
+}
+
+/**
+ * 算出每個區塊該放在第幾列。
+ *
+ * 為什麼要自己算，不交給 CSS 自動排版：網格的自動排版是一個「只會前進的游標」，
+ * 所以順序會決定結果 —— 先放「第 7 欄起」再放「第 1 欄起」的話，第二塊會被推到
+ * 下一列，而使用者的意圖是並排。手寫列號又太脆弱（插一張圖就要全部重編）。
+ *
+ * 這裡的規則：照順序走，只要要佔的欄位跟這一列已經被佔的不重疊就留在同一列，
+ * 重疊才換到下一列。所以任何不重疊的組合都會並排，跟先後順序無關。
+ * 區塊加上 "newRow": true 可以強制斷開（明明放得下也另起一列）。
+ * 沒指定欄位的區塊佔滿整列，自然把那一列封住。
+ */
+function assignRows(blocks) {
+  let row = 0;
+  let taken = new Array(13).fill(false);   // 1..12，索引 0 不用
+
+  return blocks.map((b) => {
+    const box = blockBox(b);
+    const cols = box
+      ? Array.from({ length: box.span }, (_, k) => box.col + k)
+      : Array.from({ length: 12 }, (_, k) => k + 1);
+
+    const clash = cols.some((c) => taken[c]);
+    if (row === 0 || clash || b.newRow === true) {
+      row += 1;
+      taken = new Array(13).fill(false);
+    }
+    cols.forEach((c) => { taken[c] = true; });
+    return row;
+  });
 }
 
 const VIDEO_EXT = /\.(mp4|webm|mov|m4v)$/i;
@@ -436,14 +474,24 @@ ${footerSocial ? `  <ul class="footer-social">\n${footerSocial}\n  </ul>\n` : ''
  *   media    圖片
  *   embed    Vimeo 嵌入
  */
-function renderBlock(b, i, slug, base) {
+function renderBlock(b, i, slug, base, row) {
+  /* 列號由 assignRows() 統一算好傳進來，所有區塊都輸出 grid-row —— 全部明寫
+     才不會有一半靠自動排版、一半靠明寫而互相打亂。 */
+  const rowStyle = row ? `grid-row:${row}` : '';
+  const withRow = (s) => [s, rowStyle].filter(Boolean).join(';');
+  /* 每一種區塊都要帶 style —— 只要有一種漏掉，那一種就會退回 CSS 的自動排版，
+     跟其他明寫列號的區塊混在一起就會錯位或留下空洞。
+     2026-08-21 第一版漏了 heading 與 embed，影片就是這樣跑掉的。 */
+  const placeStyle = withRow(blockPlacement(b));
+  const styleAttr = placeStyle ? ` style="${placeStyle}"` : '';
+
   if (b.type === 'heading') {
     const tag = b.level === 'h1' ? 'h2' : 'h3';   // 內頁只有作品名是 h1
-    return `      <${tag} class="case-section">${esc(b.text)}</${tag}>`;
+    return `      <${tag} class="case-section"${styleAttr}>${esc(b.text)}</${tag}>`;
   }
 
   if (b.type === 'text') {
-    return `      ${paragraph(b.text, blockPlacement(b))}`;
+    return `      ${paragraph(b.text, withRow(blockPlacement(b)))}`;
   }
 
   if (b.type === 'embed') {
@@ -454,13 +502,13 @@ function renderBlock(b, i, slug, base) {
         b.autoplay ? 'autoplay=1&muted=1' : '',
         b.loop ? 'loop=1' : '',
       ].filter(Boolean).join('&');
-      return `      <div class="embed">
+      return `      <div class="embed"${styleAttr}>
         <iframe src="https://player.vimeo.com/video/${esc(b.id)}?${params}"
           title="${esc(b.title || 'Vimeo video')}" loading="lazy"
           allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
       </div>`;
     }
-    return `      <div class="embed"><iframe src="${esc(b.url)}" title="Embedded video" loading="lazy" allow="autoplay; fullscreen" allowfullscreen></iframe></div>`;
+    return `      <div class="embed"${styleAttr}><iframe src="${esc(b.url)}" title="Embedded video" loading="lazy" allow="autoplay; fullscreen" allowfullscreen></iframe></div>`;
   }
 
   if (b.type !== 'media') return '';
@@ -490,7 +538,7 @@ function renderBlock(b, i, slug, base) {
     const wide = ratioNum((site.case || {}).wideRatio || '16 / 9');
     return `${Math.min(100, (b.w / b.h) / wide * 100).toFixed(1)}%`;
   }
-  const ratioStyle = ` style="${blockPlacement(b) || `--media-max:${mediaMaxWidth()}`}"`;
+  const ratioStyle = ` style="${withRow(blockPlacement(b) || `--media-max:${mediaMaxWidth()}`)}"`;
 
   // #eye：跟著滑鼠轉
   let eye = '';
@@ -801,8 +849,13 @@ function renderProject(p, prev, next) {
     if (i !== -1 && blocks[i].file === cover.file) blocks.splice(i, 1);
   }
 
+  /* 列號要在這裡一次算完 —— 它取決於「前面的區塊佔掉了哪些欄」，
+     所以是整份清單的性質，不是單一區塊能決定的。要在去重之後才算，
+     不然被拿掉的那張圖會佔掉一個列號、後面全部往下移一列。 */
+  const rows = assignRows(blocks);
+
   const gallery = blocks
-    .map((b, i) => renderBlock(b, i, p.slug, base))
+    .map((b, i) => renderBlock(b, i, p.slug, base, rows[i]))
     .filter(Boolean)
     .join('\n');
 
