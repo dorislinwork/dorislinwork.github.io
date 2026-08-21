@@ -408,9 +408,9 @@
           "h": 450,
           "alt": "",
           "caption": "",
+          "width": "70%",
           "col": 1,
-          "span": 4,
-          "width": "full"
+          "span": 6
         },
         {
           "type": "media",
