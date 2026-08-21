@@ -75,6 +75,17 @@ const CARGO_HOST = 'https://freight.cargo.site';
 const localName = (file) => file.replace(/\.[^.]+$/, '') + (isGifFile(file) ? '.mp4' : '.webp');
 const posterName = (file) => file.replace(/\.[^.]+$/, '') + '.webp';
 
+/* 本機檔名。平常就是 file，但同一件作品裡可能有**不同的圖用同一個檔名** ——
+   Cargo 用 hash 定址，所以它允許這種事（Dancing-Christmas-Tree 有三張不同的圖
+   都叫 _00000.png）。只用檔名存的話它們會互相蓋掉，頁面上會看到同一張重複三次，
+   另外兩張根本沒下載。2026-08-21 發現線上真的是這樣。
+
+   所以衝突的區塊要在 projects.json 補一個 localFile（例如 _00000-707ab261.png）。
+   Cargo 的網址仍然用原本的 file（實測換檔名會 404，它要求完全相符），
+   只有存在本機的名字不同。下面 checkLocalNameCollisions() 會在 build 時檢查，
+   漏填的話會警告，不會再默默壞掉。 */
+const sourceName = (m) => m.localFile || m.file;
+
 /** 本機的 GIF 已轉成 MP4，所以在 local 模式下 GIF 也算影片 */
 const isVideo = (m) => m.tag === 'video'
   || VIDEO_EXT.test(m.file || m.src || '')
@@ -84,7 +95,7 @@ function mediaUrl(m, slug, width, base) {
   if (!m) return '';
   if (MEDIA_SOURCE === 'local') {
     if (!m.file) return base + (m.url || '');
-    return `${base}assets/media/${slug}/${encodeURIComponent(localName(m.file))}`;
+    return `${base}assets/media/${slug}/${encodeURIComponent(localName(sourceName(m)))}`;
   }
   if (m.hash && m.file) {
     const q = MEDIA.quality || 82;
@@ -100,7 +111,7 @@ function mediaUrl(m, slug, width, base) {
 /** <video> 的 poster（第一幀）。只有 local 模式才有 */
 function posterUrl(m, slug, base) {
   if (MEDIA_SOURCE !== 'local' || !m || !m.file) return '';
-  return `${base}assets/media/${slug}/${encodeURIComponent(posterName(m.file))}`;
+  return `${base}assets/media/${slug}/${encodeURIComponent(posterName(sourceName(m)))}`;
 }
 
 /* ------------------------------------------------------- 主題變數注入 ---- */
@@ -961,6 +972,35 @@ if (INDEX_STATS) {
 }
 if (empty.length) {
   console.log(`\n⚠ 完全沒有內容的作品（${empty.length}）：${empty.map((p) => p.slug).join(', ')}`);
+}
+
+/* 本機檔名撞名檢查。
+   同一件作品裡不同的圖（不同 hash）可能用同一個檔名 —— Cargo 用 hash 定址所以
+   允許。本機是用檔名存的，撞名的話會互相蓋掉：頁面上同一張圖重複出現，
+   另外幾張根本沒下載，而且完全不會報錯。2026-08-21 在 Dancing-Christmas-Tree
+   身上就是這樣（三張不同的圖都叫 _00000.png，線上只看得到一張）。
+   解法是在那些區塊補 localFile。這裡負責在漏填時吼一聲。 */
+{
+  const collisions = [];
+  for (const p of projects) {
+    const byName = new Map();
+    const consider = [p.thumb, ...(p.blocks || []).filter((b) => b.type === 'media')];
+    for (const m of consider) {
+      if (!m || !m.file || !m.hash) continue;
+      const name = m.localFile || m.file;
+      if (!byName.has(name)) byName.set(name, new Set());
+      byName.get(name).add(m.hash);
+    }
+    for (const [name, hashes] of byName) {
+      if (hashes.size > 1) collisions.push({ slug: p.slug, name, count: hashes.size });
+    }
+  }
+  if (collisions.length) {
+    console.log(`\n⚠ 本機檔名撞名（${collisions.length} 處）—— 這些圖會互相蓋掉，頁面上會重複顯示同一張：`);
+    collisions.forEach((c) => console.log(`    ${c.slug} 的 ${c.name} 有 ${c.count} 個不同的圖`));
+    console.log('  修法：在 projects.json 那些 media 區塊加 "localFile"，給每一張不同的本機檔名');
+    console.log('  （"file" 保持原樣不要動，Cargo 的網址需要它完全相符）');
+  }
 }
 
 /* 字重有沒有真的載到。
