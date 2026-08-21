@@ -77,10 +77,10 @@
            不去解析數值 —— 那樣才不用管使用者填什麼單位。 */
         if (coverH > 0) {
           var t = Math.min(1, Math.max(0, y / coverH));
-          coverEl.style.setProperty(
-            '--cover-radius-now',
-            'calc(var(--cover-radius, 0) * ' + t.toFixed(4) + ')',
-          );
+          var f = t.toFixed(4);
+          // 乘一個比例而不是自己算數值，這樣設定填 rem／px／em 都不用管單位
+          coverEl.style.setProperty('--cover-radius-now', 'calc(var(--cover-radius, 0) * ' + f + ')');
+          coverEl.style.setProperty('--cover-inset-now', 'calc(var(--cover-inset, 0px) * ' + f + ')');
         }
       }
 
@@ -111,7 +111,12 @@
   var cover = document.querySelector('.case-cover[data-fill="true"]');
   var caseInfo = document.querySelector('.case-info');
   if (cover && caseInfo) {
+    /* --vw 是「不含滾動條」的視窗寬度。封面要橫向撐滿視窗，用 100vw 不行 ——
+       Windows 上 100vw 包含滾動條寬度，封面會比看得到的區域寬十幾像素。
+       clientWidth 沒有這個問題。 */
     var sizeCover = function () {
+      document.documentElement.style.setProperty(
+        '--vw', document.documentElement.clientWidth + 'px');
       cover.style.setProperty('--cover-h',
         (window.innerHeight - cover.offsetTop - caseInfo.offsetHeight) + 'px');
     };

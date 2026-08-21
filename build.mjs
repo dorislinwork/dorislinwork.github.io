@@ -189,6 +189,7 @@ function themeVars(base) {
        --cover-radius-now，由 site.js 依捲動進度算出來。 */
     `--media-radius: ${cs.mediaRadius || '0'};`,
     `--cover-radius: ${cs.coverRadius || '0'};`,
+    `--cover-inset: ${cs.coverInset || '0'};`,
     `--gallery-gap: ${cs.gallerySpacing || '2.4rem'};`,
     // 導覽列右邊那組連結：對齊哪一邊、字級、字重、往上抬多少（site.json 的 header）
     `--nav-align: ${NAV_ALIGN[(site.header || {}).navAlign] || 'flex-end'};`,

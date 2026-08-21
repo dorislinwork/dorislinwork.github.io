@@ -565,10 +565,20 @@ h1, h2, h3 {
   overflow: hidden;
   background: rgba(0, 0, 0, 0.06);
 
-  /* 捲動時長出圓角，滿版的圖就從貼邊變成不貼邊（參考 filippomartinelli.com，
-     他們用 GSAP 把 border-radius 從 0em 補到 6em）。
-     --cover-radius-now 由 site.js 依捲動進度寫入，捲動前是 0。
-     這裡不用 transition —— JS 每一格都會更新，加了會跟捲動打架、變成拖尾。 */
+  /* 捲動時往內縮 + 長出圓角。
+     捲動前橫向撐滿整個視窗（連 .case 的左右邊界都突破），往下捲時左右一起收進來。
+     --cover-inset-now 與 --cover-radius-now 都是 site.js 依捲動進度寫入的，
+     兩者在捲動前都是 0。
+
+     撐滿寬度用 --vw（site.js 寫入 documentElement.clientWidth）而不是 100vw：
+     100vw 在 Windows 上會包含滾動條寬度，封面會比看得到的區域寬十幾像素、右邊被切掉。
+
+     margin-left 那條是把元素從「置中且有邊界的容器」推回視窗左緣的標準算式：
+     50% 是容器寬的一半，減掉視窗寬的一半就回到視窗左緣，再加上要縮進來的量。
+
+     這裡不加 transition —— JS 每一格都會更新，加了會跟捲動打架變成拖尾。 */
+  width: calc(var(--vw, 100vw) - 2 * var(--cover-inset-now, 0px));
+  margin-left: calc(50% - var(--vw, 100vw) / 2 + var(--cover-inset-now, 0px));
   border-radius: var(--cover-radius-now, 0);
 }
 .case-cover > * {
