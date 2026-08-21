@@ -232,7 +232,9 @@
           "w": 900,
           "h": 1201,
           "alt": "",
-          "caption": ""
+          "caption": "",
+          "col": 1,
+          "span": 6
         },
         {
           "type": "media",
@@ -242,7 +244,9 @@
           "w": 900,
           "h": 1201,
           "alt": "",
-          "caption": ""
+          "caption": "",
+          "col": 7,
+          "span": 6
         },
         {
           "type": "media",
@@ -252,7 +256,9 @@
           "w": 900,
           "h": 1201,
           "alt": "",
-          "caption": ""
+          "caption": "",
+          "col": 1,
+          "span": 6
         },
         {
           "type": "media",
@@ -262,10 +268,13 @@
           "w": 900,
           "h": 1201,
           "alt": "",
-          "caption": ""
+          "caption": "",
+          "col": 7,
+          "span": 6
         }
       ],
-      "cardColor": "#41a2c8"
+      "cardColor": "#41a2c8",
+      "coverPosition": "50% 63.7%"
     },
     {
       "slug": "Gua-Bao",
