@@ -1031,8 +1031,13 @@ function coverEditor(p, upd) {
   });
   srcLab.appendChild(src);
   srcLab.appendChild(el('p', 'doc',
-    '選到的那張如果也排在內文裡，內文那張會自動不重複出現，不會同一張看到兩次。'));
+    '選到的那張如果也排在內文裡，內文那張預設會自動略過，不會同一張看到兩次。'));
   wrap.appendChild(srcLab);
+
+  wrap.appendChild(checkbox('封面那張也放進內文一次', p.coverInBody,
+    (v) => upd(() => { if (v) p.coverInBody = true; else delete p.coverInBody; }),
+    '勾起來就不略過 —— 封面看到一次，往下捲在原本的位置再看到一次。'
+    + '適合封面裁得很緊、想讓人看到完整那張的時候。'));
 
   /* ---- 位置與縮放 ---- */
   const curFile = () => (p.cover && p.cover.file)

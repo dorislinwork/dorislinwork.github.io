@@ -905,12 +905,20 @@ function renderProject(p, prev, next) {
   const blurb = [];
   while (blocks.length && blocks[0].type === 'text') blurb.push(blocks.shift().text);
 
-  /* 封面用的檔案如果同時是內文第一張圖，就把內文那張拿掉，不然同一張圖會連著
-     出現兩次（50 件裡有 22 件是這種情況）。找的是第一個 media 而不是第一個區塊，
-     因為有些頁面是小標開頭。 */
-  if (cover && cover.file && cs.dedupeCover !== false) {
-    const i = blocks.findIndex((b) => b.type === 'media');
-    if (i !== -1 && blocks[i].file === cover.file) blocks.splice(i, 1);
+  /* 封面用的檔案如果也排在內文裡，預設把內文那張拿掉，不然同一張圖會出現兩次
+     （52 件裡有 23 件是這種情況）。
+
+     單獨某一件想讓封面那張**也**在內文出現一次，就加 "coverInBody": true，
+     後台的封面區有勾選框。
+
+     2026-08-21 改成「在內文的任何位置都算」。原本只比對內文的第一張圖，所以
+     封面挑到第二張以後的圖時就不會去重，同一份資料會因為圖的位置不同得到兩種
+     行為 —— 後台現在可以自由挑封面，這種不一致只會越來越常撞到。改的當下正好
+     有 3 件是這種狀況（happiness-awaits、Afternoon-Tea-Time、Nodding-Off），
+     都補上了 coverInBody，所以那 3 頁的輸出完全沒變。 */
+  if (cover && cover.file && cs.dedupeCover !== false && p.coverInBody !== true) {
+    const i = blocks.findIndex((b) => b.type === 'media' && b.file === cover.file);
+    if (i !== -1) blocks.splice(i, 1);
   }
 
   /* 列號要在這裡一次算完 —— 它取決於「前面的區塊佔掉了哪些欄」，

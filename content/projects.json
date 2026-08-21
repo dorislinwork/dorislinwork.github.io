@@ -20,6 +20,7 @@
     "  封面：",
     "  cover          用哪一張當封面 { file, w, h }。留空 = 用 thumb 那張。",
     "                 選到的圖如果也排在 blocks 裡，內文那張會自動略過，不會重複。",
+    "  coverInBody    true = 封面那張圖也在內文出現一次（預設會略過，不重複）。後台封面區有勾選框。",
     "  coverPosition  圖在封面框裡的位置，\"50% 50%\" 這種兩個百分比。預設居中。",
     "                 封面是裁切填滿的，這個值決定看得到哪一塊 —— 直式素材預設",
     "                 只看得到中段，往上拖就是 \"50% 0%\"。",
@@ -293,6 +294,7 @@
         "w": 800,
         "h": 1067
       },
+      "coverInBody": true,
       "blocks": [
         {
           "type": "text",
@@ -609,7 +611,7 @@
       "title": "Goodmorningmacc & Shenzaoclub | 早安美之沈聯名動畫",
       "year": "2024",
       "type": "Client work",
-      "client": "",
+      "client": "ShenzaoClub ",
       "tags": [],
       "summary": "「早安美之沈」是由 Youtuber 陪沈團 的沈所創立的早餐品牌 「沈早俱樂部」，此次與早餐連鎖品牌 「早安美芝城」 攜手合作，推出全新聯名計畫！",
       "_summary註": "summary 只用於 <meta description>，不會顯示在頁面上",
@@ -621,17 +623,16 @@
       },
       "blocks": [
         {
-          "type": "heading",
-          "level": "h2",
-          "text": "Role |"
+          "type": "text",
+          "text": "「早安美之沈」是由 Youtuber 陪沈團 的沈所創立的早餐品牌 「沈早俱樂部」，此次與早餐連鎖品牌 「早安美芝城」 攜手合作，推出全新聯名計畫！",
+          "col": 1,
+          "span": 12
         },
         {
           "type": "text",
-          "text": "「早安美之沈」是由 Youtuber 陪沈團 的沈所創立的早餐品牌 「沈早俱樂部」，此次與早餐連鎖品牌 「早安美芝城」 攜手合作，推出全新聯名計畫！"
-        },
-        {
-          "type": "text",
-          "text": "為了宣傳此次合作，我們特別製作了一支充滿可愛與活力的行銷短片，以「沈早俱樂部」的角色 沈早鳥 為主角，講述它與這次聯名產品——剝皮辣椒相遇後，擦出全新火花的精彩故事，呈現出活力滿滿的動畫。"
+          "text": "為了宣傳此次合作，我們特別製作了一支充滿可愛與活力的行銷短片，以「沈早俱樂部」的角色 沈早鳥 為主角，講述它與這次聯名產品——剝皮辣椒相遇後，擦出全新火花的精彩故事，呈現出活力滿滿的動畫。",
+          "col": 1,
+          "span": 12
         },
         {
           "type": "embed",
@@ -694,7 +695,8 @@
       ],
       "cardColor": "#f1c006",
       "cardColorDark": true,
-      "coverTopDark": true
+      "coverTopDark": true,
+      "role": "All"
     },
     {
       "slug": "Tommy-s-Oddly-Love",
@@ -1108,6 +1110,7 @@
         "w": 1500,
         "h": 1125
       },
+      "coverInBody": true,
       "blocks": [
         {
           "type": "embed",
@@ -1507,6 +1510,7 @@
         "w": 800,
         "h": 800
       },
+      "coverInBody": true,
       "blocks": [
         {
           "type": "text",
