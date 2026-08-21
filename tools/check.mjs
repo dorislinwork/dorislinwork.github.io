@@ -73,7 +73,17 @@ for (const f of files) {
       : resolve(dirname(f), decoded);
 
     if (!existsSync(target)) {
-      problems.push(`${rel}: 找不到檔案 -> ${url}`);
+      /* 少了 https:// 的外部網址會被瀏覽器當成相對路徑，所以走到這裡。
+         直接說出原因 —— 2026-08-21 使用者在社群連結填了
+         linkedin.com/in/dorislin1226，結果 55 頁都報「找不到檔案」，
+         那個訊息完全看不出真正的問題是少了協定。
+         判斷方式：第一段路徑長得像網域（有點、沒有副檔名的樣子）。 */
+      const first = decoded.split('/')[0];
+      const looksLikeDomain = /^[\w-]+(\.[\w-]+)+$/.test(first)
+        && !/\.(html?|css|js|json|png|jpe?g|webp|gif|mp4|webm|svg|ico|txt|xml)$/i.test(first);
+      problems.push(looksLikeDomain
+        ? `${rel}: ${url} 看起來是外部網址但少了 https://（沒有協定的話會被當成站內路徑）`
+        : `${rel}: 找不到檔案 -> ${url}`);
       continue;
     }
     if (hash) {

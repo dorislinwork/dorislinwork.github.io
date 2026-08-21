@@ -41,7 +41,7 @@
 
   "social": [
     { "label": "Behance", "href": "https://www.behance.net/yihsuanlin3257" },
-    { "label": "Vimeo", "href": "https://vimeo.com/dorislin1226" },
+    { "label": "Linkdin", "href": "linkedin.com/in/dorislin1226" },
     { "label": "Instagram", "href": "https://www.instagram.com/ouuch.aep/" }
   ],
   "_social註": "這一份同時餵兩個地方：每一頁的頁尾，以及 Information 頁的聯絡區塊。要加平台就在後台的「版面設定」按「＋ 新增一項」，或直接在這裡補一行，兩邊會一起更新。不想讓頁尾出現這一組就把 footer.showSocial 設成 false。",
@@ -165,7 +165,6 @@
       "link": "#8a8a8a"
     },
     "_colors說明": "default 是一般狀態，用的是全站唯一的那個粉紅（theme.accentHover）。link 是滑到可點擊元素時的灰。想改成深灰就填 #252525。這兩個只影響 PNG 圖檔那一組（也就是 JS 沒跑時的降級版本）。",
-
     "follow": {
       "_說明": "跟隨式游標，2026-08-21 參考 therocketpanda.com 做的。一顆粉紅圓點平滑跟著滑鼠，滑到可點擊的東西會放大。enabled 設 false 就回到上面那組 PNG 圖檔游標。",
       "enabled": true,

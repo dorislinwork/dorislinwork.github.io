@@ -16,7 +16,13 @@ import { fileURLToPath } from 'node:url';
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 
 const msgArg = process.argv.slice(2).find((a) => !a.startsWith('--'));
-const stamp = new Date().toISOString().slice(0, 16).replace('T', ' ');
+/* 當地時間，不是 UTC。
+
+   原本用 toISOString()，所以在台灣按發布會記成 8 小時前 —— 22:12 按的顯示成
+   14:12。跟 git 自己記的 author date（有時區）也差 8 小時，之後要對「這個改動是
+   我什麼時候按的」會對不上。用 sv-SE 這個地區設定是因為它的格式剛好就是
+   YYYY-MM-DD HH:mm，不必自己拼字串。 */
+const stamp = new Date().toLocaleString('sv-SE', { dateStyle: 'short', timeStyle: 'short' });
 const MESSAGE = msgArg || `Update site ${stamp}`;
 
 /** 跑一個指令，輸出直接接到終端機 */

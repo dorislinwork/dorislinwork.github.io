@@ -63,6 +63,26 @@ const esc = (s) => String(s ?? '')
 const isNote = (k) => k.startsWith('_');
 
 /**
+ * 社群連結的網址補上 https://。
+ *
+ * 2026-08-21 使用者在後台加 LinkedIn 時填了 `linkedin.com/in/dorislin1226`，
+ * 沒有 https://。瀏覽器會把它當成**相對路徑**，所以每一頁都指向
+ * /work/linkedin.com/in/… 這種不存在的位置 —— check.mjs 在 55 頁全部報錯、
+ * 發布被擋下來。從貼網址的人的角度看，那個值長得完全正常。
+ *
+ * 所以在這裡補，而不是要求她記得打。社群連結**一定**是外部網址，
+ * 不可能是站內路徑，所以這個補法沒有猜錯的空間。
+ * （nav 不套用：那裡的 index.html、work/Reel.html 本來就是相對路徑。）
+ */
+const externalUrl = (href) => {
+  const v = String(href || '').trim();
+  if (!v) return v;
+  // 已經有協定（https:、mailto:、tel:…）或是明確的絕對／協定相對路徑就不動
+  if (/^[a-z][a-z0-9+.-]*:/i.test(v) || v.startsWith('//') || v.startsWith('/')) return v;
+  return 'https://' + v;
+};
+
+/**
  * 一段文字 → 一個 <p>，區塊內的換行轉成 <br>。
  *
  * HTML 會把原始碼裡的換行折成空格，所以在後台按 Enter 分行的話，不轉的話
@@ -411,7 +431,7 @@ function layout(o) {
     ? ''
     : (site.social || [])
       .filter((s) => s && s.label && s.href && !isNote(s.label))
-      .map((s) => `    <li><a class="wiggle-text" href="${esc(s.href)}" target="_blank" rel="noopener">${esc(s.label)}</a></li>`)
+      .map((s) => `    <li><a class="wiggle-text" href="${esc(externalUrl(s.href))}" target="_blank" rel="noopener">${esc(s.label)}</a></li>`)
       .join('\n');
 
   /* 全站標題的出現方式。放在 <html> 上是為了不必在每一種頁面的 h1 上各加一次
@@ -1043,7 +1063,7 @@ ${info.clients.map((c) => `        <li>${esc(c)}</li>`).join('\n')}
     </div>` : '';
 
   const social = (site.social || []).map((s) =>
-    `        <li><a class="link-accent wiggle-text" href="${esc(s.href)}" target="_blank" rel="noopener">${esc(s.label)}</a></li>`
+    `        <li><a class="link-accent wiggle-text" href="${esc(externalUrl(s.href))}" target="_blank" rel="noopener">${esc(s.label)}</a></li>`
   ).join('\n');
 
   const body = `  <section class="info" data-stagger-scope>
