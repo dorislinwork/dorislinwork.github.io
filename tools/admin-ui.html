@@ -878,6 +878,29 @@ function projectEditor(p, idx) {
   box.appendChild(blocksEditor(p, upd));
 
   /* ---- 補圖 ---- */
+  /* 預覽這一頁 —— 不必先儲存。把目前的草稿送到後端，只產生這一頁到
+     work/_preview.html 再開起來。順序才對：先看，滿意了再存。 */
+  const prev = el('div');
+  prev.style.cssText = 'margin-top:1.4rem;padding-top:1.4rem;border-top:1px solid var(--line)';
+  const prevBtn = el('button', 'primary', '預覽這一頁（不用先儲存）');
+  prevBtn.onclick = async () => {
+    busy(true, '產生預覽中…');
+    try {
+      await api('preview', { projects: D.projects, slug: p.slug });
+      window.open('/work/_preview.html?cb=' + Date.now(), 'casePreview', 'noopener');
+      toast('預覽已更新', 'ok');
+    } catch (e) {
+      toast(e.message, 'err');
+    } finally {
+      busy(false);
+    }
+  };
+  prev.appendChild(prevBtn);
+  prev.appendChild(el('p', 'doc',
+    '用目前畫面上的設定（包含還沒儲存的）產生這一頁，開在另一個分頁。'
+    + '再按一次會更新同一個分頁，所以可以邊調邊看。不會動到正式頁面。'));
+  box.appendChild(prev);
+
   const add = el('div');
   add.style.cssText = 'margin-top:1.4rem';
   const inp = el('input');

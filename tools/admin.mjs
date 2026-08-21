@@ -295,6 +295,27 @@ async function api(req, res, url) {
     return json(res, r.ok ? 200 : 500, r);
   }
 
+  /* ---- 預覽單一作品頁（不必先儲存）----
+     前端把「還沒儲存」的整份草稿送過來，寫成一個暫存清單檔，
+     再用 build.mjs 的 --projects / --only 只產生那一頁到 work/_preview.html。
+
+     為什麼不直接存檔再 build：那就變成「要先儲存才看得到」，而順序本來就該相反 ——
+     先看對不對，滿意了再存。暫存檔與預覽頁都在 .gitignore 裡，不會進 repo。
+
+     暫存檔的路徑必須是 repo 相對路徑：build.mjs 的 read() 會把它跟 ROOT 相接，
+     給絕對路徑在 Windows 上會接出 C:\repo\C:\temp\... 這種壞路徑。 */
+  if (route === 'preview' && req.method === 'POST') {
+    const b = JSON.parse((await readBody(req)).toString('utf8'));
+    if (!Array.isArray(b.projects) || !SLUG_OK.test(String(b.slug || ''))) {
+      return json(res, 400, { error: '參數不合法' });
+    }
+    const rel = 'content/_preview-projects.json';
+    const current = readJson(PROJECTS);
+    writeJson(join(ROOT, rel), { ...current, projects: b.projects });
+    const r = await node('build.mjs', ['--projects', rel, '--only', b.slug]);
+    return json(res, r.ok ? 200 : 500, { ...r, url: 'work/_preview.html' });
+  }
+
   /* ---- 產生網站 ---- */
   if (route === 'build' && req.method === 'POST') {
     const built = await node('build.mjs');

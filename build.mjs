@@ -25,10 +25,24 @@ import { fileURLToPath } from 'node:url';
 const ROOT = dirname(fileURLToPath(import.meta.url));
 const read = (p) => JSON.parse(readFileSync(join(ROOT, p), 'utf8'));
 
+/* 參數（都是給後台的「預覽這一頁」用的，平常直接跑 node build.mjs 不用給）：
+     --projects <路徑>   改讀別的作品清單，而不是 content/projects.json
+     --only <slug>       只產生那一件作品的頁面到 work/_preview.html，其他都不動
+
+   後台會把「還沒儲存」的草稿寫成一個暫存的清單檔，再用這兩個參數產生預覽頁，
+   所以使用者不必先按儲存才能看結果。 */
+const argv = process.argv.slice(2);
+const argOf = (name) => {
+  const i = argv.indexOf('--' + name);
+  return i === -1 ? null : argv[i + 1];
+};
+const PROJECTS_FILE = argOf('projects') || 'content/projects.json';
+const ONLY = argOf('only');
+
 const site = read('content/site.json');
 
 // projects.json 可以是純陣列，也可以是 { _說明, projects: [...] }
-const rawProjects = read('content/projects.json');
+const rawProjects = read(PROJECTS_FILE);
 const projects = (Array.isArray(rawProjects) ? rawProjects : rawProjects.projects || [])
   .filter((p) => p && p.slug && !p.draft);
 
@@ -1011,6 +1025,20 @@ const out = (rel, content) => {
   writeFileSync(abs, content, 'utf8');
   written.push(rel);
 };
+
+/* --only：只做那一頁的預覽就結束。
+   刻意不走下面的流程 —— 那裡會先把 work/ 裡所有 html 刪掉再全部重產，
+   預覽不該動到任何正式頁面。也不產生首頁、sitemap、不複製 assets。 */
+if (ONLY) {
+  const i = projects.findIndex((p) => p.slug === ONLY);
+  if (i === -1) {
+    console.error(`找不到作品「${ONLY}」。可能是被設為草稿（draft）—— 草稿不會產生頁面。`);
+    process.exit(1);
+  }
+  out('work/_preview.html', renderProject(projects[i], projects[i - 1] || null, projects[i + 1] || null));
+  console.log(`✓ 預覽：work/_preview.html　${projects[i].title}`);
+  process.exit(0);
+}
 
 // 先清掉上一次產生的作品頁，這樣 projects.json 刪掉的作品不會留下孤兒檔
 const workDir = join(ROOT, 'work');

@@ -31,3 +31,8 @@ dev/index-bito.html
 # 字體對照頁。從 Fontshare 的 CDN 載字只是為了在本機比對，不該上線
 # （正式要用哪支字就自己下載自架，不靠別人的 CDN）。
 dev/font-compare.html
+
+# 後台「預覽這一頁」的產物。暫存的草稿清單與只產生一頁的預覽檔，
+# 都是即時生成的，不該進 repo（GitHub Pages 會把 repo 內所有檔案公開）。
+content/_preview-projects.json
+work/_preview.html
