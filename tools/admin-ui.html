@@ -799,6 +799,42 @@ function move(i, d) {
   renderProjects();
 }
 
+/* 離開欄位時去掉前後空白。
+
+   為什麼綁 blur 而不是每次 input：邊打邊 trim 的話，兩個字之間那個空格會在打下去
+   的瞬間被吃掉，「A B」根本打不出來。所以等離開這一格才處理。
+
+   值沒變就什麼都不做 —— 不然每次點過去再點開都會多算一次未儲存變更。 */
+function trimOnBlur(input, apply) {
+  input.addEventListener('blur', () => {
+    const t = input.value.trim();
+    if (t === input.value) return;
+    input.value = t;
+    apply(t);
+  });
+}
+
+/* 儲存前再掃一次。blur 已經處理過剛編輯的那一格，這裡是保險 ——
+   打完字直接按儲存、焦點還沒離開的話，blur 不一定會先發生。
+
+   ⚠ 以 _ 開頭的鍵一律跳過。那些是給人看的說明，而 projects.json 的 _說明 是一份
+   手排的欄位表，靠行首空白對齊（37 行都是）—— 全部 trim 掉會把那份表毀掉。 */
+function trimEdited(node) {
+  if (Array.isArray(node)) {
+    node.forEach((v, i) => {
+      if (typeof v === 'string') node[i] = v.trim();
+      else trimEdited(v);
+    });
+    return;
+  }
+  if (!node || typeof node !== 'object') return;
+  for (const [k, v] of Object.entries(node)) {
+    if (k.startsWith('_')) continue;
+    if (typeof v === 'string') node[k] = v.trim();
+    else trimEdited(v);
+  }
+}
+
 function field(labelText, value, onInput, opts) {
   const o = opts || {};
   const lab = el('label');
@@ -809,6 +845,7 @@ function field(labelText, value, onInput, opts) {
   if (o.placeholder) input.placeholder = o.placeholder;
   input.value = value === null || value === undefined ? '' : value;
   input.addEventListener('input', () => onInput(input.value));
+  trimOnBlur(input, onInput);
   lab.appendChild(input);
   if (o.doc) lab.appendChild(el('p', 'doc', o.doc));
   return lab;
@@ -1201,12 +1238,15 @@ function blocksEditor(p, upd) {
       ta.rows = 3;
       ta.value = b.text || '';
       ta.addEventListener('input', () => upd(() => { b.text = ta.value; }));
+      // 段落只去掉整段的前後空白，中間的換行是她自己分的行，不能動
+      trimOnBlur(ta, (v) => upd(() => { b.text = v; }));
       body.appendChild(ta);
     } else if (b.type === 'heading') {
       const inp = el('input');
       inp.type = 'text';
       inp.value = b.text || '';
       inp.addEventListener('input', () => upd(() => { b.text = inp.value; }));
+      trimOnBlur(inp, (v) => upd(() => { b.text = v; }));
       body.appendChild(inp);
       body.appendChild(el('p', 'doc', '內頁的小標題（Styleframe、Credit 這類）'));
     } else if (b.type === 'embed') {
@@ -1229,6 +1269,7 @@ function blocksEditor(p, upd) {
       cap.value = b.caption || '';
       cap.placeholder = '圖說（留空就不顯示）';
       cap.addEventListener('input', () => upd(() => { b.caption = cap.value; }));
+      trimOnBlur(cap, (v) => upd(() => { b.caption = v; }));
       body.appendChild(cap);
 
       /* 這張圖在內頁佔多寬。預設是按比例自動收窄（讓每張圖高度一致），
@@ -1380,6 +1421,7 @@ async function removeProject(p) {
 $('#btnSaveProjects').onclick = async () => {
   busy(true, '儲存中…');
   try {
+    trimEdited(D.projects);
     await api('projects', { projects: D.projects });
     await load();
     toast('已儲存', 'ok');
@@ -1709,6 +1751,7 @@ function arrayEditor(arr, path) {
 $('#btnSaveSite').onclick = async () => {
   busy(true, '儲存中…');
   try {
+    trimEdited(D.site);
     await api('site', { site: D.site });
     await load();
     toast('已儲存', 'ok');
