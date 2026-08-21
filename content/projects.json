@@ -47,6 +47,65 @@
   ],
   "projects": [
     {
+      "slug": "Tommy-in-paradise",
+      "title": "Tommy in paradise 💙🪽",
+      "year": "2026",
+      "type": "Personal work",
+      "role": "Personal work",
+      "agency": "",
+      "client": "",
+      "tags": [],
+      "summary": "Tommy was my first dog, and he’s still the only dog I’ve ever had.\nThis year marks the second year of his journey in heaven. 🎒",
+      "thumb": {
+        "file": "Denoised-beauty-source-4_00071.png",
+        "w": 1080,
+        "h": 1920
+      },
+      "blocks": [
+        {
+          "type": "text",
+          "text": "Tommy was my first dog, and he’s still the only dog I’ve ever had.\nThis year marks the second year of his journey in heaven. 🎒"
+        },
+        {
+          "type": "text",
+          "text": "Bananas, carrots, dental chews, corn… they were all his favorites.🍌🌽🥕🦴\nHe once stole a whole carrot that Mom had just bought and ran off to eat it.\nNow he can eat as many as he wants in heaven!"
+        },
+        {
+          "type": "media",
+          "file": "Tommy's Paradise_Output.mp4",
+          "w": 1080,
+          "h": 1920,
+          "col": 1,
+          "span": 4
+        },
+        {
+          "type": "media",
+          "file": "Denoised-beauty-source-4_00071.png",
+          "w": 1080,
+          "h": 1920,
+          "col": 5,
+          "span": 4,
+          "newRow": true
+        },
+        {
+          "type": "media",
+          "file": "Tommy-s-Paradise_Output_00064.png",
+          "w": 1080,
+          "h": 1920,
+          "col": 9,
+          "span": 4
+        }
+      ],
+      "cardColor": "#35c3d4",
+      "cover": {
+        "file": "Denoised-beauty-source-4_00071.png",
+        "w": 1080,
+        "h": 1920
+      },
+      "coverPosition": "50% 68.2%",
+      "coverInBody": true
+    },
+    {
       "slug": "Grandma-s-kitchen-copy",
       "title": "Grandma’s kitchen",
       "year": "2026",
@@ -611,7 +670,7 @@
       "title": "Goodmorningmacc & Shenzaoclub | 早安美之沈聯名動畫",
       "year": "2024",
       "type": "Client work",
-      "client": "ShenzaoClub ",
+      "client": "ShenzaoClub",
       "tags": [],
       "summary": "「早安美之沈」是由 Youtuber 陪沈團 的沈所創立的早餐品牌 「沈早俱樂部」，此次與早餐連鎖品牌 「早安美芝城」 攜手合作，推出全新聯名計畫！",
       "_summary註": "summary 只用於 <meta description>，不會顯示在頁面上",

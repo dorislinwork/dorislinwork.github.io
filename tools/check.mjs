@@ -53,10 +53,21 @@ for (const f of files) {
     const [pathPart, hash] = url.split('#');
     if (!pathPart) continue;
 
+    /* 網址是編碼過的，磁碟上的檔名不是 —— 要先解碼才找得到。
+       build.mjs 用 encodeURIComponent 組媒體網址，所以檔名裡的空格會變成 %20。
+       2026-08-21 第一次撞到：Tommy's Paradise_Output.mp4 這個檔名有空格，
+       頁面在瀏覽器裡完全正常，但這裡拿 %20 去 existsSync 當然找不到，
+       於是新增作品的最後一步被判定失敗。之前的檔名剛好都沒有空格。
+
+       解不開就用原字串（單獨一個 % 會讓 decodeURIComponent 丟例外），
+       這樣壞掉的網址仍然會被下面的 existsSync 抓出來。 */
+    let decoded = pathPart;
+    try { decoded = decodeURIComponent(pathPart); } catch { /* 保持原樣 */ }
+
     // 絕對路徑（/ 開頭）以站台根目錄為基準
-    const target = pathPart.startsWith('/')
-      ? join(ROOT, pathPart)
-      : resolve(dirname(f), pathPart);
+    const target = decoded.startsWith('/')
+      ? join(ROOT, decoded)
+      : resolve(dirname(f), decoded);
 
     if (!existsSync(target)) {
       problems.push(`${rel}: 找不到檔案 -> ${url}`);
