@@ -194,6 +194,14 @@ h2 { font-size: 1.9rem; margin: 0 0 0.6rem; }
 .fcard .fn { word-break: break-all; color: var(--ink-soft); margin-top: 0.3rem; }
 .fcard.isthumb { outline: 2px solid var(--pink); outline-offset: 2px; border-radius: 4px; }
 
+/* Information 頁那些成組的欄位 */
+.group {
+  border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 1.2rem 1.4rem; margin: 1rem 0;
+  display: flex; flex-direction: column; gap: 0.8rem;
+}
+.group > .lbl { font-weight: 700; }
+
 /* ---- 封面構圖 ---- */
 /* 預覽框套的是跟正式頁面一樣的 object-fit / object-position / transform，
    所以看到的就是實際結果，不是另外算一套近似值。 */
@@ -293,6 +301,7 @@ pre.log:empty { display: none; }
 <nav class="tabs" id="tabs">
   <button data-tab="projects" aria-selected="true">作品 <span class="dot" id="dotProjects" hidden>●</span></button>
   <button data-tab="new" aria-selected="false">新增作品</button>
+  <button data-tab="info" aria-selected="false">Information 頁 <span class="dot" id="dotInfo" hidden>●</span></button>
   <button data-tab="site" aria-selected="false">版面設定 <span class="dot" id="dotSite" hidden>●</span></button>
   <button data-tab="publish" aria-selected="false">發布</button>
 </nav>
@@ -396,6 +405,19 @@ pre.log:empty { display: none; }
     <div class="bar sticky">
       <button class="primary" id="btnSaveSite" disabled>儲存</button>
       <button id="btnRevertSite" disabled>放棄變更</button>
+    </div>
+  </section>
+
+  <!-- ============================================ Information ==== -->
+  <section id="tab-info" hidden>
+    <h2>Information 頁</h2>
+    <p class="sub">就是 <code>information.html</code> 那一頁的內容。</p>
+    <div class="note">這裡跟「版面設定」的 <code>information</code> 改的是<strong>同一份資料</strong>，所以未儲存的狀態、儲存與放棄都是共用的 —— 在哪一頁按儲存都一樣。信箱與社群平台的清單在「版面設定」裡改。</div>
+    <div id="infoForm"></div>
+    <div class="bar sticky">
+      <button class="primary" id="btnSaveInfo" disabled>儲存</button>
+      <button id="btnRevertInfo" disabled>放棄變更</button>
+      <button id="btnPreviewInfo">預覽這一頁（不用先儲存）</button>
     </div>
   </section>
 
@@ -680,6 +702,10 @@ function syncDirtyUI() {
   $('#btnRevertProjects').disabled = !dirty.projects;
   $('#btnSaveSite').disabled = !dirty.site;
   $('#btnRevertSite').disabled = !dirty.site;
+  // Information 頁改的是 site.json 的一部分，所以共用 dirty.site
+  $('#dotInfo').hidden = !dirty.site;
+  $('#btnSaveInfo').disabled = !dirty.site;
+  $('#btnRevertInfo').disabled = !dirty.site;
 }
 
 window.addEventListener('beforeunload', (e) => {
@@ -698,6 +724,7 @@ async function load() {
   renderGit();
   renderProjects();
   renderSite();
+  renderInfo();
   syncDirtyUI();
 }
 
@@ -1616,6 +1643,141 @@ const LABELS = {
   header: '導覽列行為', footer: '頁尾', case: '作品內頁', grid: '首頁網格',
 };
 
+/* ---------------------------------------------------- Information 頁 ----
+   這些欄位在「版面設定」裡本來就改得到（那個表單是遞迴的，連 Experience 的
+   項目都吃得到），但它們埋在 20 組設定中間，而且子欄位顯示的是英文鍵名
+   （heading、body、sections）—— 使用者 2026-08-21 說找不到，這很合理。
+
+   所以另外做一頁，用看得懂的說法排出來。改的是同一份 D.site.information，
+   所以「未儲存」的狀態、儲存與放棄都跟「版面設定」共用一組，不會出現
+   兩邊各自有一份草稿、互相覆蓋的問題。 */
+
+/** 一行一個的清單 ↔ textarea。空行會被丟掉，所以不會存進空字串。 */
+function linesEditor(labelText, arr, doc, rows) {
+  const lab = el('label');
+  lab.appendChild(el('span', 'lbl', labelText));
+  const ta = el('textarea');
+  ta.rows = rows || Math.min(12, Math.max(3, arr.length + 1));
+  ta.value = arr.join('\n');
+  const apply = () => {
+    const next = ta.value.split('\n').map((s) => s.trim()).filter(Boolean);
+    arr.length = 0;
+    next.forEach((s) => arr.push(s));
+    markDirty('site');
+  };
+  ta.addEventListener('input', apply);
+  lab.appendChild(ta);
+  if (doc) lab.appendChild(el('p', 'doc', doc));
+  return lab;
+}
+
+/** ↑ ↓ ✕ 三顆小按鈕。跟區塊編輯器同一套操作，不用另外學。 */
+function orderButtons(arr, i, redraw, confirmText) {
+  const box = el('div');
+  box.style.cssText = 'display:flex;gap:.4rem;margin-top:.6rem';
+  const mk = (label, title, fn) => {
+    const b = el('button', 'tiny', label);
+    b.title = title;
+    b.onclick = () => { fn(); markDirty('site'); redraw(); };
+    return b;
+  };
+  if (i > 0) box.appendChild(mk('↑', '往上', () => {
+    [arr[i - 1], arr[i]] = [arr[i], arr[i - 1]];
+  }));
+  if (i < arr.length - 1) box.appendChild(mk('↓', '往下', () => {
+    [arr[i + 1], arr[i]] = [arr[i], arr[i + 1]];
+  }));
+  const del = mk('✕', '刪掉', () => {});
+  del.className = 'tiny danger';
+  del.onclick = () => {
+    if (confirmText && !confirm(confirmText)) return;
+    arr.splice(i, 1);
+    markDirty('site');
+    redraw();
+  };
+  box.appendChild(del);
+  return box;
+}
+
+function renderInfo() {
+  const host = $('#infoForm');
+  host.textContent = '';
+  const info = (D.site || {}).information;
+  if (!info) {
+    host.appendChild(el('p', 'doc', 'site.json 裡沒有 information 這一組，先在「版面設定」補上。'));
+    return;
+  }
+
+  const upd = (fn) => { fn(); markDirty('site'); };
+
+  /* ---- 標題 ---- */
+  host.appendChild(field('頁面標題', info.heading, (v) => upd(() => { info.heading = v; }),
+    { doc: '這一頁最上面那句，現在是「Hey there!」。' }));
+
+  /* ---- 自我介紹 ---- */
+  const bodyBox = el('div', 'group');
+  bodyBox.appendChild(el('span', 'lbl', '自我介紹（一段一個框）'));
+  const body = info.body || (info.body = []);
+  body.forEach((t, i) => {
+    const card = el('div', 'arritem');
+    const ta = el('textarea');
+    ta.rows = 4;
+    ta.value = t;
+    ta.addEventListener('input', () => upd(() => { body[i] = ta.value; }));
+    trimOnBlur(ta, (v) => upd(() => { body[i] = v; }));
+    card.appendChild(ta);
+    card.appendChild(orderButtons(body, i, renderInfo, '刪掉這一段？'));
+    bodyBox.appendChild(card);
+  });
+  const addPara = el('button', 'tiny', '＋ 新增一段');
+  addPara.onclick = () => { upd(() => { body.push(''); }); renderInfo(); };
+  bodyBox.appendChild(addPara);
+  bodyBox.appendChild(el('p', 'doc', '一個框就是頁面上的一段。段落之間會自動留間距，不用自己空行。'));
+  host.appendChild(bodyBox);
+
+  /* ---- 合作品牌 ---- */
+  host.appendChild(linesEditor('合作過的品牌', info.clients || (info.clients = []),
+    '一行一個。標題固定是「✸ Brands I\'ve Designed & Animated For」。'));
+
+  /* ---- 條列區塊 ---- */
+  const secBox = el('div', 'group');
+  secBox.appendChild(el('span', 'lbl', '條列區塊（Experience、Exhibition 這些）'));
+  const sections = info.sections || (info.sections = []);
+  sections.forEach((s, i) => {
+    const card = el('div', 'arritem');
+    card.appendChild(field('小標', s.heading, (v) => upd(() => { s.heading = v; }),
+      { placeholder: '✸ Experience' }));
+    card.appendChild(linesEditor('項目', s.items || (s.items = []),
+      '一行一個。想在同一行分欄可以用全形空白對齊，現有的資料就是這樣排的。'));
+    card.appendChild(orderButtons(sections, i, renderInfo,
+      `刪掉「${s.heading || '這一段'}」以及它底下 ${(s.items || []).length} 個項目？`));
+    secBox.appendChild(card);
+  });
+  const addSec = el('button', 'tiny', '＋ 新增一個區塊');
+  addSec.onclick = () => {
+    upd(() => { sections.push({ heading: '✸ ', items: [] }); });
+    renderInfo();
+  };
+  secBox.appendChild(addSec);
+  host.appendChild(secBox);
+
+  /* ---- 聯絡 ---- */
+  host.appendChild(field('聯絡區塊的文字', info.contactLabel,
+    (v) => upd(() => { info.contactLabel = v; }),
+    { doc: '信箱與社群連結上面那一句，現在是「Come and say hey →」。信箱與平台清單在「版面設定」的「信箱」與「社群連結」裡改。' }));
+
+  /* ---- 那些以 _ 開頭的說明 ---- */
+  const notes = Object.keys(info).filter((k) => k.startsWith('_'));
+  if (notes.length) {
+    const box = el('div', 'group');
+    box.appendChild(el('span', 'lbl', 'json 裡留的備註（唯讀）'));
+    notes.forEach((k) => {
+      box.appendChild(el('p', 'doc', k.replace(/^_/, '') + '：' + docText(info[k])));
+    });
+    host.appendChild(box);
+  }
+}
+
 function renderSite() {
   const box = $('#siteForm');
   box.textContent = '';
@@ -1765,10 +1927,36 @@ $('#btnSaveSite').onclick = async () => {
 
 $('#btnRevertSite').onclick = () => {
   if (!confirm('放棄所有還沒儲存的版面設定變更？')) return;
+  revertSite();
+};
+
+/* Information 頁的三顆按鈕。儲存與放棄直接借用版面設定那一組的行為 ——
+   同一份資料只該有一條儲存路徑，複製一份邏輯遲早會不一致。 */
+function revertSite() {
   D.site = JSON.parse(JSON.stringify(S.site));
   dirty.site = false;
   syncDirtyUI();
   renderSite();
+  renderInfo();
+}
+
+$('#btnSaveInfo').onclick = () => $('#btnSaveSite').click();
+$('#btnRevertInfo').onclick = () => {
+  if (!confirm('放棄所有還沒儲存的變更？（包含在「版面設定」改的）')) return;
+  revertSite();
+};
+
+$('#btnPreviewInfo').onclick = async () => {
+  busy(true, '產生預覽中…');
+  try {
+    await api('preview-info', { site: D.site });
+    window.open('/_preview-info.html?cb=' + Date.now(), 'infoPreview', 'noopener');
+    toast('預覽已更新', 'ok');
+  } catch (e) {
+    toast(e.message, 'err');
+  } finally {
+    busy(false);
+  }
 };
 
 /* ============================================================== 發布 ==== */
@@ -1837,7 +2025,7 @@ $('#btnPublish').onclick = async () => {
 /* ============================================================== 分頁 ==== */
 
 function showTab(name) {
-  ['projects', 'new', 'site', 'publish'].forEach((t) => {
+  ['projects', 'new', 'info', 'site', 'publish'].forEach((t) => {
     $('#tab-' + t).hidden = t !== name;
   });
   [...$('#tabs').children].forEach((b) => {

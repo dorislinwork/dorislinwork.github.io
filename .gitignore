@@ -36,3 +36,5 @@ dev/font-compare.html
 # 都是即時生成的，不該進 repo（GitHub Pages 會把 repo 內所有檔案公開）。
 content/_preview-projects.json
 work/_preview.html
+content/_preview-site.json
+_preview-info.html

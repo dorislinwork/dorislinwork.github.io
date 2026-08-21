@@ -329,6 +329,19 @@ async function api(req, res, url) {
     });
   }
 
+  /* ---- 預覽 Information 頁（不必先儲存）----
+     跟上面的作品預覽同一個做法：草稿寫成暫存檔，build.mjs 用 --site 讀它，
+     --preview-info 只產生那一頁到 _preview-info.html。正式的 information.html
+     不會被動到，所以看壞了也沒差。 */
+  if (route === 'preview-info' && req.method === 'POST') {
+    const b = JSON.parse((await readBody(req)).toString('utf8'));
+    if (!b.site || typeof b.site !== 'object') return json(res, 400, { error: '參數不合法' });
+    const rel = 'content/_preview-site.json';
+    writeJson(join(ROOT, rel), b.site);
+    const r = await node('build.mjs', ['--site', rel, '--preview-info']);
+    return json(res, r.ok ? 200 : 500, { ...r, url: '_preview-info.html' });
+  }
+
   /* ---- 產生網站 ---- */
   if (route === 'build' && req.method === 'POST') {
     const built = await node('build.mjs');

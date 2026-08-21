@@ -274,7 +274,8 @@
         }
       ],
       "cardColor": "#41a2c8",
-      "coverPosition": "50% 63.7%"
+      "coverPosition": "50% 63.7%",
+      "coverInBody": true
     },
     {
       "slug": "Gua-Bao",

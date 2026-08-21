@@ -25,21 +25,28 @@ import { fileURLToPath } from 'node:url';
 const ROOT = dirname(fileURLToPath(import.meta.url));
 const read = (p) => JSON.parse(readFileSync(join(ROOT, p), 'utf8'));
 
-/* 參數（都是給後台的「預覽這一頁」用的，平常直接跑 node build.mjs 不用給）：
+/* 參數（都是給後台的「預覽」用的，平常直接跑 node build.mjs 不用給）：
      --projects <路徑>   改讀別的作品清單，而不是 content/projects.json
+     --site <路徑>       改讀別的全站設定，而不是 content/site.json
      --only <slug>       只產生那一件作品的頁面到 work/_preview.html，其他都不動
+     --preview-info      只產生 Information 頁到 _preview-info.html，其他都不動
 
-   後台會把「還沒儲存」的草稿寫成一個暫存的清單檔，再用這兩個參數產生預覽頁，
-   所以使用者不必先按儲存才能看結果。 */
+   後台會把「還沒儲存」的草稿寫成暫存檔，再用這些參數產生預覽頁，
+   所以使用者不必先按儲存才能看結果 —— 順序本來就該是「先看，滿意了再存」。
+
+   路徑都要用 repo 相對的：read() 會把它跟 ROOT 相接，
+   給絕對路徑在 Windows 上會接出 C:\repo\C:\temp\... 這種壞路徑。 */
 const argv = process.argv.slice(2);
 const argOf = (name) => {
   const i = argv.indexOf('--' + name);
   return i === -1 ? null : argv[i + 1];
 };
 const PROJECTS_FILE = argOf('projects') || 'content/projects.json';
+const SITE_FILE = argOf('site') || 'content/site.json';
 const ONLY = argOf('only');
+const PREVIEW_INFO = argv.includes('--preview-info');
 
-const site = read('content/site.json');
+const site = read(SITE_FILE);
 
 // projects.json 可以是純陣列，也可以是 { _說明, projects: [...] }
 const rawProjects = read(PROJECTS_FILE);
@@ -1107,6 +1114,14 @@ if (ONLY) {
   }
   out('work/_preview.html', renderProject(projects[i], projects[i - 1] || null, projects[i + 1] || null));
   console.log(`✓ 預覽：work/_preview.html　${projects[i].title}`);
+  process.exit(0);
+}
+
+/* Information 頁的預覽。跟上面的 --only 一樣要放在下面那段「清掉舊作品頁」之前，
+   不然按一次預覽就會把 work/ 裡的頁面全部刪掉再只補一頁回去。 */
+if (PREVIEW_INFO) {
+  out('_preview-info.html', renderInformation());
+  console.log('✓ 預覽：_preview-info.html');
   process.exit(0);
 }
 

@@ -16,6 +16,9 @@ function walk(dir) {
   const out = [];
   for (const e of readdirSync(dir)) {
     if (SKIP_DIRS.has(e)) continue;
+    /* 後台預覽的產物不檢查。它們是用「還沒儲存的草稿」產生的，本來就可能是
+       半成品；留在磁碟上的話會讓發布前的檢查因為一個暫存檔而失敗。 */
+    if (e.startsWith('_preview')) continue;
     const p = join(dir, e);
     if (statSync(p).isDirectory()) out.push(...walk(p));
     else if (e.endsWith('.html')) out.push(p);
