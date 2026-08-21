@@ -238,6 +238,7 @@ function themeVars(base) {
 
   const ty = site.type || {};
   const cs = site.case || {};
+  const inf = site.information || {};
   const wg = (site.effects || {}).wiggle || {};
 
   const lines = [
@@ -296,6 +297,15 @@ function themeVars(base) {
       ? 'transparent'
       : (cs.factsRuleColor || 'rgba(0,0,0,.16)')};`,
     `--info-pad: ${cs.infoSpacing || '10rem'};`,
+    /* Information 頁的兩欄版面（2026-08-21 參考 bb-hlw.com/info）。
+       都放在 site.json 的 information 裡，因為那一組本來就是這一頁的東西。 */
+    `--info-photo-span: ${inf.photoSpan ?? 5};`,
+    `--info-text-span: ${inf.textSpan ?? 7};`,
+    `--info-photo-ratio: ${inf.photoRatio || '1 / 1'};`,
+    `--info-text-max: ${inf.textMax || '75rem'};`,
+    `--info-title-size: ${inf.titleSize || '2.6rem'};`,
+    `--info-heading-size: ${inf.headingSize || '2rem'};`,
+    `--info-contact-size: ${inf.contactSize || '2.6rem'};`,
     /* 內頁的圓角與間距（參考 filippomartinelli.com）。
        --cover-radius 是「捲到底時」的值，捲動前是 0；實際套用的是
        --cover-radius-now，由 site.js 依捲動進度算出來。 */
@@ -1046,42 +1056,55 @@ function renderInformation() {
   const info = site.information || {};
   const mail = site.email || {};
 
-  const paras = (info.body || []).map((t) => `      <p>${esc(t)}</p>`).join('\n');
+  const paras = (info.body || []).map((t) => `        <p>${esc(t)}</p>`).join('\n');
 
-  const blocks = (info.sections || []).map((s) => `    <div class="info-block">
-      <h2>${esc(s.heading)}</h2>
-      <ul class="info-list">
-${(s.items || []).map((it) => `        <li>${esc(it)}</li>`).join('\n')}
-      </ul>
-    </div>`).join('\n');
+  const blocks = (info.sections || []).map((s) => `      <div class="info-block">
+        <h2>${esc(s.heading)}</h2>
+        <ul class="info-list">
+${(s.items || []).map((it) => `          <li>${esc(it)}</li>`).join('\n')}
+        </ul>
+      </div>`).join('\n');
 
-  const clients = (info.clients || []).length ? `    <div class="info-block">
-      <h2>${esc(info.clientsHeading || "✸ Brands I've Designed & Animated For")}</h2>
-      <ul class="info-list">
-${info.clients.map((c) => `        <li>${esc(c)}</li>`).join('\n')}
-      </ul>
-    </div>` : '';
+  const clients = (info.clients || []).length ? `      <div class="info-block">
+        <h2>${esc(info.clientsHeading || "✸ Brands I've Designed & Animated For")}</h2>
+        <ul class="info-list">
+${info.clients.map((c) => `          <li>${esc(c)}</li>`).join('\n')}
+        </ul>
+      </div>` : '';
 
   const social = (site.social || []).map((s) =>
-    `        <li><a class="link-accent wiggle-text" href="${esc(externalUrl(s.href))}" target="_blank" rel="noopener">${esc(s.label)}</a></li>`
+    `          <li><a class="link-accent wiggle-text" href="${esc(externalUrl(s.href))}" target="_blank" rel="noopener">${esc(s.label)}</a></li>`
   ).join('\n');
 
-  const body = `  <section class="info" data-stagger-scope>
-    <h1 class="display-l">${esc(info.heading || 'Information')}</h1>
+  /* 左邊的照片。沒設 information.image 就整個不產生，版面自動變回單欄
+     —— 這樣「還沒挑好照片」不會留下一個空框。 */
+  const photo = info.image ? `    <div class="info-photo">
+      <img src="${esc(info.image)}" alt="${esc(info.imageAlt || '')}"
+        width="${esc(info.imageW || 1200)}" height="${esc(info.imageH || 1200)}"
+        fetchpriority="high" decoding="async">
+    </div>` : '';
 
-    <div class="info-body body-text stagger-item">
+  const body = `  <section class="info" data-stagger-scope>
+    <div class="info-grid${photo ? '' : ' is-single'}">
+${photo}
+      <div class="info-main">
+        <h1 class="info-title">${esc(info.heading || 'Information')}</h1>
+
+        <div class="info-body body-text stagger-item">
 ${paras}
-    </div>
+        </div>
 
 ${clients}
 ${blocks}
 
-    <div class="info-block">
-      <h2>${esc(info.contactLabel || 'Contact')}</h2>
-      <p style="margin-top:1.2rem"><a class="contact-mail mailto" data-user="${esc(mail.user)}" data-domain="${esc(mail.domain)}" href="#">${esc(mail.user)}@${esc(mail.domain)}</a></p>
-      <ul class="info-list" style="margin-top:2rem">
+        <div class="info-block">
+          <h2>${esc(info.contactLabel || 'Contact')}</h2>
+          <p><a class="contact-mail mailto" data-user="${esc(mail.user)}" data-domain="${esc(mail.domain)}" href="#">${esc(mail.user)}@${esc(mail.domain)}</a></p>
+          <ul class="info-list info-social">
 ${social}
-      </ul>
+          </ul>
+        </div>
+      </div>
     </div>
   </section>`;
 

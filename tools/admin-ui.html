@@ -1714,6 +1714,30 @@ function renderInfo() {
   host.appendChild(field('頁面標題', info.heading, (v) => upd(() => { info.heading = v; }),
     { doc: '這一頁最上面那句，現在是「Hey there!」。' }));
 
+  /* ---- 照片 ---- */
+  /* 左邊那張。目前只能填路徑 —— 後台的上傳端點是綁作品 slug 的
+     （檔案會進 incoming/<slug>/），要做通用上傳得另外開一條路。 */
+  const photoBox = el('div', 'group');
+  photoBox.appendChild(el('span', 'lbl', '左邊的照片'));
+  const shot = el('img');
+  shot.style.cssText = 'width:16rem;aspect-ratio:1;object-fit:cover;border-radius:6px;background:#f0f0f0;display:block';
+  const paint = () => { shot.src = (info.image || '') ? '/' + info.image : ''; shot.hidden = !info.image; };
+  photoBox.appendChild(shot);
+  photoBox.appendChild(field('檔案路徑', info.image, (v) => upd(() => {
+    if (v.trim()) info.image = v.trim(); else delete info.image;
+    paint();
+  }), { placeholder: 'assets/img/me.webp',
+    doc: '把照片放進 assets/img/ 資料夾，再填在這裡。留空 = 不放照片，版面自動變回單欄。'
+      + '現在是佔位圖（灰底寫著 photo goes here）。換圖之後記得一起改下面的寬高。' }));
+  const wh = el('div', 'row');
+  wh.appendChild(field('寬（px）', info.imageW, (v) => upd(() => { info.imageW = Number(v) || 1200; }), { type: 'number' }));
+  wh.appendChild(field('高（px）', info.imageH, (v) => upd(() => { info.imageH = Number(v) || 1200; }), { type: 'number' }));
+  photoBox.appendChild(wh);
+  photoBox.appendChild(field('替代文字', info.imageAlt, (v) => upd(() => { info.imageAlt = v; }),
+    { placeholder: 'Doris Lin 的照片', doc: '給讀螢幕的人與搜尋引擎看的說明。留空也可以。' }));
+  paint();
+  host.appendChild(photoBox);
+
   /* ---- 自我介紹 ---- */
   const bodyBox = el('div', 'group');
   bodyBox.appendChild(el('span', 'lbl', '自我介紹（一段一個框）'));
