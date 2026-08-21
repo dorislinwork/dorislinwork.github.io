@@ -72,7 +72,12 @@ const CARGO_HOST = 'https://freight.cargo.site';
 /* 本機檔名規則，對應 download-media.mjs 與 tools/convert-gifs.mjs 的產出：
      靜態圖  x.png  → x.webp
      動畫    x.gif  → x.mp4（另有 x.webp 當 poster） */
-const localName = (file) => file.replace(/\.[^.]+$/, '') + (isGifFile(file) ? '.mp4' : '.webp');
+/* GIF 與影片來源都會被轉成 MP4（見 tools/lib-media.mjs 的 outputNames()）。
+   這裡原本只判斷 GIF，所以來源是 .mp4／.mov／.webm 時會算出 .webp、指到不存在的檔案。
+   目前的資料剛好沒有影片來源，所以還沒出事，但 add-project.mjs 支援丟影片進來。
+   兩邊的規則必須一致，2026-08-21 對過一次。 */
+const isMovingFile = (f) => isGifFile(f) || VIDEO_EXT.test(f || '');
+const localName = (file) => file.replace(/\.[^.]+$/, '') + (isMovingFile(file) ? '.mp4' : '.webp');
 const posterName = (file) => file.replace(/\.[^.]+$/, '') + '.webp';
 
 /* 本機檔名。平常就是 file，但同一件作品裡可能有**不同的圖用同一個檔名** ——

@@ -2417,6 +2417,36 @@
       "coverTopDark": true
     },
     {
+      "slug": "Mirror",
+      "title": "OUUCH! | Mirror",
+      "year": "2021",
+      "role": "Graduation project",
+      "client": "",
+      "tags": [],
+      "summary": "<OUUCH!>is a series of works about my anxiety.There are eight sprites in the series.",
+      "thumb": {
+        "hash": "4ce315baa4b2610b43b9ca9def85c9f135621c747d58ba317407f31601831952",
+        "file": ".gif",
+        "w": 1920,
+        "h": 1080
+      },
+      "blocks": [
+        {
+          "type": "text",
+          "text": "<OUUCH!>is a series of works about my anxiety.There are eight sprites in the series."
+        },
+        {
+          "type": "embed",
+          "provider": "vimeo",
+          "id": "692733807",
+          "url": "https://player.vimeo.com/video/692733807",
+          "autoplay": false,
+          "loop": false
+        }
+      ],
+      "cardColor": "#5ec841"
+    },
+    {
       "slug": "Reel",
       "title": "Reel",
       "year": "",

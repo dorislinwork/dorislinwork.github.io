@@ -43,9 +43,15 @@ export function listSources(dir) {
   );
 }
 
-/** 轉檔後會產生的檔名（不含路徑）。build.mjs 的 localName() 是同一套規則。 */
+/** 轉檔後會產生的檔名（不含路徑）。build.mjs 的 localName() 是同一套規則。
+ *
+ * ⚠ 去掉副檔名要用正則，不能用 basename(file, extname(file))。
+ * Node 把「開頭是點」的名字當成隱藏檔：extname('.gif') 回空字串、
+ * basename('.gif','') 回 '.gif'，結果會產生 '.gif.mp4' 而 build.mjs 期待 '.mp4'，
+ * 頁面就會指到不存在的檔案。舊站有 8 件作品的縮圖檔名正是 '.gif'
+ * （Cargo 用 hash 定址，檔名可以只有副檔名），2026-08-21 在 Mirror 上踩到。 */
 export function outputNames(file) {
-  const stem = basename(file, extname(file));
+  const stem = String(file).replace(/\.[^.]+$/, '');
   const moving = GIF_EXT.test(file) || VIDEO_EXT.test(file);
   return {
     main: moving ? `${stem}.mp4` : `${stem}.webp`,
