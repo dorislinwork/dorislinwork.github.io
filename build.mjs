@@ -184,6 +184,12 @@ function themeVars(base) {
     `--cover-h-min: ${cs.coverMinHeight || '45vh'};`,
     `--cover-h-max: ${cs.coverMaxHeight || '92vh'};`,
     `--blurb-lines: ${cs.blurbLines ?? 4};`,
+    /* 內頁的圓角與間距（參考 filippomartinelli.com）。
+       --cover-radius 是「捲到底時」的值，捲動前是 0；實際套用的是
+       --cover-radius-now，由 site.js 依捲動進度算出來。 */
+    `--media-radius: ${cs.mediaRadius || '0'};`,
+    `--cover-radius: ${cs.coverRadius || '0'};`,
+    `--gallery-gap: ${cs.gallerySpacing || '2.4rem'};`,
     // 導覽列右邊那組連結：對齊哪一邊、字級、字重、往上抬多少（site.json 的 header）
     `--nav-align: ${NAV_ALIGN[(site.header || {}).navAlign] || 'flex-end'};`,
     `--nav-size: ${(site.header || {}).navSize || '1.5rem'};`,
@@ -339,8 +345,13 @@ function layout(o) {
      第一個元素就會從 y=0 開始、直接被導覽列疊住。 */
   const hasCover = o.hasCover ? ' data-cover="true"' : '';
 
+  /* 內頁圖片之間那些文字段落要靠左還是置中（site.json 的 case.galleryTextAlign）。
+     用屬性而不是 CSS 變數，因為置中要同時改 text-align、max-width 與左右 margin
+     三件事，寫成一條規則比三個變數清楚。 */
+  const galleryText = (site.case || {}).galleryTextAlign === 'center' ? ' data-gallery-text="center"' : '';
+
   return `<!DOCTYPE html>
-<html lang="${esc(site.lang || 'en')}" data-reveal-default="${revealDefault}" data-page="${esc(page)}" data-header-solid="${solid}"${coverDark}${hasCover}>
+<html lang="${esc(site.lang || 'en')}" data-reveal-default="${revealDefault}" data-page="${esc(page)}" data-header-solid="${solid}"${coverDark}${hasCover}${galleryText}>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">

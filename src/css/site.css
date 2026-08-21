@@ -564,6 +564,12 @@ h1, h2, h3 {
   height: clamp(var(--cover-h-min, 45vh), var(--cover-h, 70vh), var(--cover-h-max, 92vh));
   overflow: hidden;
   background: rgba(0, 0, 0, 0.06);
+
+  /* 捲動時長出圓角，滿版的圖就從貼邊變成不貼邊（參考 filippomartinelli.com，
+     他們用 GSAP 把 border-radius 從 0em 補到 6em）。
+     --cover-radius-now 由 site.js 依捲動進度寫入，捲動前是 0。
+     這裡不用 transition —— JS 每一格都會更新，加了會跟捲動打架、變成拖尾。 */
+  border-radius: var(--cover-radius-now, 0);
 }
 .case-cover > * {
   display: block;
@@ -650,7 +656,9 @@ h1, h2, h3 {
 /* ---- 圖片區 ----
    Bito 是每個媒體塊都 col-span-full 滿寬直排，這裡照做。
    原站 .content img 的 margin-bottom: 2rem 換成統一的區塊間距。 */
-.case-gallery > * { margin-bottom: var(--grid-gutter, 2.4rem); }
+/* 圖片之間的垂直間距。原本沿用網格的 2.4rem 太擠了（參考站是 10em）。
+   文字段落的上下距離另外設，見下面 .case-gallery > p。 */
+.case-gallery > * { margin-bottom: var(--gallery-gap, 2.4rem); }
 
 /* 寬度上限。--media-max 由 build.mjs 逐張算好寫在 style 屬性上：
    預設按比例收窄（讓所有媒體高度一致，就是一張 16:9 滿寬時的高度），
@@ -666,6 +674,16 @@ h1, h2, h3 {
   max-width: var(--media-max, 100%);
   margin-inline: auto;
 }
+
+/* 圓角（site.json 的 case.mediaRadius，參考站是 3em）。
+   圖片與影片自己就能圓角；Vimeo 的 iframe 不行，要靠外層的 .embed 裁掉，
+   所以那邊要 overflow: hidden。figure 的圓角掛在裡面的圖上，不然圖說也會被裁。 */
+.case-gallery > img,
+.case-gallery > video,
+.case-gallery > figure img,
+.case-gallery > figure video {
+  border-radius: var(--media-radius, 0);
+}
 /* 有圖說的時候上限掛在 figure 上（--r 也寫在 figure 上），圖說才會跟圖片左邊對齊。
    圖片本身就填滿那個已經收窄的 figure，不要再收一次。 */
 .case-gallery > figure img,
@@ -680,7 +698,8 @@ h1, h2, h3 {
 }
 figure { margin: 0; }
 
-/* 圖片之間的文字不要跟圖一樣滿版，限制在好讀的寬度 */
+/* 圖片之間的文字不要跟圖一樣滿版，限制在好讀的寬度。
+   上下距離自己設，不吃 --gallery-gap（圖片之間要很鬆，文字不用）。 */
 .case-gallery > p {
   max-width: 62ch;
   font-size: var(--body-size, 1.4rem);
@@ -688,6 +707,18 @@ figure { margin: 0; }
   margin-block: clamp(2rem, 4vh, 4rem);
 }
 .case-gallery > p + p { margin-top: -0.8rem; }
+
+/* 置中版（site.json 的 case.galleryTextAlign: "center"，參考站的做法 ——
+   他們左右各留 15em 把行寬收窄再置中）。行寬收得比靠左版更窄，
+   因為置中的長行讀起來比靠左的長行更累（每行起點都在跳）。
+
+   只管圖片之間的段落。資訊列裡的作品敘述不套用 —— 那裡是 12 欄版面的左半邊，
+   置中會跟右邊的 Type／Year 對不起來。 */
+[data-gallery-text="center"] .case-gallery > p {
+  max-width: 52ch;
+  text-align: center;
+  margin-inline: auto;
+}
 
 /* 內頁小標題（Styleframe / Storyboard / Credit 這類） */
 .case-section {
@@ -702,6 +733,10 @@ figure { margin: 0; }
   width: 100%;
   aspect-ratio: 16 / 9;
   background: rgba(0, 0, 0, 0.06);
+  /* Vimeo 的 iframe 自己吃不到 border-radius，要靠外層裁掉。
+     參考站也是這樣做的（.videowrap 有 border-radius + overflow: hidden）。 */
+  border-radius: var(--media-radius, 0);
+  overflow: hidden;
 }
 .embed iframe {
   position: absolute;

@@ -66,8 +66,22 @@
          不能只看 data-cover-dark 就一路白到底。 */
       var coverEl = document.querySelector('.case-cover');
       if (coverEl) {
-        var coverBottom = coverEl.offsetTop + coverEl.offsetHeight;
+        var coverH = coverEl.offsetHeight;
+        var coverBottom = coverEl.offsetTop + coverH;
         nav.classList.toggle('is-over-cover', y + nav.offsetHeight < coverBottom);
+
+        /* 封面的圓角隨捲動長出來：捲動前 0，捲過整個封面高度時到滿。
+           參考 filippomartinelli.com（他們用 GSAP 的 scrub 做同一件事，
+           這裡直接算比例、零依賴）。
+           --cover-radius 的單位可能是 rem／px／em，所以用 calc 乘一個比例，
+           不去解析數值 —— 那樣才不用管使用者填什麼單位。 */
+        if (coverH > 0) {
+          var t = Math.min(1, Math.max(0, y / coverH));
+          coverEl.style.setProperty(
+            '--cover-radius-now',
+            'calc(var(--cover-radius, 0) * ' + t.toFixed(4) + ')',
+          );
+        }
       }
 
       ticking = false;
