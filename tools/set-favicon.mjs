@@ -8,10 +8,18 @@
            assets/img/favicon-32.png       瀏覽器分頁
            assets/img/apple-touch-icon.png 180×180，iOS 加到主畫面用
 
-   來源建議用正方形、去背的 PNG。2026-08-22 用的是 D:\website\favicon.png
-   （2000×2000，粉紅毛球角色，圓形去背）。
+   來源用去背的 PNG 就好，不必自己裁成正方形 —— 工具會先把四周全透明的邊裁掉、
+   以圖形為中心取正方形，再縮。目前用的是 D:\website\favicon-2_工作區域 1.png
+   （1000×1000 的粉紅 D 字標，白眼睛與白笑臉）。
 
-   三件不顯而易見的事：
+   **五官要畫得夠大夠粗。** 這是圖示唯一真正重要的事：16px 的時候細線一定會糊掉。
+   工具產完會逐一報告每個尺寸還剩多少細節，直接看那份輸出就知道夠不夠。
+
+   四件不顯而易見的事：
+
+   0. **留白會吃掉五官。** 圖形四周每留一圈空白，五官在 32px 下就跟著縮一圈。
+      實測同一張圖：不裁留白時 32px 只剩 2 個像素認得出臉，裁掉之後變 4 個、
+      48px 從 7 變 13。所以自動裁是預設行為，不是選項。
 
    1. **ICO 是自己組的**，因為 repo 不裝套件。格式很簡單：6 bytes 檔頭 +
       每張 16 bytes 的目錄項 + 影像資料。Vista 之後允許直接塞 PNG（不必用
@@ -57,8 +65,63 @@ mkdirSync(imgDir, { recursive: true });
 const size = execFileSync(ffprobe, ['-v', 'error', '-select_streams', 'v:0',
   '-show_entries', 'stream=width,height', '-of', 'csv=p=0:s=x', src],
   { encoding: 'utf8' }).trim();
-const square = /^(\d+)x\1$/.test(size);
-console.log(`\n來源：${src}　${size}${square ? '' : '（不是正方形，會補透明邊而不是拉伸）'}`);
+const [srcW, srcH] = size.split('x').map(Number);
+console.log(`\n來源：${src}　${size}`);
+
+/**
+ * 先把四周全透明的邊裁掉。
+ *
+ * 圖示只有 16–48 像素，圖形四周每留一圈空白，五官就跟著縮一圈。2026-08-22 的
+ * 素材 D 只佔畫面 78%×83%、還偏左上，裁掉之後同樣是 32px，臉的像素數就從 2 變成
+ * 一倍以上。留白在 2000px 的稿子上看不出來，在 32px 上是決定看不看得見的差別。
+ *
+ * 取樣用縮小版（快，而且不會被單一個雜訊像素影響），再映射回原尺寸。
+ * 裁出來一律是**正方形**並以圖形為中心 —— 圖示的容器就是正方形，
+ * 在這裡先擺正比之後補邊更準。
+ */
+function contentBox() {
+  const N = 200;
+  const buf = execFileSync(ffmpeg, ['-v', 'error', '-i', src,
+    '-vf', `scale=${N}:${N}:flags=area`, '-frames:v', '1',
+    '-f', 'rawvideo', '-pix_fmt', 'rgba', '-'], { maxBuffer: 1 << 22 });
+
+  let minX = N; let maxX = -1; let minY = N; let maxY = -1;
+  for (let y = 0; y < N; y++) {
+    for (let x = 0; x < N; x++) {
+      if (buf[(y * N + x) * 4 + 3] > 8) {
+        if (x < minX) minX = x;
+        if (x > maxX) maxX = x;
+        if (y < minY) minY = y;
+        if (y > maxY) maxY = y;
+      }
+    }
+  }
+  if (maxX < 0) return null;                       // 整張全透明，別動它
+
+  // 映射回原尺寸，四邊各留一點餘裕免得抗鋸齒的邊被切到
+  const pad = 2;
+  const x0 = Math.max(0, Math.floor((minX - pad) / N * srcW));
+  const x1 = Math.min(srcW, Math.ceil((maxX + 1 + pad) / N * srcW));
+  const y0 = Math.max(0, Math.floor((minY - pad) / N * srcH));
+  const y1 = Math.min(srcH, Math.ceil((maxY + 1 + pad) / N * srcH));
+
+  // 以圖形為中心撐成正方形，超出邊界就往回收
+  const side = Math.min(Math.max(x1 - x0, y1 - y0), Math.min(srcW, srcH));
+  const cx = (x0 + x1) / 2;
+  const cy = (y0 + y1) / 2;
+  const left = Math.round(Math.min(Math.max(cx - side / 2, 0), srcW - side));
+  const top = Math.round(Math.min(Math.max(cy - side / 2, 0), srcH - side));
+  return { side: Math.round(side), left, top };
+}
+
+const box = contentBox();
+const trimmed = box && (box.side < Math.min(srcW, srcH) - 2 || srcW !== srcH);
+if (trimmed) {
+  const pct = Math.round(box.side / Math.min(srcW, srcH) * 100);
+  console.log(`  圖形只佔畫面的 ${pct}%，先裁掉四周的透明邊 → ${box.side}×${box.side}`);
+  console.log('  （圖示只有 16–48px，留白會讓五官跟著縮小）');
+}
+const square = true;   // 裁完一定是正方形
 
 /**
  * 縮成某個尺寸的 PNG，保留透明。
@@ -66,13 +129,12 @@ console.log(`\n來源：${src}　${size}${square ? '' : '（不是正方形，�
  * 來源不是正方形時**補透明邊，不拉伸** —— 圖示是她的作品，拉變形比留白難看。
  * force_original_aspect_ratio=decrease 先把長邊縮到目標尺寸，再用透明色補滿。
  */
+/** 裁切後再縮放的 filter 前綴。沒有可裁的就空字串。 */
+const cropVf = trimmed ? `crop=${box.side}:${box.side}:${box.left}:${box.top},` : '';
+
 function png(px, out) {
-  const vf = square
-    ? `scale=${px}:${px}:flags=lanczos`
-    : `scale=w=${px}:h=${px}:force_original_aspect_ratio=decrease:flags=lanczos,`
-      + `pad=${px}:${px}:(ow-iw)/2:(oh-ih)/2:color=0x00000000`;
   execFileSync(ffmpeg, ['-y', '-loglevel', 'error', '-i', src,
-    '-vf', vf, '-frames:v', '1', out]);
+    '-vf', `${cropVf}scale=${px}:${px}:flags=lanczos`, '-frames:v', '1', out]);
   return readFileSync(out);
 }
 
@@ -104,9 +166,7 @@ console.log(`  ✓ assets/img/favicon-32.png　${readFileSync(p32).length} bytes
 
 /* ---- iOS 主畫面（壓白底，理由見檔頭） ---- */
 const apple = join(imgDir, 'apple-touch-icon.png');
-const appleFit = square
-  ? 'scale=180:180:flags=lanczos'
-  : 'scale=w=180:h=180:force_original_aspect_ratio=decrease:flags=lanczos';
+const appleFit = `${cropVf}scale=180:180:flags=lanczos`;
 execFileSync(ffmpeg, ['-y', '-loglevel', 'error',
   '-f', 'lavfi', '-i', 'color=c=white:s=180x180',
   '-i', src,
