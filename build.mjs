@@ -1069,10 +1069,25 @@ function renderProject(p, prev, next) {
   const out = ['  <article class="case">'];
 
   if (cover) {
+    /* 封面的底色（projects.json 的 coverBg）。
+
+       封面本身是滿版的圖，所以平常看不到底色 —— 它是給「往下捲、封面縮進來」
+       那個狀態用的：縮進來之後左右與圓角外會露出底色，不設就是白的。
+       頁面載入、圖還沒到的時候也會先看到這個顏色。
+
+       is-cover 讓色帶不加上下內距 —— 封面要頂到最上面，加內距會把它推下來、
+       導覽列就不再壓在圖上了。 */
+    const coverBg = blockBg({ bg: p.coverBg });
+    if (coverBg) {
+      const lum = luminance(coverBg);
+      const ink = lum !== null && lum < 0.45 ? ';color:#fff' : '';
+      out.push(`    <div class="case-band is-cover" style="background:${coverBg}${ink}">`);
+    }
     // data-fill 給 site.js 看：要不要把高度算成「視窗高 - 資訊列高」
     out.push(`    <div class="case-cover" data-fill="${cs.fillFirstScreen === false ? 'false' : 'true'}">`);
     out.push('      ' + renderCover(cover, p.slug, base, coverMediaStyle(p)));
     out.push('    </div>');
+    if (coverBg) out.push('    </div>');
   }
 
   /* 沒有敘述的作品（52 件裡有 21 件）標成 data-lean，CSS 會把整段收緊。

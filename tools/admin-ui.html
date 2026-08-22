@@ -1103,6 +1103,47 @@ function coverEditor(p, upd) {
     '勾起來就不略過 —— 封面看到一次，往下捲在原本的位置再看到一次。'
     + '適合封面裁得很緊、想讓人看到完整那張的時候。'));
 
+  /* ---- 封面底色 ---- */
+  /* 平常看不到 —— 封面是滿版的圖。它是給「往下捲、封面縮進來」那個狀態用的：
+     縮進來之後左右與圓角外會露出這個顏色，不設就是白的。所以說明要講清楚
+     「什麼時候才看得到」，不然她設了顏色、看畫面沒變會以為壞了。 */
+  const bgBox = el('div');
+  bgBox.style.cssText = 'display:flex;gap:.8rem;align-items:center;'
+    + 'margin-top:1rem;flex-wrap:wrap';
+  bgBox.appendChild(el('span', 'lbl', '封面底色'));
+
+  const okHex = (v) => /^#[0-9a-f]{6}$/i.test(String(v || ''));
+  const bgPick = el('input');
+  bgPick.type = 'color';
+  bgPick.value = okHex(p.coverBg) ? p.coverBg : '#f0ece6';
+  bgPick.style.cssText = 'width:4.4rem;height:3.2rem;padding:0;flex:none';
+  const bgTxt = el('input');
+  bgTxt.type = 'text';
+  bgTxt.value = p.coverBg || '';
+  bgTxt.placeholder = '沒有底色（白）';
+  bgTxt.style.cssText = 'width:11rem;flex:none';
+  const bgClear = el('button', 'tiny', '拿掉');
+
+  const setBg = (v) => upd(() => {
+    const t = String(v || '').trim().toLowerCase();
+    if (okHex(t)) p.coverBg = t; else delete p.coverBg;
+    if (bgTxt.value !== (p.coverBg || '')) bgTxt.value = p.coverBg || '';
+    if (okHex(p.coverBg)) bgPick.value = p.coverBg;
+    stage.style.background = p.coverBg || '';
+  });
+  bgPick.addEventListener('change', () => setBg(bgPick.value));
+  bgTxt.addEventListener('change', () => setBg(bgTxt.value));
+  bgClear.onclick = () => setBg('');
+
+  bgBox.appendChild(bgPick);
+  bgBox.appendChild(bgTxt);
+  bgBox.appendChild(bgClear);
+  wrap.appendChild(bgBox);
+  wrap.appendChild(el('p', 'doc',
+    '封面平常是滿版的圖，所以這個顏色**平常看不到**。它是給「往下捲、封面縮進來」'
+    + '那一刻用的：縮進來之後左右兩側與圓角外會露出這個顏色，不設就是白的。'
+    + '圖還沒載完的時候也會先看到它。'));
+
   /* ---- 位置與縮放 ---- */
   const curFile = () => (p.cover && p.cover.file)
     || (p.thumb && p.thumb.file)
@@ -1113,6 +1154,8 @@ function coverEditor(p, upd) {
 
   const stage = el('div', 'coverstage');
   stage.style.aspectRatio = aspect.toFixed(3);
+  // 預覽框也墊上封面底色，這樣選了顏色至少在這裡看得到它長怎樣
+  stage.style.background = p.coverBg || '';
   const img = el('img');
   img.draggable = false;
   img.alt = '';
