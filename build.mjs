@@ -985,8 +985,16 @@ function renderProject(p, prev, next) {
   /* 前導敘述搬進資訊列（Bito 的 .info 就是標題加一段敘述）。
      只吃最前面連續的 text 區塊 —— 碰到圖片、影片或小標就停，
      因為那些是內文的一部分，不是作品簡介。 */
+  /* 開頭連續的 text 區塊會被搬到資訊列當作品簡介，所以它們的橫幅底色也要跟著
+     搬過去 —— 不然使用者把簡介那塊塗上顏色，畫面上完全沒反應（2026-08-22 她就是
+     這樣問「為甚麼還是白底」）。取第一塊的顏色代表整個資訊列。 */
   const blurb = [];
-  while (blocks.length && blocks[0].type === 'text') blurb.push(blocks.shift().text);
+  let infoBg = '';
+  while (blocks.length && blocks[0].type === 'text') {
+    const b = blocks.shift();
+    if (!infoBg) infoBg = blockBg(b);
+    blurb.push(b.text);
+  }
 
   /* 封面用的檔案如果也排在內文裡，預設把內文那張拿掉，不然同一張圖會出現兩次
      （52 件裡有 23 件是這種情況）。
@@ -1070,6 +1078,13 @@ function renderProject(p, prev, next) {
   /* 沒有敘述的作品（52 件裡有 21 件）標成 data-lean，CSS 會把整段收緊。
      大字敘述的版型靠大量留白撐起來，但左邊只有一個標題的時候，同樣的留白
      就只是一片空白，右邊兩個欄位還被拉開快 250px。 */
+  /* 資訊列的色帶。is-info 讓它不要再加一次上下內距 —— .case-info 自己就有
+     --info-pad，兩個疊起來會變成兩倍高。 */
+  if (infoBg) {
+    const lum = luminance(infoBg);
+    const ink = lum !== null && lum < 0.45 ? ';color:#fff' : '';
+    out.push(`    <div class="case-band is-info" style="background:${infoBg}${ink}">`);
+  }
   out.push(`    <div class="case-info" data-stagger-scope${blurb.length ? '' : ' data-lean'}>`);
   out.push('      <div class="case-name">');
   out.push(`        <h1 class="case-title">${esc(p.title)}</h1>`);
@@ -1092,6 +1107,7 @@ function renderProject(p, prev, next) {
     out.push('      </dl>');
   }
   out.push('    </div>');
+  if (infoBg) out.push('    </div>');
 
   // gallery 自己已經帶好每一段的容器（有底色的是 .case-band，沒有的是 .case-gallery）
   if (gallery) out.push(gallery);

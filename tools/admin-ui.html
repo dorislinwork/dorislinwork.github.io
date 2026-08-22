@@ -1268,13 +1268,22 @@ function bandColor(blocks, i, upd, redraw) {
   note.style.flex = '1 1 100%';
 
   /* 分段結果要說出來，不能讓她自己推。同色相鄰 = 同一段。 */
+  /* 開頭連續的文字區塊會被搬到最上面的資訊列當作品簡介（build.mjs 的 blurb）。
+     她如果只看區塊順序，不會知道這一塊其實不在圖片區裡 —— 2026-08-22 她就是
+     把簡介那塊塗上顏色、然後問「為甚麼還是白底」。所以要講出來。 */
+  const isBlurb = blocks.slice(0, i + 1).every((x) => x.type === 'text');
+
   const describe = () => {
-    if (!ok(b.bg)) return '沒有底色，這一塊在頁面原本的白底上。';
+    const where = isBlurb
+      ? '這一塊是作品簡介（排在最上面的資訊列，不在圖片區裡）。'
+      : '';
+    if (!ok(b.bg)) return where + '沒有底色，這一塊在頁面原本的白底上。';
     const prev = blocks[i - 1] && blocks[i - 1].bg;
     const next = blocks[i + 1] && blocks[i + 1].bg;
     const same = (x) => ok(x) && String(x).toLowerCase() === String(b.bg).toLowerCase();
     const parts = [];
-    if (same(prev) && same(next)) parts.push('跟上一塊和下一塊連成同一條色帶');
+    if (isBlurb) parts.push('整個資訊列（作品名、簡介、右邊欄位）會一起上色');
+    else if (same(prev) && same(next)) parts.push('跟上一塊和下一塊連成同一條色帶');
     else if (same(prev)) parts.push('跟上一塊連成同一條色帶');
     else if (same(next)) parts.push('跟下一塊連成同一條色帶');
     else parts.push('自己一條色帶');
@@ -1283,7 +1292,7 @@ function bandColor(blocks, i, upd, redraw) {
       .map((v) => (v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4));
     const lum = 0.2126 * lin[0] + 0.7152 * lin[1] + 0.0722 * lin[2];
     parts.push(lum < 0.45 ? '深色 → 整段文字自動轉白' : '淺色 → 文字維持深色');
-    return parts.join('，') + '。';
+    return where + parts.join('，') + '。';
   };
 
   const paint = () => {

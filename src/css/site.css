@@ -805,11 +805,14 @@ figure { margin: 0; }
   margin-left: calc(50% - var(--vw, 100vw) / 2);
   padding: var(--band-pad, 6rem) 0;
 }
-.case-band > .case-gallery {
+.case-band > .case-gallery,
+.case-band > .case-info {
   max-width: var(--max, 160rem);
   margin-inline: auto;
   padding-inline: var(--pad, 3.5rem);
 }
+/* 資訊列自己就有 --info-pad 的上下內距，色帶不要再加一次（會變兩倍高）。 */
+.case-band.is-info { padding-block: 0; }
 /* 段落與圖片自己的外距會疊在色帶的內距上，讓上下看起來比設定值鬆很多。
    第一塊與最後一塊的外距歸零，色帶的高度就由 --band-pad 說了算。 */
 .case-band > .case-gallery > *:first-child { margin-top: 0; }
