@@ -1231,6 +1231,71 @@ function coverEditor(p, upd) {
   return wrap;
 }
 
+/* 文字區塊的板塊底色。
+
+   色票旁邊要有「拿掉」，因為 <input type="color"> 沒有「沒有顏色」這個狀態
+   —— 只有色票的話她永遠回不到「沒有底色」。
+
+   文字顏色不給她調：底色暗就自動翻白字（build.mjs 量亮度決定）。
+   多一個「文字顏色」欄位只會多一個可以設錯的地方，而正確答案是算得出來的。
+   這裡的預覽用同一個門檻，所以後台看到的黑白跟頁面一致。 */
+function panelColor(b, ta, upd) {
+  const wrap = el('div');
+  wrap.style.cssText = 'display:flex;gap:.8rem;align-items:center;margin-top:.6rem;flex-wrap:wrap';
+  wrap.appendChild(el('span', 'fname', '板塊底色'));
+
+  const pick = el('input');
+  pick.type = 'color';
+  pick.value = /^#[0-9a-f]{6}$/i.test(b.bg || '') ? b.bg : '#f0ece6';
+  pick.style.cssText = 'width:4.4rem;height:3.2rem;padding:0;flex:none';
+
+  const txt = el('input');
+  txt.type = 'text';
+  txt.value = b.bg || '';
+  txt.placeholder = '沒有底色';
+  txt.style.cssText = 'width:11rem;flex:none';
+
+  const clear = el('button', 'tiny', '拿掉');
+  const note = el('span', 'fname', '');
+
+  /* 後台的段落框直接套上底色，所以打字的時候就看得到實際效果，
+     不必按預覽。門檻 0.45 跟 build.mjs 的 renderBlock 一致。 */
+  const paint = () => {
+    const ok = /^#[0-9a-f]{6}$/i.test(b.bg || '');
+    ta.style.background = ok ? b.bg : '';
+    ta.style.color = '';
+    note.textContent = '';
+    if (ok) {
+      const n = parseInt(b.bg.slice(1), 16);
+      const lin = [(n >> 16) & 255, (n >> 8) & 255, n & 255].map((v) => v / 255)
+        .map((v) => (v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4));
+      const lum = 0.2126 * lin[0] + 0.7152 * lin[1] + 0.0722 * lin[2];
+      const dark = lum < 0.45;
+      ta.style.color = dark ? '#fff' : '';
+      note.textContent = dark ? '深色 → 文字自動轉白' : '淺色 → 文字維持深色';
+    }
+    if (txt.value !== (b.bg || '')) txt.value = b.bg || '';
+    if (/^#[0-9a-f]{6}$/i.test(b.bg || '')) pick.value = b.bg;
+  };
+
+  const set = (v) => upd(() => {
+    const t = String(v || '').trim().toLowerCase();
+    if (/^#[0-9a-f]{6}$/i.test(t)) b.bg = t; else delete b.bg;
+    paint();
+  });
+
+  pick.addEventListener('input', () => set(pick.value));
+  txt.addEventListener('input', () => set(txt.value));
+  clear.onclick = () => set('');
+
+  wrap.appendChild(pick);
+  wrap.appendChild(txt);
+  wrap.appendChild(clear);
+  wrap.appendChild(note);
+  paint();
+  return wrap;
+}
+
 function blocksEditor(p, upd) {
   const wrap = el('div', 'blocks');
   const blocks = p.blocks || (p.blocks = []);
@@ -1268,6 +1333,7 @@ function blocksEditor(p, upd) {
       // 段落只去掉整段的前後空白，中間的換行是她自己分的行，不能動
       trimOnBlur(ta, (v) => upd(() => { b.text = v; }));
       body.appendChild(ta);
+      body.appendChild(panelColor(b, ta, upd));
     } else if (b.type === 'heading') {
       const inp = el('input');
       inp.type = 'text';
@@ -1854,6 +1920,30 @@ function fieldFor(obj, key, path) {
       change();
     }, { type: 'number', doc }));
     row.querySelector('input').step = 'any';
+    return row;
+  }
+
+  /* 有 _<鍵>選項 的話就給下拉，不要讓她自己打字。
+     像 align 這種只有 left/center/right 三個合法值的欄位，打錯字不會報錯、
+     只是靜靜退回預設值 —— 那種「我明明改了卻沒反應」最難查。
+     沿用 docFor 的 _<鍵>說明 命名慣例，所以未來任何列舉欄位都自動有下拉。 */
+  const opts = obj['_' + key + '選項'];
+  if (Array.isArray(opts) && opts.length) {
+    const lab = el('label');
+    lab.appendChild(el('span', 'lbl', label));
+    const sel = el('select');
+    // 允許留空（= 用預設值）的欄位，下拉也要有得選
+    const list = (v === '' && !opts.includes('')) ? [''].concat(opts) : opts;
+    list.forEach((o) => {
+      const opt = el('option', null, o === '' ? '（留空 = 預設）' : String(o));
+      opt.value = String(o);
+      if (String(o) === String(v)) opt.selected = true;
+      sel.appendChild(opt);
+    });
+    sel.addEventListener('change', () => { obj[key] = sel.value; change(); });
+    lab.appendChild(sel);
+    if (doc) lab.appendChild(el('p', 'doc', doc));
+    row.appendChild(lab);
     return row;
   }
 

@@ -379,12 +379,34 @@ h1, h2, h3 {
 /* --------------------------------------------------------------------------
    5. 首頁 hero
    -------------------------------------------------------------------------- */
+/* 首頁大標。字級、字重、斜體、行距、字距、行寬、對齊都在 site.json 的 hero，
+   後台的「版面設定 → 首頁大標」調得到。
+
+   對齊要同時做兩件事：文字本身的 text-align，以及整個區塊往哪邊靠（--hero-margin）。
+   只設 text-align 的話區塊仍然被 max-width 綁在左邊，選「置中」看起來只是
+   「在左半邊置中」—— 這是這裡最容易做錯的一點。 */
 .hero {
   padding: clamp(4rem, 12vh, 12rem) var(--edge) clamp(5rem, 10vh, 10rem);
+  text-align: var(--hero-align, left);
 }
-/* 文字不要拉太寬。用 max-width 會破壞跟網格對齊的左邊界，所以限制在內層。 */
-.hero > * { max-width: 90rem; }
-.hero h1 + h1 { margin-top: 1.2rem; }
+.hero > * {
+  max-width: var(--hero-max, 90rem);
+  margin: var(--hero-margin, 0 auto 0 0);
+}
+.hero .display-xl {
+  font-weight: var(--hero-weight, 700);
+  font-style: var(--hero-style, normal);
+  line-height: var(--hero-lh, 1.1);
+  letter-spacing: var(--hero-ls, 0);
+}
+/* 副標。字級獨立，其餘跟著大標走，這樣改一個值兩行不會脫節。 */
+.hero .display-l {
+  font-size: var(--hero-sub-size, 2.2rem);
+  font-style: var(--hero-style, normal);
+  line-height: var(--hero-lh, 1.1);
+  letter-spacing: var(--hero-ls, 0);
+}
+.hero > * + * { margin-top: var(--hero-gap, 1.2rem); }
 
 /* --------------------------------------------------------------------------
    6. 縮圖網格
@@ -765,6 +787,35 @@ figure { margin: 0; }
   margin-block: clamp(2rem, 4vh, 4rem);
 }
 .case-gallery > p + p { margin-top: -0.8rem; }
+
+/* 有底色的文字區塊（projects.json 的 bg）。底色、內距、圓角在外層這一層，
+   段落本身維持原樣 —— 但這也表示上面那條 .case-gallery > p 選不到被包起來的
+   段落，所以行寬與行高要在這裡再寫一次。**改一邊就要改另一邊。**
+
+   文字顏色由 build.mjs 依底色亮度算好寫在 style 上，不在這裡處理。
+
+   相鄰兩塊只留一份間距（第二塊的 margin-top 歸零），但**不會接成一整片** ——
+   它們是各自獨立的圓角方塊。想要一整片就把那幾行寫在同一個文字區塊裡
+   （區塊內的換行會保留成 <br>），那才是一個板塊。 */
+.text-panel {
+  padding: var(--panel-pad, 3.2rem) var(--panel-pad-x, 3.2rem);
+  border-radius: var(--media-radius, 0);
+  margin-block: clamp(2rem, 4vh, 4rem);
+}
+.text-panel + .text-panel { margin-top: 0; }
+.text-panel p {
+  max-width: 62ch;
+  font-size: var(--body-size, 1.4rem);
+  line-height: 1.5;
+  margin: 0;
+}
+[data-gallery-text="center"] .text-panel p {
+  max-width: 52ch;
+  text-align: center;
+  margin-inline: auto;
+}
+/* 板塊裡的連結要跟著翻色，不然深底上會剩下深灰的連結看不見 */
+.text-panel a { color: inherit; }
 
 /* 置中版（site.json 的 case.galleryTextAlign: "center"，參考站的做法 ——
    他們左右各留 15em 把行寬收窄再置中）。行寬收得比靠左版更窄，

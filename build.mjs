@@ -74,6 +74,26 @@ const isNote = (k) => k.startsWith('_');
  * 不可能是站內路徑，所以這個補法沒有猜錯的空間。
  * （nav 不套用：那裡的 index.html、work/Reel.html 本來就是相對路徑。）
  */
+/**
+ * "#rrggbb" → 相對亮度 0..1（WCAG 的算法，跟 set-card-colors.mjs 同一套）。
+ * 用來決定板塊上的文字該用黑還是白 —— 她挑了深色板塊，文字就得自動翻白，
+ * 不然要她自己記得「深底配白字」等於把問題丟回給她。認不得的值回 null。
+ */
+function luminance(hex) {
+  const m = /^#?([0-9a-f]{6})$/i.exec(String(hex || '').trim());
+  if (!m) return null;
+  const n = parseInt(m[1], 16);
+  const lin = [(n >> 16) & 255, (n >> 8) & 255, n & 255]
+    .map((v) => v / 255)
+    .map((v) => (v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4));
+  return 0.2126 * lin[0] + 0.7152 * lin[1] + 0.0722 * lin[2];
+}
+
+/** 區塊的板塊底色。只認 #rrggbb，其他一律當沒設（避免把任意字串塞進 style）。 */
+const blockBg = (b) => (/^#[0-9a-f]{6}$/i.test(String(b.bg || '').trim())
+  ? String(b.bg).trim().toLowerCase()
+  : '');
+
 const externalUrl = (href) => {
   const v = String(href || '').trim();
   if (!v) return v;
@@ -230,6 +250,10 @@ function ratioNum(ratio) {
    只認這三個，填別的就退回 bottom，不會產生壞的 CSS。 */
 const NAV_ALIGN = { top: 'flex-start', bottom: 'flex-end', center: 'center' };
 
+/* 首頁大標的對齊 → 區塊要往哪邊靠（margin 的左右值）。
+   只認這三個，填別的就退回 left。 */
+const HERO_ALIGN = { left: '0 auto 0 0', center: '0 auto', right: '0 0 0 auto' };
+
 function themeVars(base) {
   const t = site.theme || {};
   const g = site.grid || {};
@@ -239,6 +263,7 @@ function themeVars(base) {
   const ty = site.type || {};
   const cs = site.case || {};
   const inf = site.information || {};
+  const hr = site.hero || {};
   const wg = (site.effects || {}).wiggle || {};
 
   const lines = [
@@ -257,7 +282,22 @@ function themeVars(base) {
     `--font-body: ${f.body || 'sans-serif'};`,
     `--font-caption: ${f.caption || f.body || 'sans-serif'};`,
     // 字級：舊站是固定值，首頁大標拉出來可調
-    `--hero-size: ${ty.heroSize || 'clamp(2.6rem, 4.5vw, 5.2rem)'};`,
+    /* 首頁大標的排版。都在 site.json 的 hero 那一組，因為那本來就是首頁的東西。
+       size 沒填的話退回舊的 type.heroSize，所以既有設定不會失效。
+
+       對齊要同時處理兩件事：文字本身的 text-align，以及整個區塊往哪邊靠。
+       只設 text-align 的話，區塊仍然被 max-width 綁在左邊，「置中」看起來
+       只是「在左半邊置中」。所以另外算一組 margin。 */
+    `--hero-size: ${hr.size || ty.heroSize || 'clamp(2.6rem, 4.5vw, 5.2rem)'};`,
+    `--hero-sub-size: ${hr.subSize || ty.titleSize || '2.2rem'};`,
+    `--hero-weight: ${hr.weight || ty.headingWeight || '700'};`,
+    `--hero-style: ${hr.style === 'italic' ? 'italic' : 'normal'};`,
+    `--hero-lh: ${hr.lineHeight || '1.1'};`,
+    `--hero-ls: ${hr.letterSpacing || '0'};`,
+    `--hero-gap: ${hr.lineGap || '1.2rem'};`,
+    `--hero-max: ${hr.maxWidth || '90rem'};`,
+    `--hero-align: ${HERO_ALIGN[hr.align] ? hr.align : 'left'};`,
+    `--hero-margin: ${HERO_ALIGN[hr.align] || HERO_ALIGN.left};`,
     `--title-size: ${ty.titleSize || '2.2rem'};`,
     `--body-size: ${ty.bodySize || '1.4rem'};`,
     `--body-lh: ${ty.bodyLineHeight || '1.2'};`,
@@ -323,6 +363,9 @@ function themeVars(base) {
       ? 'calc((var(--vw, 100vw) - min(var(--max, 160rem), var(--vw, 100vw))) / 2 + var(--pad, 4rem))'
       : (cs.coverInset || '0')};`,
     `--gallery-gap: ${cs.gallerySpacing || '2.4rem'};`,
+    // 文字區塊有底色時，色塊的內距（上下 / 左右）
+    `--panel-pad: ${cs.panelPadding || '3.2rem'};`,
+    `--panel-pad-x: ${cs.panelPaddingX || cs.panelPadding || '3.2rem'};`,
     // 導覽列右邊那組連結：對齊哪一邊、字級、字重、往上抬多少（site.json 的 header）
     `--nav-align: ${NAV_ALIGN[(site.header || {}).navAlign] || 'flex-end'};`,
     `--nav-size: ${(site.header || {}).navSize || '1.5rem'};`,
@@ -559,8 +602,22 @@ function renderBlock(b, i, slug, base, row) {
     return `      <${tag} class="case-section"${styleAttr}>${esc(b.text)}</${tag}>`;
   }
 
+  /* 文字區塊可以有自己的板塊底色（projects.json 的 bg，後台有色票）。
+
+     有底色時要多包一層 div：底色、內距、圓角都在那一層，段落本身維持原樣。
+     這也表示 .case-gallery > p 這條直接子選擇器選不到被包起來的段落，
+     所以 CSS 另外有一組 .text-panel p —— 兩邊的行寬與行高要一致，
+     改一邊就要改另一邊。
+
+     文字顏色是量出來的，不是另一個要她填的欄位：底色暗就翻白字。
+     門檻 0.45 比 0.5 略低，因為白字在中間灰上比黑字更容易讀。 */
   if (b.type === 'text') {
-    return `      ${paragraph(b.text, withRow(blockPlacement(b)))}`;
+    const bg = blockBg(b);
+    if (!bg) return `      ${paragraph(b.text, withRow(blockPlacement(b)))}`;
+    const lum = luminance(bg);
+    const ink = lum !== null && lum < 0.45 ? ';color:#fff' : '';
+    const style = withRow(`${blockPlacement(b)};background:${bg}${ink}`.replace(/^;/, ''));
+    return `      <div class="text-panel" style="${style}">${paragraph(b.text)}</div>`;
   }
 
   if (b.type === 'embed') {
