@@ -363,9 +363,8 @@ function themeVars(base) {
       ? 'calc((var(--vw, 100vw) - min(var(--max, 160rem), var(--vw, 100vw))) / 2 + var(--pad, 4rem))'
       : (cs.coverInset || '0')};`,
     `--gallery-gap: ${cs.gallerySpacing || '2.4rem'};`,
-    // 文字區塊有底色時，色塊的內距（上下 / 左右）
-    `--panel-pad: ${cs.panelPadding || '3.2rem'};`,
-    `--panel-pad-x: ${cs.panelPaddingX || cs.panelPadding || '3.2rem'};`,
+    // 橫幅色帶的上下內距
+    `--band-pad: ${cs.bandPadding || '6rem'};`,
     // 導覽列右邊那組連結：對齊哪一邊、字級、字重、往上抬多少（site.json 的 header）
     `--nav-align: ${NAV_ALIGN[(site.header || {}).navAlign] || 'flex-end'};`,
     `--nav-size: ${(site.header || {}).navSize || '1.5rem'};`,
@@ -602,22 +601,8 @@ function renderBlock(b, i, slug, base, row) {
     return `      <${tag} class="case-section"${styleAttr}>${esc(b.text)}</${tag}>`;
   }
 
-  /* 文字區塊可以有自己的板塊底色（projects.json 的 bg，後台有色票）。
-
-     有底色時要多包一層 div：底色、內距、圓角都在那一層，段落本身維持原樣。
-     這也表示 .case-gallery > p 這條直接子選擇器選不到被包起來的段落，
-     所以 CSS 另外有一組 .text-panel p —— 兩邊的行寬與行高要一致，
-     改一邊就要改另一邊。
-
-     文字顏色是量出來的，不是另一個要她填的欄位：底色暗就翻白字。
-     門檻 0.45 比 0.5 略低，因為白字在中間灰上比黑字更容易讀。 */
   if (b.type === 'text') {
-    const bg = blockBg(b);
-    if (!bg) return `      ${paragraph(b.text, withRow(blockPlacement(b)))}`;
-    const lum = luminance(bg);
-    const ink = lum !== null && lum < 0.45 ? ';color:#fff' : '';
-    const style = withRow(`${blockPlacement(b)};background:${bg}${ink}`.replace(/^;/, ''));
-    return `      <div class="text-panel" style="${style}">${paragraph(b.text)}</div>`;
+    return `      ${paragraph(b.text, withRow(blockPlacement(b)))}`;
   }
 
   if (b.type === 'embed') {
@@ -1022,12 +1007,36 @@ function renderProject(p, prev, next) {
   /* 列號要在這裡一次算完 —— 它取決於「前面的區塊佔掉了哪些欄」，
      所以是整份清單的性質，不是單一區塊能決定的。要在去重之後才算，
      不然被拿掉的那張圖會佔掉一個列號、後面全部往下移一列。 */
-  const rows = assignRows(blocks);
+  /* 把連續同底色的區塊收成「橫幅」—— 一條左右滿版的色帶，裡面照樣是 12 欄網格。
 
-  const gallery = blocks
-    .map((b, i) => renderBlock(b, i, p.slug, base, rows[i]))
-    .filter(Boolean)
-    .join('\n');
+     相鄰且 bg 相同的區塊算同一段，顏色不同或沒有 bg 就切開。所以她只要在後台把
+     幾個區塊塗成同一色，它們就連成一整條，中間不會露出頁面底色；要分成兩段就
+     塗不同的顏色。
+
+     列號**每一段各自從 1 開始算**：每段是獨立的 grid 容器，沿用整份清單的列號會
+     在第二段以後留下一堆空列（第二段從第 5 列開始畫，前面四列是空的）。 */
+  const bands = [];
+  for (const b of blocks) {
+    const bg = blockBg(b);
+    const last = bands[bands.length - 1];
+    if (last && last.bg === bg) last.blocks.push(b);
+    else bands.push({ bg, blocks: [b] });
+  }
+
+  const gallery = bands.map((g) => {
+    const rows = assignRows(g.blocks);
+    const inner = g.blocks
+      .map((b, i) => renderBlock(b, i, p.slug, base, rows[i]))
+      .filter(Boolean)
+      .join('\n');
+    if (!inner) return '';
+    if (!g.bg) return `    <div class="case-gallery">\n${inner}\n    </div>`;
+    // 底色暗就整段翻白字。門檻 0.45 比 0.5 略低，白字在中間灰上比黑字好讀。
+    const lum = luminance(g.bg);
+    const ink = lum !== null && lum < 0.45 ? ';color:#fff' : '';
+    return `    <div class="case-band" style="background:${g.bg}${ink}">\n`
+      + `      <div class="case-gallery">\n${inner}\n      </div>\n    </div>`;
+  }).filter(Boolean).join('\n');
 
   /* 資訊列右半邊。空的欄位不會產生，所以順序只影響「有填的那幾格」怎麼排。
 
@@ -1084,11 +1093,8 @@ function renderProject(p, prev, next) {
   }
   out.push('    </div>');
 
-  if (gallery) {
-    out.push('    <div class="case-gallery">');
-    out.push(gallery);
-    out.push('    </div>');
-  }
+  // gallery 自己已經帶好每一段的容器（有底色的是 .case-band，沒有的是 .case-gallery）
+  if (gallery) out.push(gallery);
 
   out.push('    <nav class="case-nav" aria-label="More work">');
   out.push(`      <a href="${base}index.html">← All work</a>`);

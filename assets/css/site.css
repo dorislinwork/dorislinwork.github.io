@@ -788,34 +788,34 @@ figure { margin: 0; }
 }
 .case-gallery > p + p { margin-top: -0.8rem; }
 
-/* 有底色的文字區塊（projects.json 的 bg）。底色、內距、圓角在外層這一層，
-   段落本身維持原樣 —— 但這也表示上面那條 .case-gallery > p 選不到被包起來的
-   段落，所以行寬與行高要在這裡再寫一次。**改一邊就要改另一邊。**
+/* 整段橫幅：連續同底色的區塊共用一條左右滿版的色帶（projects.json 的 bg）。
 
-   文字顏色由 build.mjs 依底色亮度算好寫在 style 上，不在這裡處理。
+   滿版的做法跟 .case-cover 同一套：.case 有 --pad 的左右內距、又被 --max 收窄，
+   所以要先突破它再把內容收回原本的欄寬 —— 這樣色帶裡的圖片跟色帶外的對得齊。
 
-   相鄰兩塊只留一份間距（第二塊的 margin-top 歸零），但**不會接成一整片** ——
-   它們是各自獨立的圓角方塊。想要一整片就把那幾行寫在同一個文字區塊裡
-   （區塊內的換行會保留成 <br>），那才是一個板塊。 */
-.text-panel {
-  padding: var(--panel-pad, 3.2rem) var(--panel-pad-x, 3.2rem);
-  border-radius: var(--media-radius, 0);
-  margin-block: clamp(2rem, 4vh, 4rem);
+   **不能用 100vw**：Windows 上它包含滾動條寬度，色帶會比看得到的區域寬十幾像素、
+   右邊被切掉。--vw 是 site.js 寫入的 documentElement.clientWidth。
+
+   文字顏色由 build.mjs 依底色亮度算好寫在 style 上（深底翻白字），不在這裡處理。
+
+   色帶裡面仍然是 .case-gallery，所以 .case-gallery > img 那些規則照常生效 ——
+   這是刻意保留同一個 class 的原因，不然圖片的寬度與間距要再寫一份。 */
+.case-band {
+  width: var(--vw, 100vw);
+  margin-left: calc(50% - var(--vw, 100vw) / 2);
+  padding: var(--band-pad, 6rem) 0;
 }
-.text-panel + .text-panel { margin-top: 0; }
-.text-panel p {
-  max-width: 62ch;
-  font-size: var(--body-size, 1.4rem);
-  line-height: 1.5;
-  margin: 0;
-}
-[data-gallery-text="center"] .text-panel p {
-  max-width: 52ch;
-  text-align: center;
+.case-band > .case-gallery {
+  max-width: var(--max, 160rem);
   margin-inline: auto;
+  padding-inline: var(--pad, 3.5rem);
 }
-/* 板塊裡的連結要跟著翻色，不然深底上會剩下深灰的連結看不見 */
-.text-panel a { color: inherit; }
+/* 段落與圖片自己的外距會疊在色帶的內距上，讓上下看起來比設定值鬆很多。
+   第一塊與最後一塊的外距歸零，色帶的高度就由 --band-pad 說了算。 */
+.case-band > .case-gallery > *:first-child { margin-top: 0; }
+.case-band > .case-gallery > *:last-child { margin-bottom: 0; }
+/* 深色色帶上的連結要跟著翻白，不然會剩下深灰的連結看不見 */
+.case-band a { color: inherit; }
 
 /* 置中版（site.json 的 case.galleryTextAlign: "center"，參考站的做法 ——
    他們左右各留 15em 把行寬收窄再置中）。行寬收得比靠左版更窄，
