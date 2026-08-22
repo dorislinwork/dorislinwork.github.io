@@ -182,7 +182,9 @@
         }
       ],
       "cardColor": "#c6713a",
-      "coverTopDark": true
+      "coverTopDark": true,
+      "coverPosition": "50% 52.2%",
+      "coverInBody": true
     },
     {
       "slug": "A-Journey-in-Tohoku",
@@ -466,7 +468,7 @@
     },
     {
       "slug": "Taiwanese-sumer-vibe",
-      "title": "Taiwanese summer vibe",
+      "title": "Taiwanese sumer vibe",
       "year": "2025",
       "type": "Personal work",
       "client": "",
@@ -661,7 +663,9 @@
           "w": 1600,
           "h": 1600,
           "alt": "",
-          "caption": ""
+          "caption": "",
+          "col": 1,
+          "span": 6
         },
         {
           "type": "media",
@@ -671,7 +675,9 @@
           "w": 1600,
           "h": 1600,
           "alt": "",
-          "caption": ""
+          "caption": "",
+          "col": 7,
+          "span": 6
         },
         {
           "type": "heading",
@@ -680,7 +686,8 @@
         }
       ],
       "cardColor": "#2e81a5",
-      "coverTopDark": true
+      "coverTopDark": true,
+      "coverInBody": true
     },
     {
       "slug": "goodmorningmacc-shenzaoclub",
