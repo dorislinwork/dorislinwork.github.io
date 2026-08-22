@@ -2,7 +2,8 @@
   "_說明": "全站設定。改這個檔案然後跑 `node build.mjs` 就會重新產生所有頁面。",
 
   "name": "Doris Lin",
-  "url": "https://dorislinwork.github.io",
+  "url": "https://doris-lin.com",
+  "_url說明": "網站的正式網址。用在 sitemap.xml 的每一筆、robots.txt 的 Sitemap 那行，以及分享預覽圖（og:image）的絕對網址 —— 那三個地方都必須是完整網址，不能用相對路徑。\n\n2026-08-22 從 https://dorislinwork.github.io 改成 https://doris-lin.com（自訂網域接上的當天）。GitHub Pages 仍然服務同一份檔案，dorislinwork.github.io 會自動轉址到這裡，所以舊網址不會壞。\n\n網域的 DNS 在 Cargo 的面板管理（四筆 A 記錄指向 GitHub、www 用 CNAME）。repo 根目錄的 CNAME 檔是 GitHub 自己建的，不要刪 —— 刪掉自訂網域就會失效。",
   "description": "Doris Lin is a motion designer and 3D illustrator based in Taiwan, making furry, friendly things in 3D.",
   "lang": "en",
 
