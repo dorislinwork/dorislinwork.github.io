@@ -950,7 +950,7 @@
     },
     {
       "slug": "Camping",
-      "title": "Camping",
+      "title": "The Spring Camping 🫛🏕️",
       "year": "2025",
       "type": "Personal work",
       "client": "",
@@ -965,6 +965,11 @@
       },
       "blocks": [
         {
+          "type": "text",
+          "text": "The weather is getting warmer!\nIt‘s the perfect time to go camping in the mountains together.\n\nToasty Baby and Little Jam are going camping together! This time, they‘re joined by some little elves ⛺️\n\nAnd they happily roasted popcorn while the little fairies were still asleep.🍿",
+          "bg": "#a3c22b"
+        },
+        {
           "type": "media",
           "hash": "47835fd1600d6dcfd089708a6423c152b03b75d01b0f2d3d2a0a1df3af71c48e",
           "file": "FINAL_VSCO.jpg",
@@ -972,27 +977,10 @@
           "w": 1800,
           "h": 1440,
           "alt": "",
-          "caption": ""
-        },
-        {
-          "type": "media",
-          "hash": "22a0462327b318881d68235db814750dd32317fa59ae77d595f1b5b6a9b30ad9",
-          "file": "963F926D-B38E-4672-A10C-A97298F60D22.JPG",
-          "url": "https://freight.cargo.site/w/1815/q/75/i/22a0462327b318881d68235db814750dd32317fa59ae77d595f1b5b6a9b30ad9/963F926D-B38E-4672-A10C-A97298F60D22.JPG",
-          "w": 1815,
-          "h": 1452,
-          "alt": "",
-          "caption": ""
-        },
-        {
-          "type": "media",
-          "hash": "8603d9040b9e55f73fa17e04f50808541fe086d4b38e5bbd7d84e337c294ea24",
-          "file": "7E75C3B4-20C9-494E-BA99-C86354EB1B65.JPG",
-          "url": "https://freight.cargo.site/w/900/q/75/i/8603d9040b9e55f73fa17e04f50808541fe086d4b38e5bbd7d84e337c294ea24/7E75C3B4-20C9-494E-BA99-C86354EB1B65.JPG",
-          "w": 900,
-          "h": 720,
-          "alt": "",
-          "caption": ""
+          "caption": "",
+          "col": 1,
+          "span": 12,
+          "bg": "#a3c22b"
         },
         {
           "type": "media",
@@ -1002,11 +990,42 @@
           "w": 900,
           "h": 720,
           "alt": "",
-          "caption": ""
+          "caption": "",
+          "col": 1,
+          "span": 12,
+          "bg": "#a3c22b"
+        },
+        {
+          "type": "media",
+          "hash": "22a0462327b318881d68235db814750dd32317fa59ae77d595f1b5b6a9b30ad9",
+          "file": "963F926D-B38E-4672-A10C-A97298F60D22.JPG",
+          "url": "https://freight.cargo.site/w/1815/q/75/i/22a0462327b318881d68235db814750dd32317fa59ae77d595f1b5b6a9b30ad9/963F926D-B38E-4672-A10C-A97298F60D22.JPG",
+          "w": 1815,
+          "h": 1452,
+          "alt": "",
+          "caption": "",
+          "col": 7,
+          "span": 6,
+          "bg": "#a3c22b"
+        },
+        {
+          "type": "media",
+          "hash": "8603d9040b9e55f73fa17e04f50808541fe086d4b38e5bbd7d84e337c294ea24",
+          "file": "7E75C3B4-20C9-494E-BA99-C86354EB1B65.JPG",
+          "url": "https://freight.cargo.site/w/900/q/75/i/8603d9040b9e55f73fa17e04f50808541fe086d4b38e5bbd7d84e337c294ea24/7E75C3B4-20C9-494E-BA99-C86354EB1B65.JPG",
+          "w": 900,
+          "h": 720,
+          "alt": "",
+          "caption": "",
+          "col": 1,
+          "span": 6,
+          "bg": "#a3c22b"
         }
       ],
       "cardColor": "#4db327",
-      "coverTopDark": true
+      "coverTopDark": true,
+      "coverPosition": "50% 100%",
+      "coverBg": "#a3c22b"
     },
     {
       "slug": "snaaaake",
