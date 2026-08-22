@@ -1176,8 +1176,18 @@ ${info.clients.map((c) => `          <li>${esc(c)}</li>`).join('\n')}
 
   /* 左邊的照片。沒設 information.image 就整個不產生，版面自動變回單欄
      —— 這樣「還沒挑好照片」不會留下一個空框。 */
-  const photo = info.image ? `    <div class="info-photo">
-      <img src="${esc(info.image)}" alt="${esc(info.imageAlt || '')}"
+  /* 照片路徑只接受網站裡的相對路徑。填成本機路徑（D:\… 或 \\伺服器\…）、
+     帶引號的值、或外部網址時，一律當沒設 —— 產出一個破圖並讓發布被檢查擋住，
+     比少一張照片糟得多。2026-08-22 她真的填過 "D:\website\…\xxx.png"
+     （連前後的引號一起貼進來）。後台也會即時提醒，這裡是最後一道。 */
+  const rawPhoto = String(info.image || '').trim();
+  const badPhoto = /^["']|^[a-zA-Z]:[\\/]|^\\\\|^https?:/.test(rawPhoto);
+  const photoSrc = badPhoto ? '' : rawPhoto;
+  if (info.image && !photoSrc) {
+    console.warn('  ⚠ information.image 不是網站裡的路徑，這一頁的照片略過：' + info.image);
+  }
+  const photo = photoSrc ? `    <div class="info-photo">
+      <img src="${esc(photoSrc)}" alt="${esc(info.imageAlt || '')}"
         width="${esc(info.imageW || 1200)}" height="${esc(info.imageH || 1200)}"
         fetchpriority="high" decoding="async">
     </div>` : '';

@@ -28,11 +28,11 @@
 
 import { createServer } from 'node:http';
 import { createWriteStream } from 'node:fs';
-import { readFile, mkdir, stat, readdir, unlink } from 'node:fs/promises';
+import { readFile, mkdir, stat, readdir, unlink, rename } from 'node:fs/promises';
 import { pipeline } from 'node:stream/promises';
 import { join, dirname, normalize, extname, basename } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { spawn, execFile } from 'node:child_process';
+import { spawn, execFile, execFileSync } from 'node:child_process';
 import { TYPES, typeFor } from './lib-mime.mjs';
 import { findFfmpeg, findFfprobe } from './lib-ffmpeg.mjs';
 import { convertOne, listSources, isUsable, ffmpegError } from './lib-media.mjs';
@@ -327,6 +327,76 @@ async function api(req, res, url) {
       log: (toned.ok ? '' : toned.log + '\n') + r.log,
       url: 'work/_preview.html',
     });
+  }
+
+  /* ---- Information 頁的照片上傳 ----
+
+     為什麼要專門開一條：現有的 upload 端點是綁作品 slug 的（檔案進
+     incoming/<slug>/，之後由 add-project 處理），這張照片不屬於任何作品。
+
+     2026-08-22 她在路徑欄位填了 "D:\\website\\...\\xxx.png"（本機路徑，還帶著
+     引號）——瀏覽器當然讀不到，整頁的圖就壞了。要她自己把檔案複製到 assets/img/
+     再填相對路徑，本來就不是設計師該做的事。
+
+     檔名每次換一個號碼（info-photo-1、-2…）而不是固定名字：固定名字的話瀏覽器
+     會拿快取的舊圖，她換了照片卻看到舊的，只會以為壞掉。順便把上一張刪掉，
+     不然 assets/img/ 會越積越多。 */
+  if (route === 'info-photo' && req.method === 'POST') {
+    const name = safeName(q.get('name'));
+    if (!name) return json(res, 400, { error: '檔名不合法' });
+    if (!/\.(png|jpe?g|webp|tiff?|bmp)$/i.test(name)) {
+      return json(res, 400, { error: '大頭照請用靜態圖片（png / jpg / webp / tif / bmp）' });
+    }
+    const ffmpeg = findFfmpeg();
+    const ffprobe = findFfprobe();
+    if (!ffmpeg || !ffprobe) return json(res, 500, { error: '找不到 ffmpeg，沒辦法轉檔' });
+
+    const tmpDir = join(ROOT, 'incoming', '_info');
+    await mkdir(tmpDir, { recursive: true });
+    const tmp = join(tmpDir, name);
+    await pipeline(req, createWriteStream(tmp));
+
+    const imgDir = join(ROOT, 'assets/img');
+    await mkdir(imgDir, { recursive: true });
+
+    // 下一個編號
+    let existing = [];
+    try { existing = await readdir(imgDir); } catch { /* 還沒有這個資料夾 */ }
+    const used = existing
+      .map((f) => /^info-photo-(\d+)\.webp$/.exec(f))
+      .filter(Boolean)
+      .map((m) => Number(m[1]));
+    const next = (used.length ? Math.max(...used) : 0) + 1;
+    const outName = `info-photo-${next}.webp`;
+
+    try {
+      // 轉檔：convertOne 會用來源的檔名決定產出名字，所以先轉再改名
+      convertOne({ ffmpeg, ffprobe, src: tmp, outDir: imgDir });
+      const made = join(imgDir, name.replace(/\.[^.]+$/, '') + '.webp');
+      await rename(made, join(imgDir, outName));
+
+      // 產出的尺寸要重新量：convertOne 回的是**來源**尺寸，而它會縮到最寬 1600
+      const probe = execFileSync(ffprobe, ['-v', 'error', '-select_streams', 'v:0',
+        '-show_entries', 'stream=width,height', '-of', 'csv=p=0:s=x',
+        join(imgDir, outName)], { encoding: 'utf8' }).trim().match(/(\d+)x(\d+)/);
+
+      // 舊的那張刪掉
+      for (const f of existing) {
+        if (/^info-photo-\d+\.webp$/.test(f) && f !== outName) {
+          try { await unlink(join(imgDir, f)); } catch { /* 已經不在了 */ }
+        }
+      }
+      try { await unlink(tmp); } catch { /* 留著也無所謂 */ }
+
+      return json(res, 200, {
+        ok: true,
+        file: `assets/img/${outName}`,
+        w: probe ? Number(probe[1]) : 1200,
+        h: probe ? Number(probe[2]) : 1200,
+      });
+    } catch (e) {
+      return json(res, 500, { error: '轉檔失敗：' + ffmpegError(e) });
+    }
   }
 
   /* ---- 預覽 Information 頁（不必先儲存）----

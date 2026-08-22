@@ -1856,14 +1856,87 @@ function renderInfo() {
   photoBox.appendChild(el('span', 'lbl', '左邊的照片'));
   const shot = el('img');
   shot.style.cssText = 'width:16rem;aspect-ratio:1;object-fit:cover;border-radius:6px;background:#f0f0f0;display:block';
-  const paint = () => { shot.src = (info.image || '') ? '/' + info.image : ''; shot.hidden = !info.image; };
+  /* 預覽圖。順便擋一個她真的踩過的坑：填了本機路徑（D:\\…）或帶引號的值時，
+     圖一定是破的，所以直接說出來，不要讓她對著一個空框猜。 */
+  const warn = el('p', 'doc', '');
+  warn.style.color = 'var(--warn)';
+  const paint = () => {
+    const v = String(info.image || '').trim();
+    const usable = v && !/^["\']|^[a-zA-Z]:[\\/]|^\\\\/.test(v);
+    shot.src = usable ? '/' + v.replace(/^\//, '') : '';
+    /* 用 display 而不是 hidden 屬性 —— shot 的 cssText 裡有 display:block，
+       inline 樣式會蓋掉 [hidden] 的 display:none，破圖圖示還是會露出來。 */
+    shot.style.display = usable ? 'block' : 'none';
+    warn.textContent = (v && !usable)
+      ? '這不是網站裡的路徑，網頁讀不到（現在的值：' + v + '）。按上面的「上傳照片」重選一次。'
+      : '';
+  };
   photoBox.appendChild(shot);
+  photoBox.appendChild(warn);
+  /* 上傳。2026-08-22 加的 —— 在這之前只有「填路徑」，她填了
+     "D:\\website\\…\\xxx.png"（本機路徑，還帶著引號），整頁的圖就壞了。
+     要設計師自己把檔案複製到 assets/img/ 再填相對路徑，本來就不合理。
+
+     上傳完會自動轉成 WebP、量出尺寸、把路徑與寬高一起填好。 */
+  const pickBtn = el('button', 'primary', '⇧ 上傳照片');
+  const fileIn = el('input');
+  fileIn.type = 'file';
+  fileIn.accept = '.png,.jpg,.jpeg,.webp,.tif,.tiff,.bmp';
+  fileIn.style.display = 'none';
+  pickBtn.onclick = () => fileIn.click();
+
+  const doUpload = async (f) => {
+    if (!f) return;
+    busy(true, '上傳並轉檔中…');
+    try {
+      const r = await fetch('/api/info-photo?name=' + encodeURIComponent(f.name), {
+        method: 'POST', headers: { 'x-admin': '1' }, body: f,
+      });
+      const j = await r.json();
+      if (!r.ok) throw new Error(j.error || '上傳失敗');
+      upd(() => {
+        info.image = j.file;
+        info.imageW = j.w;
+        info.imageH = j.h;
+      });
+      renderInfo();
+      toast(`已上傳，${j.w}×${j.h}`, 'ok');
+    } catch (e) {
+      toast(e.message, 'err');
+    } finally {
+      busy(false);
+    }
+  };
+  fileIn.addEventListener('change', () => doUpload(fileIn.files[0]));
+
+  /* 整個區塊都能拖，不是只有預覽圖 —— 還沒設照片的時候根本沒有圖可以拖，
+     那時候提示「拖到圖上」等於叫她拖一個看不見的東西。 */
+  const drop = (e) => { e.preventDefault(); photoBox.style.outline = ''; };
+  photoBox.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    photoBox.style.outline = '2px solid var(--pink)';
+  });
+  photoBox.addEventListener('dragleave', drop);
+  photoBox.addEventListener('drop', (e) => {
+    drop(e);
+    doUpload(e.dataTransfer.files[0]);
+  });
+
+  const upRow = el('div');
+  upRow.style.cssText = 'display:flex;gap:.8rem;align-items:center;margin:.8rem 0';
+  upRow.appendChild(pickBtn);
+  upRow.appendChild(fileIn);
+  upRow.appendChild(el('span', 'fname', '或把檔案拖進這一區'));
+  photoBox.appendChild(upRow);
+
   photoBox.appendChild(field('檔案路徑', info.image, (v) => upd(() => {
     if (v.trim()) info.image = v.trim(); else delete info.image;
     paint();
   }), { placeholder: 'assets/img/me.webp',
-    doc: '把照片放進 assets/img/ 資料夾，再填在這裡。留空 = 不放照片，版面自動變回單欄。'
-      + '現在是佔位圖（灰底寫著 photo goes here）。換圖之後記得一起改下面的寬高。' }));
+    doc: '上傳之後這裡會自動填好，通常不用自己動。'
+      + '要手填的話只能填**網站裡的相對路徑**（assets/img/… 這種）——'
+      + '填 D:\\ 開頭的本機路徑網頁讀不到，整張圖會變成破圖。'
+      + '留空 = 不放照片，版面自動變回單欄。' }));
   const wh = el('div', 'row');
   wh.appendChild(field('寬（px）', info.imageW, (v) => upd(() => { info.imageW = Number(v) || 1200; }), { type: 'number' }));
   wh.appendChild(field('高（px）', info.imageH, (v) => upd(() => { info.imageH = Number(v) || 1200; }), { type: 'number' }));
