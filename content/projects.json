@@ -318,7 +318,9 @@
         }
       ],
       "cardColor": "#c87d41",
-      "coverTopDark": true
+      "coverTopDark": true,
+      "coverPosition": "50% 55%",
+      "coverInBody": true
     },
     {
       "slug": "happiness-awaits",
@@ -413,7 +415,9 @@
           "w": 1485,
           "h": 1188,
           "alt": "",
-          "caption": ""
+          "caption": "",
+          "col": 1,
+          "span": 12
         },
         {
           "type": "media",
@@ -423,11 +427,15 @@
           "w": 1485,
           "h": 1188,
           "alt": "",
-          "caption": ""
+          "caption": "",
+          "col": 7,
+          "span": 6
         }
       ],
       "cardColor": "#a91d04",
-      "coverTopDark": true
+      "coverTopDark": true,
+      "coverInBody": true,
+      "coverPosition": "50% 68.6%"
     },
     {
       "slug": "Taiwanese-sumer-vibe",
@@ -465,7 +473,9 @@
           "w": 1400,
           "h": 1050,
           "alt": "",
-          "caption": ""
+          "caption": "",
+          "col": 1,
+          "span": 12
         },
         {
           "type": "media",
@@ -508,7 +518,9 @@
       ],
       "cardColor": "#89c841",
       "cardColorDark": true,
-      "coverTopDark": true
+      "coverTopDark": true,
+      "coverInBody": true,
+      "coverPosition": "50% 94.8%"
     },
     {
       "slug": "Playground",
@@ -546,7 +558,9 @@
           "w": 1500,
           "h": 1200,
           "alt": "",
-          "caption": ""
+          "caption": "",
+          "col": 1,
+          "span": 12
         },
         {
           "type": "media",
@@ -556,7 +570,9 @@
           "w": 1500,
           "h": 1200,
           "alt": "",
-          "caption": ""
+          "caption": "",
+          "col": 1,
+          "span": 4
         },
         {
           "type": "media",
@@ -566,7 +582,9 @@
           "w": 900,
           "h": 720,
           "alt": "",
-          "caption": ""
+          "caption": "",
+          "col": 5,
+          "span": 4
         },
         {
           "type": "media",
@@ -576,11 +594,14 @@
           "w": 900,
           "h": 720,
           "alt": "",
-          "caption": ""
+          "caption": "",
+          "col": 9,
+          "span": 4
         }
       ],
       "cardColor": "#d18b38",
-      "coverTopDark": true
+      "coverTopDark": true,
+      "coverInBody": true
     },
     {
       "slug": "Year-of-the-Dragon",
