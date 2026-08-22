@@ -72,7 +72,7 @@
 
   "social": [
     { "label": "Behance", "href": "https://www.behance.net/yihsuanlin3257" },
-    { "label": "Linkdin", "href": "linkedin.com/in/dorislin1226" },
+    { "label": "LinkedIn", "href": "linkedin.com/in/dorislin1226" },
     { "label": "Instagram", "href": "https://www.instagram.com/ouuch.aep/" }
   ],
   "_social註": "這一份同時餵兩個地方：每一頁的頁尾，以及 Information 頁的聯絡區塊。要加平台就在後台的「版面設定」按「＋ 新增一項」，或直接在這裡補一行，兩邊會一起更新。不想讓頁尾出現這一組就把 footer.showSocial 設成 false。",
@@ -97,11 +97,11 @@
     "_字級說明": "titleSize 是最上面那句（Hey there!），headingSize 是每個區塊的小標，contactSize 是信箱那一行。取自參考站的比例：小標 20px、標題與信箱 26px（他們的正文是 15px，這裡是全站的 1.6rem）。\n\n參考站的正文顏色是 #999 淺灰，我沒有抄 —— 白底上對比只有 2.8:1，低於 4.5:1 的可讀性門檻，而這一頁是履歷，被看不清楚的代價太高。維持全站的 theme.ink（75% 黑，對比 8.6:1）。",
     "heading": "Hey there!",
     "body": [
-      "Doris Lin is a motion designer and 3D illustrator based in Taiwan (UTC+8) who made her inspiration from animal and real life. She loves making furry things in her work.",
-      "I love to animate friendly things that I feel identified with, trying different things and making cute characters and animations. Recntly, I like to realize my idea in 3D.",
+      "Doris Lin is a motion designer and 3D illustrator based in Taiwan (UTC+8) who draws her inspiration from animal and real life. She loves making furry things in her work.",
+      "I love to animate friendly things that I feel identified with, trying different things and making cute characters and animations. Recently, I like to realize my idea in 3D.",
       "Apart from work, I also enjoy watching various types of movies and taking photos on the street. I also like browsing different memes on the internet and using them as inspiration for my own creations. Sometimes, when I am working on my projects, I find myself amused and laughing out loud at what I have made."
     ],
-    "_錯字提醒": "原站有三個小錯字，我照原樣保留沒有改：「Recntly」應為 Recently、下面的「Exbihtion」應為 Exhibition、「made her inspiration from」語意上應該是 draws her inspiration from。要改的話直接改這個檔案。",
+    "_錯字提醒": "2026-08-22 已修正舊站帶過來的三個錯：「Recntly」→ Recently、小標「Exbihtion」→ Exhibition、「made her inspiration from」→ draws her inspiration from（前者語意不通）。同一天也把社群連結的「Linkdin」改成 LinkedIn、作品標題「Taiwanese sumer vibe」改成 summer。\n\n作品的網址 work/Taiwanese-sumer-vibe.html 沒有跟著改 —— 改 slug 會讓舊網址 404，而且要一起搬 assets/media/ 的資料夾。要改跟我說。",
     "clients": [
       "Asus",
       "TaiwanPlus",
@@ -121,7 +121,7 @@
         ]
       },
       {
-        "heading": "✸ Exbihtion",
+        "heading": "✸ Exhibition",
         "items": [
           "Oddly in Love: Handle with Weirdness ILLO, Turin (Graphic Days® – In the City), 2025",
           "回川 CONATION Online Exhibition, 2021",
