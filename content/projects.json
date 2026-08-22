@@ -113,43 +113,6 @@
       "coverBg": "#afe4e3"
     },
     {
-      "slug": "Grandma-s-kitchen-copy",
-      "title": "Grandma’s kitchen",
-      "year": "2026",
-      "type": "Personal work",
-      "client": "",
-      "tags": [],
-      "summary": "",
-      "_summary註": "summary 只用於 <meta description>，不會顯示在頁面上",
-      "thumb": {
-        "hash": "2ac5f256447c2c6818bdf6b64756f1aad5768b1ef16b28910004ba8219808ab9",
-        "file": "TP_TaipeiLumitree_Lumi2025_kitchen_00000_V06_00000.png",
-        "w": 1000,
-        "h": 813
-      },
-      "blocks": [
-        {
-          "type": "text",
-          "text": "Back to Taiwanese grandma’s kitchen 🧑‍🍳 以前專案的槍稿，把它好好撿起來改製(´･･`) 當時做得很開心！參考各種阿媽家的用具🫯 私心一定要做秋海棠玻璃更像阿媽家😆 阿媽家必備： 大同電鍋、金蘭醬油、台灣米酒、逼逼叫煮水壺、茄芷袋！ I had so much fun making this! I drew inspiration from all the vintage items you’d find at Grandma's house."
-        },
-        {
-          "type": "media",
-          "hash": "2ac5f256447c2c6818bdf6b64756f1aad5768b1ef16b28910004ba8219808ab9",
-          "file": "TP_TaipeiLumitree_Lumi2025_kitchen_00000_V06_00000.png",
-          "url": "https://freight.cargo.site/w/1440/q/94/i/2ac5f256447c2c6818bdf6b64756f1aad5768b1ef16b28910004ba8219808ab9/TP_TaipeiLumitree_Lumi2025_kitchen_00000_V06_00000.png",
-          "w": 1440,
-          "h": 1170,
-          "alt": "",
-          "caption": "",
-          "width": "full"
-        }
-      ],
-      "draft": true,
-      "_註": "網址結尾是 -copy，原站留下的重複頁，設為 draft 不產生。要保留就刪掉 draft。",
-      "cardColor": "#c6713a",
-      "coverTopDark": true
-    },
-    {
       "slug": "Grandma-s-kitchen",
       "title": "Grandma’s kitchen",
       "year": "2026",
