@@ -534,6 +534,13 @@ function layout(o) {
 <meta name="description" content="${esc(o.desc || site.description)}">
 <meta name="author" content="${esc(site.name)}">
 
+<!-- 分頁圖示。favicon.ico 放在網站根目錄（瀏覽器會自己去要 /favicon.ico，
+     連結壞掉也還有得撈），PNG 那一張給支援的瀏覽器用比較清楚。
+     檔案由 tools/set-favicon.mjs 產生，要換圖跑那支就好。 -->
+<link rel="icon" href="${o.base}favicon.ico" sizes="any">
+<link rel="icon" type="image/png" href="${o.base}assets/img/favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="${o.base}assets/img/apple-touch-icon.png">
+
 <meta property="og:type" content="website">
 <meta property="og:title" content="${esc(o.title)}">
 <meta property="og:description" content="${esc(o.desc || site.description)}">${o.ogImage ? `
