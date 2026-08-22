@@ -57,16 +57,44 @@ mkdirSync(imgDir, { recursive: true });
 const size = execFileSync(ffprobe, ['-v', 'error', '-select_streams', 'v:0',
   '-show_entries', 'stream=width,height', '-of', 'csv=p=0:s=x', src],
   { encoding: 'utf8' }).trim();
-console.log(`\n來源：${src}　${size}`);
-if (!/^(\d+)x\1$/.test(size)) {
-  console.log('  ⚠ 來源不是正方形，縮出來會被拉伸。建議先裁成正方形。');
+const square = /^(\d+)x\1$/.test(size);
+console.log(`\n來源：${src}　${size}${square ? '' : '（不是正方形，會補透明邊而不是拉伸）'}`);
+
+/**
+ * 縮成某個尺寸的 PNG，保留透明。
+ *
+ * 來源不是正方形時**補透明邊，不拉伸** —— 圖示是她的作品，拉變形比留白難看。
+ * force_original_aspect_ratio=decrease 先把長邊縮到目標尺寸，再用透明色補滿。
+ */
+function png(px, out) {
+  const vf = square
+    ? `scale=${px}:${px}:flags=lanczos`
+    : `scale=w=${px}:h=${px}:force_original_aspect_ratio=decrease:flags=lanczos,`
+      + `pad=${px}:${px}:(ow-iw)/2:(oh-ih)/2:color=0x00000000`;
+  execFileSync(ffmpeg, ['-y', '-loglevel', 'error', '-i', src,
+    '-vf', vf, '-frames:v', '1', out]);
+  return readFileSync(out);
 }
 
-/** 縮成某個尺寸的 PNG，保留透明 */
-function png(px, out) {
-  execFileSync(ffmpeg, ['-y', '-loglevel', 'error', '-i', src,
-    '-vf', `scale=${px}:${px}:flags=lanczos`, '-frames:v', '1', out]);
-  return readFileSync(out);
+/**
+ * 這個尺寸下還看得到臉嗎。
+ *
+ * 2026-08-22 換成扁平的「D」字標之後發現：16px 的時候眼睛與嘴巴會整個糊掉，
+ * 只剩一塊粉紅。那不是 bug，是細節太細 —— 但一定要講出來，不然她以為壞了。
+ * 判斷方式：數有沒有「明顯比底色亮」或「明顯偏黃」的像素。
+ */
+function facePixels(file) {
+  const b = execFileSync(ffmpeg, ['-v', 'error', '-i', file, '-frames:v', '1',
+    '-f', 'rawvideo', '-pix_fmt', 'rgba', '-'], { maxBuffer: 1 << 22 });
+  let light = 0;
+  let warm = 0;
+  for (let i = 0; i < b.length; i += 4) {
+    const [r, g, bl, a] = [b[i], b[i + 1], b[i + 2], b[i + 3]];
+    if (a < 200) continue;
+    if (r > 225 && g > 225 && bl > 225) light++;
+    if (r > 200 && g > 160 && bl < 150) warm++;
+  }
+  return light + warm;
 }
 
 /* ---- 分頁圖示（保留透明） ---- */
@@ -76,10 +104,14 @@ console.log(`  ✓ assets/img/favicon-32.png　${readFileSync(p32).length} bytes
 
 /* ---- iOS 主畫面（壓白底，理由見檔頭） ---- */
 const apple = join(imgDir, 'apple-touch-icon.png');
+const appleFit = square
+  ? 'scale=180:180:flags=lanczos'
+  : 'scale=w=180:h=180:force_original_aspect_ratio=decrease:flags=lanczos';
 execFileSync(ffmpeg, ['-y', '-loglevel', 'error',
   '-f', 'lavfi', '-i', 'color=c=white:s=180x180',
   '-i', src,
-  '-filter_complex', '[1:v]scale=180:180:flags=lanczos[fg];[0:v][fg]overlay=0:0:format=auto',
+  // 縮好之後置中疊上白底；非正方形時 overlay 會自己算出置中的位置
+  '-filter_complex', `[1:v]${appleFit}[fg];[0:v][fg]overlay=(W-w)/2:(H-h)/2:format=auto`,
   '-frames:v', '1', apple]);
 console.log(`  ✓ assets/img/apple-touch-icon.png　${readFileSync(apple).length} bytes（已壓白底）`);
 
@@ -113,8 +145,25 @@ parts.forEach((p, i) => {
 
 const ico = Buffer.concat([header, dir, ...parts.map((p) => p.data)]);
 writeFileSync(join(ROOT, 'favicon.ico'), ico);
-tmp.forEach((t) => { try { unlinkSync(t); } catch { /* 已經不在了 */ } });
 console.log(`  ✓ favicon.ico　${ico.length} bytes（16 + 32 + 48）`);
+
+/* 每個尺寸下細節還剩多少 —— 在刪暫存檔之前量 */
+console.log('\n各尺寸的細節（眼睛、嘴巴這類小元素還剩幾個像素）：');
+let lost = [];
+for (const t of tmp) {
+  const px = /_ico-(\d+)\.png$/.exec(t)[1];
+  const n = facePixels(t);
+  console.log(`  ${String(px).padStart(2, ' ')}px　${n} 像素　${n ? '看得到' : '✗ 糊掉了'}`);
+  if (!n) lost.push(px);
+}
+if (lost.length) {
+  console.log(`\n  ⚠ ${lost.join('、')}px 的時候細節會消失，只剩整體形狀與顏色。`);
+  console.log('    這不是壞掉，是細節本來就太細。現代瀏覽器在高解析螢幕上大多用 32px，');
+  console.log('    所以多數情況看得到；16px 主要是舊環境與某些書籤列在用。');
+  console.log('    想在最小尺寸也看得到，來源圖的五官要畫更大更粗。');
+}
+
+tmp.forEach((t) => { try { unlinkSync(t); } catch { /* 已經不在了 */ } });
 
 console.log('\n完成。<head> 的標籤由 build.mjs 產生，不用手動加。');
 console.log('跑 node build.mjs 之後重新整理瀏覽器 —— 分頁圖示的快取很頑固，');
