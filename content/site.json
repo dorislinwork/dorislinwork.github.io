@@ -11,17 +11,27 @@
     "headline": "Hi there! I'm Doris Lin",
     "sub": "a 3D artist, motion designer, animator and a toast maker! 🥨",
     "align": "left",
-    "_align選項": ["left", "center", "right"],
+    "_align選項": [
+      "left",
+      "center",
+      "right"
+    ],
     "_align說明": "大標與副標往哪邊靠。這個值同時控制兩件事：文字本身的對齊，以及整個文字區塊往哪邊靠 —— 只做前者的話區塊仍然被 maxWidth 綁在左邊，選了置中看起來只會是「在左半邊置中」。",
-    "size": "",
+    "size": "3rem",
     "_size說明": "大標字級。留空 = 用 type.heroSize（現在是 clamp(2.6rem, 4.5vw, 5.2rem)，視窗 1920 時約 52px）。\n\nclamp 的三個值是「最小／跟著視窗寬／最大」。想固定大小就直接填 4.8rem 這種單一值（1rem = 10px）。",
     "subSize": "",
     "_subSize說明": "副標字級。留空 = 用 type.titleSize（2.2rem）。",
     "weight": "",
-    "_weight選項": ["400", "700"],
+    "_weight選項": [
+      "400",
+      "700"
+    ],
     "_weight說明": "大標字重。留空 = 跟著 type.headingWeight（700）。**只能填有載入的字重**：現在只載 400 與 700，填 500 或 600 瀏覽器會自己合成一個假的粗體、看起來會糊掉。要用別的字重得先改 fonts.googleFonts，build 會檢查並警告。",
     "style": "normal",
-    "_style選項": ["normal", "italic"],
+    "_style選項": [
+      "normal",
+      "italic"
+    ],
     "_style說明": "正體或斜體。DM Sans 有載入斜體，但**只有 400 的斜體**（googleFonts 裡的 1,9..40,400）—— 斜體配 weight 700 會變成合成的假斜粗體。要斜體粗字就得先加載 1,9..40,700。",
     "lineHeight": "",
     "_lineHeight說明": "行距。留空 = 1.1（標題的預設，很緊）。大標換行多的話 1.2～1.3 會好讀一點。",
@@ -137,7 +147,10 @@
   "media": {
     "_說明": "圖片從哪裡來。Cargo 的網址是參數化的（/w/<寬度>/q/<品質>/i/<hash>/<檔名>），所以只要有 hash 就能要任何尺寸。",
     "source": "local",
-    "_source選項": ["cargo", "local"],
+    "_source選項": [
+      "cargo",
+      "local"
+    ],
     "_source說明": "cargo = 直接連 Cargo CDN，馬上可用但依賴 Cargo 帳號還在；local = 用 assets/media/<slug>/<檔名>，要先跑 download-media.mjs 把圖抓下來。長期一定要用 local，否則哪天停掉 Cargo 圖就全掛。\n\n（2026-08-22 順手修：這段原本寫在 _source選項 裡，但後台的 docFor 只認 _說明 與 _註 —— 所以它從來沒顯示出來過。現在選項是真的下拉，說明搬到這裡才看得到。）",
     "fullWidth": 1600,
     "thumbWidth": 800,
