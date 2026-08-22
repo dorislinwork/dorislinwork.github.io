@@ -1098,10 +1098,13 @@ function coverEditor(p, upd) {
     '選到的那張如果也排在內文裡，內文那張預設會自動略過，不會同一張看到兩次。'));
   wrap.appendChild(srcLab);
 
-  wrap.appendChild(checkbox('封面那張也放進內文一次', p.coverInBody,
-    (v) => upd(() => { if (v) p.coverInBody = true; else delete p.coverInBody; }),
-    '勾起來就不略過 —— 封面看到一次，往下捲在原本的位置再看到一次。'
-    + '適合封面裁得很緊、想讓人看到完整那張的時候。'));
+  /* 2026-08-22 反過來了：預設封面那張**會**在內文出現一次，這個勾選框是關掉它。
+     欄位是同一個 coverInBody，勾起來存 false、取消就把鍵刪掉（回到預設）。 */
+  wrap.appendChild(checkbox('封面那張不要在內文重複出現', p.coverInBody === false,
+    (v) => upd(() => { if (v) p.coverInBody = false; else delete p.coverInBody; }),
+    '預設是會重複的：封面看到一次，往下捲在原本的位置再看到一次。'
+    + '勾起來就把內文那張略過，只在封面看得到。'
+    + '（封面那張如果本來就不在內文裡，勾不勾都沒差。）'));
 
   /* ---- 封面底色 ---- */
   /* 平常看不到 —— 封面是滿版的圖。它是給「往下捲、封面縮進來」那個狀態用的：

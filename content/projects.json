@@ -20,7 +20,9 @@
     "  封面：",
     "  cover          用哪一張當封面 { file, w, h }。留空 = 用 thumb 那張。",
     "                 選到的圖如果也排在 blocks 裡，內文那張會自動略過，不會重複。",
-    "  coverInBody    true = 封面那張圖也在內文出現一次（預設會略過，不重複）。後台封面區有勾選框。",
+    "  coverInBody    封面那張圖要不要也留在內文。**預設是留著**（看得到兩次）。",
+    "                 設 false 就只在封面出現，內文那張略過。後台封面區有勾選框。",
+    "                 沒設就跟著 site.json 的 case.dedupeCover 走。",
     "  coverPosition  圖在封面框裡的位置，\"50% 50%\" 這種兩個百分比。預設居中。",
     "                 封面是裁切填滿的，這個值決定看得到哪一塊 —— 直式素材預設",
     "                 只看得到中段，往上拖就是 \"50% 0%\"。",
@@ -109,7 +111,6 @@
         "h": 1920
       },
       "coverPosition": "50% 68.2%",
-      "coverInBody": true,
       "coverBg": "#afe4e3"
     },
     {
@@ -146,8 +147,7 @@
       ],
       "cardColor": "#c6713a",
       "coverTopDark": true,
-      "coverPosition": "50% 52.2%",
-      "coverInBody": true
+      "coverPosition": "50% 52.2%"
     },
     {
       "slug": "A-Journey-in-Tohoku",
@@ -247,8 +247,7 @@
         }
       ],
       "cardColor": "#41a2c8",
-      "coverPosition": "50% 63.7%",
-      "coverInBody": true
+      "coverPosition": "50% 63.7%"
     },
     {
       "slug": "Gua-Bao",
@@ -319,8 +318,7 @@
       ],
       "cardColor": "#c87d41",
       "coverTopDark": true,
-      "coverPosition": "50% 55%",
-      "coverInBody": true
+      "coverPosition": "50% 55%"
     },
     {
       "slug": "happiness-awaits",
@@ -337,7 +335,6 @@
         "w": 800,
         "h": 1067
       },
-      "coverInBody": true,
       "blocks": [
         {
           "type": "text",
@@ -434,7 +431,6 @@
       ],
       "cardColor": "#a91d04",
       "coverTopDark": true,
-      "coverInBody": true,
       "coverPosition": "50% 68.6%"
     },
     {
@@ -519,7 +515,6 @@
       "cardColor": "#89c841",
       "cardColorDark": true,
       "coverTopDark": true,
-      "coverInBody": true,
       "coverPosition": "50% 94.8%"
     },
     {
@@ -600,8 +595,7 @@
         }
       ],
       "cardColor": "#d18b38",
-      "coverTopDark": true,
-      "coverInBody": true
+      "coverTopDark": true
     },
     {
       "slug": "Year-of-the-Dragon",
@@ -670,8 +664,7 @@
         }
       ],
       "cardColor": "#2e81a5",
-      "coverTopDark": true,
-      "coverInBody": true
+      "coverTopDark": true
     },
     {
       "slug": "goodmorningmacc-shenzaoclub",
@@ -1177,7 +1170,6 @@
         "w": 1500,
         "h": 1125
       },
-      "coverInBody": true,
       "blocks": [
         {
           "type": "embed",
@@ -1577,7 +1569,6 @@
         "w": 800,
         "h": 800
       },
-      "coverInBody": true,
       "blocks": [
         {
           "type": "text",

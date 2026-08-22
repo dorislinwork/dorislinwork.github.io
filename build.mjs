@@ -1003,18 +1003,26 @@ function renderProject(p, prev, next) {
     blurb.push(b.text);
   }
 
-  /* 封面用的檔案如果也排在內文裡，預設把內文那張拿掉，不然同一張圖會出現兩次
-     （52 件裡有 23 件是這種情況）。
+  /* 封面那張圖要不要也留在內文裡。
 
-     單獨某一件想讓封面那張**也**在內文出現一次，就加 "coverInBody": true，
-     後台的封面區有勾選框。
+     **2026-08-22 起預設是「留著」** —— 使用者的原話：「以後全部改為預設封面就是會
+     在內文出現一次，可以自己勾選不在內文中出現」。改之前是相反的（預設去重），
+     那次改動讓 16 件作品的內文各多出一張圖。
 
-     2026-08-21 改成「在內文的任何位置都算」。原本只比對內文的第一張圖，所以
-     封面挑到第二張以後的圖時就不會去重，同一份資料會因為圖的位置不同得到兩種
-     行為 —— 後台現在可以自由挑封面，這種不一致只會越來越常撞到。改的當下正好
-     有 3 件是這種狀況（happiness-awaits、Afternoon-Tea-Time、Nodding-Off），
-     都補上了 coverInBody，所以那 3 頁的輸出完全沒變。 */
-  if (cover && cover.file && cs.dedupeCover !== false && p.coverInBody !== true) {
+     三層決定，由細到粗：
+       p.coverInBody === false  這一件不要重複（後台的勾選框）
+       p.coverInBody === true   這一件要重複
+       都沒設                    看 case.dedupeCover（現在是 false = 留著）
+
+     用同一個欄位存兩個方向而不是另開一個 hideCoverInBody：兩個欄位就會出現
+     「兩個都設了要聽誰的」這種沒有好答案的狀況。
+
+     比對範圍是**內文的任何位置**，不是只有第一張。原本只比對第一張，所以封面挑到
+     第二張以後的圖時行為會不一樣 —— 同一份資料因為圖的位置得到兩種結果。 */
+  const keepCoverInBody = p.coverInBody !== undefined
+    ? p.coverInBody === true
+    : cs.dedupeCover !== true;
+  if (cover && cover.file && !keepCoverInBody) {
     const i = blocks.findIndex((b) => b.type === 'media' && b.file === cover.file);
     if (i !== -1) blocks.splice(i, 1);
   }
