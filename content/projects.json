@@ -71,7 +71,7 @@
         {
           "type": "text",
           "text": "Bananas, carrots, dental chews, corn… they were all his favorites.🍌🌽🥕🦴\nHe once stole a whole carrot that Mom had just bought and ran off to eat it.\nNow he can eat as many as he wants in heaven!",
-          "bg": "#86e4e3"
+          "bg": "#afe4e3"
         },
         {
           "type": "media",
@@ -80,7 +80,7 @@
           "h": 1920,
           "col": 1,
           "span": 4,
-          "bg": "#86e4e3"
+          "bg": "#afe4e3"
         },
         {
           "type": "media",
@@ -90,7 +90,7 @@
           "col": 5,
           "span": 4,
           "newRow": true,
-          "bg": "#86e4e3"
+          "bg": "#afe4e3"
         },
         {
           "type": "media",
@@ -99,7 +99,7 @@
           "h": 1920,
           "col": 9,
           "span": 4,
-          "bg": "#86e4e3"
+          "bg": "#afe4e3"
         }
       ],
       "cardColor": "#35c3d4",
@@ -109,7 +109,8 @@
         "h": 1920
       },
       "coverPosition": "50% 68.2%",
-      "coverInBody": true
+      "coverInBody": true,
+      "coverBg": "#afe4e3"
     },
     {
       "slug": "Grandma-s-kitchen-copy",
