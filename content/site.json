@@ -79,10 +79,10 @@
 
   "information": {
     "_說明": "Information 頁的內容與版面。文字原樣取自舊站的 /Information 頁，沒有改動。後台有一個「Information 頁」分頁可以改內容，版面那幾個數字在「版面設定」這一組裡。",
-    "image": "\"D:\\website\\cargo-originals\\The-year-of-the-Rabbit\\2023_0120_V01_00000.png\"",
+    "image": "assets/img/info-photo-1.webp",
     "imageAlt": "",
-    "imageW": 1200,
-    "imageH": 1200,
+    "imageW": 1600,
+    "imageH": 1600,
     "_image說明": "左邊那張照片。**現在是佔位圖**（灰底寫著 photo goes here，1200×1200），換成你自己的照片就好：把檔案放進 assets/img/，然後把這裡改成 \"assets/img/你的檔名\"，imageW／imageH 填實際像素。\n\n留空（\"\"）的話整個左欄不會產生，版面自動退回單欄 —— 所以還沒挑好照片時不會留一個空框在那裡。\n\n照片會被裁成 photoRatio 指定的比例（預設正方形），裁切方式是居中填滿。imageAlt 是給讀螢幕的人與搜尋引擎看的說明，例如「Doris Lin 的照片」。",
     "photoSpan": 5,
     "gapCols": 1,
