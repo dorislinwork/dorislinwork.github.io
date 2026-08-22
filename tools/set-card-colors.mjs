@@ -160,11 +160,20 @@ function toCardColor(rgb) {
 /* ------------------------------------------------------------------ 主流程 ---- */
 
 let colored = 0, sized = 0, skipped = 0, failed = 0, toned = 0;
+let skippedNoThumb = 0;   // 不上首頁又沒有圖的（例如 Reel），不算失敗
 
 for (const p of data.projects) {
   if (ONLY && p.slug !== ONLY) continue;
   const t = p.thumb || (p.blocks || []).find((b) => b.type === 'media');
-  if (!t || !t.file) { failed++; console.log(`  ✗ ${p.slug}：找不到縮圖`); continue; }
+  if (!t || !t.file) {
+    /* 不出現在首頁的作品本來就不需要卡片顏色（Reel 就是這樣：只有一支 Vimeo、
+       沒有任何圖片，hideFromGrid 也開著）。把它算成「失敗」的話，每次取色都會
+       固定報一次錯 —— 久了就會習慣忽略輸出，真正的失敗反而被埋掉。 */
+    if (p.hideFromGrid) { skippedNoThumb++; continue; }
+    failed++;
+    console.log(`  ✗ ${p.slug}：找不到縮圖`);
+    continue;
+  }
 
   const media = join(ROOT, `assets/media/${p.slug}/${localName(t.file)}`);
   // 影片取第一幀的 poster 來取色（直接讀 mp4 也行，但 poster 更快也更穩）
@@ -221,6 +230,7 @@ for (const p of data.projects) {
 
 console.log(`\n取色 ${colored} 件、補尺寸 ${sized} 件、量封面亮度 ${toned} 件、`
   + `沿用既有顏色 ${skipped} 件、失敗 ${failed} 件`);
+if (skippedNoThumb) console.log(`  （${skippedNoThumb} 件不上首頁又沒有圖，略過取色）`);
 const darkCount = data.projects.filter((p) => p.coverTopDark).length;
 console.log(`封面頂部偏暗（導覽列改白字）：${darkCount} 件`);
 

@@ -10,6 +10,7 @@
    ========================================================================== */
 
 import { spawnSync } from 'node:child_process';
+import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -104,6 +105,7 @@ if (push.code !== 0) {
 console.log('');
 console.log('═'.repeat(58));
 console.log('  完成。約一分鐘後生效：');
-console.log('  https://dorislinwork.github.io');
+// 網址讀 site.json，不要寫死 —— 2026-08-22 接上 doris-lin.com 之後這裡就過期了
+console.log('  ' + (JSON.parse(readFileSync(join(ROOT, 'content/site.json'), 'utf8')).url || ''));
 console.log('═'.repeat(58));
 console.log('');

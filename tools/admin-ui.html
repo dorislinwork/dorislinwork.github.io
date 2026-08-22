@@ -401,6 +401,11 @@ pre.log:empty { display: none; }
     <h2>版面設定</h2>
     <p class="sub">這一頁就是 content/site.json。每個欄位下面的灰字是 json 裡自己的說明，改了那邊這裡也會跟著變。</p>
     <div class="note">數字與比例類的欄位改完要按「重新產生」才看得到效果。<strong>1rem = 10px</strong>，所以 2.4rem 是 24px。</div>
+    <label><span class="lbl">找設定</span>
+      <input type="text" id="sSearch" placeholder="例如 封面、字級、顏色、blurb">
+      <p class="doc">打字就會只留下符合的那幾組。比對範圍包含欄位名稱與說明文字，所以用中文描述也找得到。</p>
+      <p class="doc" id="sCount"></p>
+    </label>
     <div id="siteForm"></div>
     <div class="bar sticky">
       <button class="primary" id="btnSaveSite" disabled>儲存</button>
@@ -725,6 +730,7 @@ async function load() {
   renderProjects();
   renderSite();
   renderInfo();
+  filterSite();
   syncDirtyUI();
 }
 
@@ -787,7 +793,8 @@ function projectItem(p, i) {
   if (p.hideFromGrid) name.appendChild(el('span', 'tag', '不上首頁'));
   meta.appendChild(name);
   meta.appendChild(el('div', 'sm',
-    [p.year, p.type, p.slug, `${(p.blocks || []).length} 個區塊`].filter(Boolean).join('　·　')));
+    [`第 ${i + 1} 件`, p.year, p.type, p.slug, `${(p.blocks || []).length} 個區塊`]
+      .filter(Boolean).join('　·　')));
   head.appendChild(meta);
 
   const acts = el('div', 'acts');
@@ -797,8 +804,12 @@ function projectItem(p, i) {
     b.onclick = fn;
     return b;
   };
-  acts.appendChild(mk('↑', '往前移', () => move(i, -1)));
-  acts.appendChild(mk('↓', '往後移', () => move(i, 1)));
+  if (i > 0) acts.appendChild(mk('⤒', '移到最前面', () => moveTo(i, 0)));
+  acts.appendChild(mk('↑', '往前移一格', () => move(i, -1)));
+  acts.appendChild(mk('↓', '往後移一格', () => move(i, 1)));
+  if (i < D.projects.length - 1) {
+    acts.appendChild(mk('⤓', '移到最後面', () => moveTo(i, D.projects.length - 1)));
+  }
   const isOpen = open.has(p.slug);
   acts.appendChild(mk(isOpen ? '收起' : '編輯', '編輯這件作品', () => {
     if (isOpen) open.delete(p.slug); else open.add(p.slug);
@@ -817,14 +828,19 @@ function projectItem(p, i) {
   return wrap;
 }
 
-function move(i, d) {
-  const j = i + d;
-  if (j < 0 || j >= D.projects.length) return;
+/* 把第 i 件搬到第 j 個位置。j 會被夾在範圍內，所以「已經在最前面還按往前」不會出事。
+
+   2026-08-22 補上「移到最前／最後」：只有 ↑↓ 的話，把第 52 件搬到第 1 位要按 51 次，
+   而首頁前幾格正是最重要的位置 —— 這個操作一定會常用。 */
+function moveTo(i, j) {
+  const to = Math.max(0, Math.min(j, D.projects.length - 1));
+  if (to === i) return;
   const [x] = D.projects.splice(i, 1);
-  D.projects.splice(j, 0, x);
+  D.projects.splice(to, 0, x);
   markDirty('projects');
   renderProjects();
 }
+const move = (i, d) => moveTo(i, i + d);
 
 /* 離開欄位時去掉前後空白。
 
@@ -2013,6 +2029,22 @@ function renderInfo() {
   }
 }
 
+/* 設定表單的過濾。site.json 有 20 組、上百個欄位，用捲的找很痛苦。
+
+   比對的是整組的**文字內容**（欄位名 + 說明），不是只有鍵名 —— 她想的是
+   「封面」「字級」這種中文詞，那些字只出現在說明裡。整組一起顯示或隱藏，
+   不拆到單一欄位：一個欄位單獨浮出來會看不出它屬於哪一組。 */
+function filterSite() {
+  const q = ($('#sSearch').value || '').trim().toLowerCase();
+  const rows = [...$('#siteForm').children];
+  rows.forEach((row) => {
+    row.hidden = q ? !row.textContent.toLowerCase().includes(q) : false;
+  });
+  const shown = rows.filter((r) => !r.hidden).length;
+  const note = $('#sCount');
+  if (note) note.textContent = q ? `符合的有 ${shown} 組` : '';
+}
+
 function renderSite() {
   const box = $('#siteForm');
   box.textContent = '';
@@ -2291,6 +2323,8 @@ function showTab(name) {
     b.setAttribute('aria-selected', String(b.dataset.tab === name));
   });
 }
+$('#sSearch').addEventListener('input', filterSite);
+
 $('#tabs').addEventListener('click', (e) => {
   const b = e.target.closest('button[data-tab]');
   if (b) showTab(b.dataset.tab);

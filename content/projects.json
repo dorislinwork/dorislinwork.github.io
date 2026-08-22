@@ -111,7 +111,8 @@
         "h": 1920
       },
       "coverPosition": "50% 68.2%",
-      "coverBg": "#afe4e3"
+      "coverBg": "#afe4e3",
+      "coverTopDark": true
     },
     {
       "slug": "Grandma-s-kitchen",
@@ -247,7 +248,8 @@
         }
       ],
       "cardColor": "#41a2c8",
-      "coverPosition": "50% 63.7%"
+      "coverPosition": "50% 63.7%",
+      "coverTopDark": true
     },
     {
       "slug": "Gua-Bao",
