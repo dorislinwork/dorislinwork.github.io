@@ -56,6 +56,42 @@
   ],
   "projects": [
     {
+      "slug": "halloween-party",
+      "title": "halloween party",
+      "year": "2026",
+      "type": "Personal work",
+      "role": "",
+      "agency": "",
+      "client": "",
+      "tags": [],
+      "summary": "",
+      "thumb": {
+        "file": "Beauty source_00000_V04.png",
+        "w": 1600,
+        "h": 1200
+      },
+      "blocks": [
+        {
+          "type": "media",
+          "file": "Beauty source_00000_V04.png",
+          "w": 1600,
+          "h": 1200,
+          "bg": "#041d65"
+        },
+        {
+          "type": "media",
+          "file": "SOLO_00000.png",
+          "w": 1200,
+          "h": 900,
+          "bg": "#041d65"
+        }
+      ],
+      "coverTopDark": true,
+      "cardColor": "#3238ab",
+      "coverBg": "#041d65",
+      "span": 8
+    },
+    {
       "slug": "Tommy-in-paradise",
       "title": "Tommy in paradise 💙🪽",
       "year": "2026",
