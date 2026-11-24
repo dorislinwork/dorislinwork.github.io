@@ -98,7 +98,7 @@
     "_字級說明": "titleSize 是最上面那句（Hey there!），headingSize 是每個區塊的小標，contactSize 是信箱那一行。取自參考站的比例：小標 20px、標題與信箱 26px（他們的正文是 15px，這裡是全站的 1.6rem）。\n\n參考站的正文顏色是 #999 淺灰，我沒有抄 —— 白底上對比只有 2.8:1，低於 4.5:1 的可讀性門檻，而這一頁是履歷，被看不清楚的代價太高。維持全站的 theme.ink（75% 黑，對比 8.6:1）。",
     "heading": "Hey there!",
     "body": [
-      "Doris Lin is a motion designer and 3D illustrator based in Taiwan (UTC+8) who draws her inspiration from animal and real life. She loves making furry things in her work.",
+      "Doris Lin is a motion designer and 3D illustrator from Taiwan (UTC+8), currently in Australia, who draws inspiration from animals and real life. She loves making furry things in her work.",
       "I love to animate friendly things that I feel identified with, trying different things and making cute characters and animations. Recently, I like to realize my idea in 3D.",
       "Apart from work, I also enjoy watching various types of movies and taking photos on the street. I also like browsing different memes on the internet and using them as inspiration for my own creations. Sometimes, when I am working on my projects, I find myself amused and laughing out loud at what I have made."
     ],
