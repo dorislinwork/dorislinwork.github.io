@@ -160,7 +160,7 @@
 
   "theme": {
     "_說明": "以下數值取自舊站 Cargo 的 predefined-style，不是估的。",
-    "bg": "#ffffff",
+    "bg": "#FFFFFF",
     "ink": "rgba(0, 0, 0, 0.75)",
     "_ink註": "舊站正文與標題都是 75% 黑，不是純黑。這是刻意的，整體會柔一點。",
     "inkStrong": "rgba(0, 0, 0, 1)",
@@ -220,8 +220,8 @@
     "follow": {
       "_說明": "跟隨式游標，2026-08-21 參考 therocketpanda.com 做的。一顆粉紅圓點平滑跟著滑鼠，滑到可點擊的東西會放大。enabled 設 false 就回到上面那組 PNG 圖檔游標。",
       "enabled": true,
-      "size": "16px",
-      "growTo": "24px",
+      "size": "20px",
+      "growTo": "30px",
       "ease": 0.26,
       "color": "#ff5b90",
       "labelColor": "#ffffff",
